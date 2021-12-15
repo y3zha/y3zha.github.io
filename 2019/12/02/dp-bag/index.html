@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            背包型动态规划 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">背包型动态规划</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-12-02 23:15:48</span>
+        <span class="mobile">2019-12-02 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Algorithm/">Algorithm</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Dynamic-programming/">Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="动态规划：背包型"><a href="#动态规划：背包型" class="headerlink" title="动态规划：背包型"></a>动态规划：背包型</h2><p>数组开n+1，背包关键就是看最后一步。</p>
+<h3 id="1、01背包–求max"><a href="#1、01背包–求max" class="headerlink" title="1、01背包–求max"></a>1、01背包–求max</h3><p><a target="_blank" rel="noopener" href="https://www.lintcode.com/problem/backpack/description"><strong>LintCode 92: Backpack</strong></a></p>
+<p>【问题】在n个物品中挑选若干物品装入背包，最多能装多满？假设背包的大小为m，每个物品的大小为A[i]</p>
+<p>【分析】从最后一步出发，最后一个物品放还是不放。有两种情况</p>
+<ul>
+<li>前n-1个物品能拼出重量 <code>w</code>，那么n个物品也能拼出重量<code>w</code></li>
+<li>前n-1个物品能拼出重量 <code>w - A[n-1]</code>，再加上最后一个物品 <code>A[n-1]</code> 拼出<code>w</code></li>
+</ul>
+<p>【状态转移】</p>
+<ul>
+<li><code>dp[i][w]</code>表示能否用前i个物品拼出重点w，可以用int数组，也可以用boolean数组，</li>
+<li><code>dp[i][j] = max{dp[i-1][j], dp[i-1][j - A[n-1]] + A[i-1]}</code>（int数组）放还是不放</li>
+<li><code>dp[i][j] = dp[i-1][w] or dp[i-1][j - A[i-1]]</code>（boolean数组）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//int型写法</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">backPack2</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">                <span class="comment">//不放</span></span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                <span class="comment">//放</span></span><br><span class="line">                <span class="keyword">if</span> (j &gt;= A[i - <span class="number">1</span>]) {</span><br><span class="line">                    dp[i][j] = Math.max(dp[i][j], dp[i - <span class="number">1</span>][j - A[i - <span class="number">1</span>]] + A[i - <span class="number">1</span>]);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n][m];</span><br><span class="line">    }</span><br><span class="line"><span class="comment">//boolean型写法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">backPack</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;   <span class="comment">//物品个数</span></span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= m; i++) {</span><br><span class="line">            dp[<span class="number">0</span>][i] = <span class="keyword">false</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="comment">//首先初始化dp[i][0]</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">                <span class="comment">//不放</span></span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                <span class="comment">//放</span></span><br><span class="line">                <span class="keyword">if</span> (j &gt;= A[i - <span class="number">1</span>]) {</span><br><span class="line">                    <span class="comment">// |=,只要有一个为true就是true</span></span><br><span class="line">                    <span class="comment">// 放入A[i-1]的情况就是看j-A[i-1]这个容量下是不是为true，如果为true，那么就是dp[i][j]为true，否则就是看dp[i-1][j]是否为true</span></span><br><span class="line">                    dp[i][j] |= dp[i - <span class="number">1</span>][j - A[i - <span class="number">1</span>]];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = m; i &gt;= <span class="number">0</span>; i--) {</span><br><span class="line">            <span class="keyword">if</span> (dp[n][i] == <span class="keyword">true</span>) {</span><br><span class="line">                res = i;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>优化成一维</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">backPack</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">       <span class="keyword">int</span> f[] = <span class="keyword">new</span> <span class="keyword">int</span>[m + <span class="number">1</span>];</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; A.length; i++) {</span><br><span class="line">        	<span class="comment">//从后往前更新</span></span><br><span class="line">         <span class="comment">//下面的f[j - A[i]]，j - A[i]严格小于j，j是从小到大枚举的</span></span><br><span class="line">         <span class="comment">//也就是在第i层已经算过了，等价于f[i][j-A[i]]</span></span><br><span class="line">         <span class="comment">//那么我们从大到小更新，算f[j],f[j - A[i]]其实是还没有被更新过，它存的是第i-1层的，这就对了</span></span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> j = m; j &gt;= A[i]; j--) {</span><br><span class="line">             	<span class="comment">//不放和放，不放就是它自身</span></span><br><span class="line">               f[j] = Math.max(f[j], f[j - A[i]] + A[i]);</span><br><span class="line">           } </span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> f[m];</span><br><span class="line">   }</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、01背包–求数量"><a href="#2、01背包–求数量" class="headerlink" title="2、01背包–求数量"></a>2、01背包–求数量</h3><p><a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/backpack-v/">LintCode 563: Backpack V<i class="fas fa-external-link-alt"></i></a></p>
+<p>【问题】给出 n 个物品, 以及一个数组, <code>nums[i]</code> 代表第i个物品的大小, 保证大小均为正数, 正整数 <code>target</code> 表示背包的大小, 找到能填满背包的方案数。<strong>注意：每一个物品只能使用一次。</strong></p>
+<p>【分析】需要求出有多少种组合能组合成target，对于最后一个物品，有放和不放两种选择。</p>
+<ul>
+<li>第一种：使用前n-1个物品拼出target</li>
+<li>第二种：前n-1个物品能拼出<code>target - nums[i]</code>，再加上nums[i]，拼出target</li>
+<li>拼出target的方式 = 不放+放,即<code>dp[i][j] = dp[i-1][j] + dp[i-1][j - nums[i-1]] </code></li>
+<li>如果知道有多少种方式拼出0、1、2…对于有多少种方式拼出target也就知道答案了。</li>
+</ul>
+<p>常规写法，时间复杂度O(n*Target)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">backPackV1</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>{</span><br><span class="line">       <span class="keyword">int</span> n = nums.length;</span><br><span class="line">       <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">       }</span><br><span class="line"></span><br><span class="line">       <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][target + <span class="number">1</span>];    <span class="comment">//dp[i][j]表示前i个数字有多少种方式拼出数字j</span></span><br><span class="line">       dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;   <span class="comment">//0个物品有一种方式拼出重量0</span></span><br><span class="line">       <span class="comment">//初始化</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= target; i++) {</span><br><span class="line">           dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">           <span class="comment">//拼出几</span></span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= target; j++) {</span><br><span class="line">               <span class="comment">//不放</span></span><br><span class="line">               dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">               <span class="comment">//放</span></span><br><span class="line">               <span class="keyword">if</span> (j &gt;= nums[i - <span class="number">1</span>]) {     </span><br><span class="line">                   dp[i][j] += dp[i - <span class="number">1</span>][j - nums[i - <span class="number">1</span>]];</span><br><span class="line">               }</span><br><span class="line">           }</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> dp[n][target];</span><br><span class="line">   }</span><br></pre></td></tr></table></figure>
+
+<p>第一步优化：利用滚动数组</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">backPackV3</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>{</span><br><span class="line">       <span class="keyword">int</span> n = nums.length;</span><br><span class="line">       <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>][target + <span class="number">1</span>];</span><br><span class="line">       dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= target; i++) {</span><br><span class="line">           dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">int</span> old = <span class="number">0</span>, now = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">           old = now;;</span><br><span class="line">           now = <span class="number">1</span> - now;</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= target; j++) {</span><br><span class="line">               <span class="comment">//不放</span></span><br><span class="line">               dp[now][j] = dp[old][j];</span><br><span class="line">               <span class="comment">//放</span></span><br><span class="line">               <span class="keyword">if</span> (j &gt;= nums[i - <span class="number">1</span>]) {</span><br><span class="line">                   dp[now][j] += dp[old][j - nums[i - <span class="number">1</span>]];</span><br><span class="line">               }</span><br><span class="line">           }</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> dp[now][target];</span><br><span class="line">   }</span><br></pre></td></tr></table></figure>
+
+<p>第二步优化：优化成一行。原本是 老值 + 老值 = 新值，如果正着更新，可能会出现 老值 + 新值，所以需要倒着更新</p>
+<p><code>dp[i][j] = dp[i-1][j] + dp[i-1][j - nums[i-1]]</code>，新值 = 两个老值加起来</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">backPackV2</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>{</span><br><span class="line">       <span class="keyword">int</span> n = nums.length;</span><br><span class="line">       <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[target + <span class="number">1</span>]; <span class="comment">//和总称重有关</span></span><br><span class="line">       <span class="comment">//init：相当于dp[0][0] = 1</span></span><br><span class="line">       dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">       <span class="comment">//init：dp[0][1] = dp[0][2] = ... = 0</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= target; i++) {</span><br><span class="line">           dp[i] = <span class="number">0</span>;</span><br><span class="line">       }</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">           <span class="comment">//reverse</span></span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> j = target; j &gt;= <span class="number">0</span>; j--) {</span><br><span class="line">               <span class="keyword">if</span> (j &gt;= nums[i - <span class="number">1</span>]) {</span><br><span class="line">                   <span class="comment">//old + old ==&gt; new old1 = dp[j],old2 = dp[j - nums[i - 1]],new就是直接覆盖</span></span><br><span class="line">                   dp[j] += dp[j - nums[i - <span class="number">1</span>]];</span><br><span class="line">               }</span><br><span class="line">           }</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> dp[target];</span><br><span class="line">   }</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、LintCode-564-Backpack-VI"><a href="#3、LintCode-564-Backpack-VI" class="headerlink" title="3、LintCode 564: Backpack VI"></a>3、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/combination-sum-iv/description">LintCode 564: Backpack VI<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】给出一个都是正整数的数组 <code>nums</code>，其中没有重复的数。从中找出所有的和为 <code>target</code> 的组合个数。<strong>注意一个数可以在组合中出现多次，数的顺序不同则会被认为是不同的组合。</strong></p>
+<p>【分析】这个题和Backpack V的区别是每个物品可以使用多次，且组合中数字可以按照不同顺序，比如1+1+2与1+2+1算是两种情况，这就导致不能按照物品顺序来处理。依旧是关注最后一步，最后一步物品重量是K，那么前面物品构成重量target-K，需要关注最后一个加进来的是谁。</p>
+<ul>
+<li>如果最后一个物品重量是A<del>0</del>, 则要求有多少种组合能拼成 Target – A<del>0</del></li>
+<li>如果最后一个物品重量是A<del>1</del>, 则要求有多少种组合能拼成 Target – A<del>1</del></li>
+<li>……</li>
+<li>如果最后一个物品重量是A<del>n-1</del>, 则要求有多少种组合能拼成 Target – A<del>n-1</del></li>
+</ul>
+<p>【状态转移方程】dp[i]代表有多少种组合能拼出重量i，则<code>dp[i] = dp[i-A[0]] + dp[i-A[1]] +...+ dp[i-A[n-1]]</code></p>
+<p>【初始条件】<code>dp[0] = 1</code>，有1种组合能拼出0</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">backPackVI</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>{</span><br><span class="line">       <span class="keyword">int</span> n = nums.length;</span><br><span class="line">       <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[target + <span class="number">1</span>];</span><br><span class="line">       dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//对于能拼出的i</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= target; i++) {</span><br><span class="line">           <span class="comment">//初始化能拼出i的情况为0种</span></span><br><span class="line">           dp[i] = <span class="number">0</span>;  </span><br><span class="line">           <span class="comment">//遍历所有数字</span></span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">               <span class="keyword">if</span> (i &gt;= nums[j]) {</span><br><span class="line">                   dp[i] += dp[i - nums[j]];</span><br><span class="line">               }</span><br><span class="line">           }</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> dp[target];</span><br><span class="line">   }</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、LintCode-125-Backpack-II"><a href="#4、LintCode-125-Backpack-II" class="headerlink" title="4、LintCode 125: Backpack II"></a>4、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/backpack-ii/">LintCode 125: Backpack II<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】有 <code>n</code> 个物品和一个大小为 <code>m</code> 的背包. 给定数组 <code>A</code> 表示每个物品的大小和数组 <code>V</code> 表示每个物品的价值。问最多能装入背包的总价值是多大？<strong>注意：每个物品只能取一次，物品不能切分。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">backPackII</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span>[] A, <span class="keyword">int</span>[] V)</span> </span>{</span><br><span class="line">       <span class="keyword">int</span> n = A.length;</span><br><span class="line">       <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">       <span class="comment">//初始化</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= m; i++) {</span><br><span class="line">           dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">int</span> res = Integer.MIN_VALUE;</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">               <span class="comment">//不放</span></span><br><span class="line">               dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">             	<span class="comment">//放</span></span><br><span class="line">               <span class="keyword">if</span> (j &gt;= A[i - <span class="number">1</span>]) {</span><br><span class="line">                   dp[i][j] = Math.max(dp[i][j], dp[i - <span class="number">1</span>][j - A[i - <span class="number">1</span>]] + V[i - <span class="number">1</span>]);</span><br><span class="line">               }</span><br><span class="line">               res = Math.max(res, dp[i][j]);</span><br><span class="line">           }</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> res;</span><br><span class="line">   }</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、完全背包"><a href="#5、完全背包" class="headerlink" title="5、完全背包"></a>5、完全背包</h3><p><strong>LintCode 440: Backpack III</strong></p>
+<p>【问题】将Backpack II的物品改为无穷多个，背包最大承重m，求能带走的最大价值。</p>
+<ul>
+<li>输入:4个物品，重量为2, 3, 5, 7，价值为1, 5, 2, 4. 背包最大承重是10</li>
+<li>输出:15</li>
+</ul>
+<p>【分析】A<del>i-1</del>有无穷多个，可以用1个、2个…在这里可以把物品变为种类，这边状态转移方程变为</p>
+<ul>
+<li>f[i] [w] = max<del>k&gt;=0</del>{f[i-1] [w-kA<del>i-1</del>] + kV<del>i-1</del>}，表示用<strong>前i种</strong>物品拼出重量w时的最大总价值，<strong>等于用前i-1种物品拼出重量w-kA<del>i-1</del> 时最大总价值，加上k个第i种物品</strong>，当k = 0和1时，就可以直接用在Backpack II 中了。</li>
+</ul>
+<p>把这个式子展开，如下</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304170107112.png" alt="展开如图"></p>
+<p><strong>可以优化</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304170143810.png" alt="优化"></p>
+<p><strong>什么意思呢</strong></p>
+<blockquote>
+<p>假设A<del>i-1</del> = 2,V<del>i-1</del> = x</p>
+<p>f[i] [5] = max{ f[i-1] [5], f[i-1] [3] + x, f[i-1] [1] + 2x }</p>
+<p>f[i] [7] = max{ f[i-1] [7], f[i-1] [5] + x, f[i-1] [3] + 2x, f[i-1] [1] + 3x }</p>
+</blockquote>
+<p>这样算了重合的部分，不是我们想要的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 只需要把Backpack II中关键一行改为</span></span><br><span class="line"><span class="comment">// dp[i][j] = Math.max(dp[i][j],dp[i][j - A[i-1]] + V[i-1])</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">backPackII</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span>[] A, <span class="keyword">int</span>[] V)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= m; i++) {</span><br><span class="line">            dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> res = Integer.MIN_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">                <span class="comment">//不放</span></span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">              	<span class="comment">//放</span></span><br><span class="line">                <span class="keyword">if</span> (j &gt;= A[i - <span class="number">1</span>]) {</span><br><span class="line">                    dp[i][j] = Math.max(dp[i][j],dp[i][j - A[i-<span class="number">1</span>]] + V[i-<span class="number">1</span>]);</span><br><span class="line">                }</span><br><span class="line">                res = Math.max(res, dp[i][j]);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>可以优化到一维，这边的细节是：用的不是两个old值，而是old+new，可以只开一个数组，old+new去覆盖本来的old，这就需要时从前往后来，而不是逆序，如图</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304170257368.png" alt="压缩成一维"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">backPackIII</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span>[] A, <span class="keyword">int</span>[] V)</span> </span>{</span><br><span class="line">       <span class="keyword">int</span> n = A.length;</span><br><span class="line">       <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[m + <span class="number">1</span>];</span><br><span class="line">       dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">int</span> res = Integer.MIN_VALUE;</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">               <span class="keyword">if</span> (j &gt;= A[i - <span class="number">1</span>]) {	<span class="comment">//上面改成j直接从A[i-1]出发更好</span></span><br><span class="line">                 <span class="comment">//old = dp[j],new = dp[j - A[i - 1] + V[i - 1]],加起来覆盖本来的old</span></span><br><span class="line">                 <span class="comment">//old相当于原来的dp[i-1][j],dp[j - A[i - 1]相当于dp[i][j - A[i - 1]</span></span><br><span class="line">                 <span class="comment">//这边就不需要倒着更新，因为和二维的状态转移方程是一致的，我们需要的就是第i层的</span></span><br><span class="line">                 <span class="comment">//这里不动看下01背包那边的注释就懂了</span></span><br><span class="line">                   dp[j] = Math.max(dp[j], dp[j - A[i - <span class="number">1</span>] + V[i - <span class="number">1</span>]]);</span><br><span class="line">               }</span><br><span class="line">               res = Math.max(res, dp[j]);</span><br><span class="line">           }</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> res;</span><br><span class="line">   }</span><br></pre></td></tr></table></figure>
+
+
+
+<p>TBD：多重背包（这个优化思想比较巧妙）、分组背包 </p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Dynamic-programming/">#Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/12/02/BinaryIndexTree/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">树状数组</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/12/02/dp-game/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">博弈型动态规划</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%9A%E8%83%8C%E5%8C%85%E5%9E%8B"><span class="nav-text">动态规划：背包型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%8101%E8%83%8C%E5%8C%85%E2%80%93%E6%B1%82max"><span class="nav-text">1、01背包–求max</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%8101%E8%83%8C%E5%8C%85%E2%80%93%E6%B1%82%E6%95%B0%E9%87%8F"><span class="nav-text">2、01背包–求数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81LintCode-564-Backpack-VI"><span class="nav-text">3、LintCode 564: Backpack VI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81LintCode-125-Backpack-II"><span class="nav-text">4、LintCode 125: Backpack II</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85"><span class="nav-text">5、完全背包</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

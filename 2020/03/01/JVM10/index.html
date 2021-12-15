@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            CMS再优化与频繁FullGC问题分析 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">CMS再优化与频繁FullGC问题分析</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-03-01 23:15:48</span>
+        <span class="mobile">2020-03-01 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/JVM/">JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="CMS再优化与频繁Full-GC问题分析"><a href="#CMS再优化与频繁Full-GC问题分析" class="headerlink" title="CMS再优化与频繁Full GC问题分析"></a>CMS再优化与频繁Full GC问题分析</h1><h2 id="一、CMS深度优化技巧"><a href="#一、CMS深度优化技巧" class="headerlink" title="一、CMS深度优化技巧"></a>一、CMS深度优化技巧</h2><h3 id="1、CMS内存碎片问题"><a href="#1、CMS内存碎片问题" class="headerlink" title="1、CMS内存碎片问题"></a>1、CMS内存碎片问题</h3><p>最常见的优化是用工具判断出来每次Young GC后存活对象有多少，Eden区域过小，自然会导致频繁的触发Young GC，Survivor区域过小，自然会导致经常在Young GC之后存活对象其实也没多少，但就是Survivor区域放不下，通过调整区域比例，避免对象快速进入老年代。这是优化的第一步，也是最容易想到的。</p>
+<p>此外，比如老年代有2G的内存，其中1.5G是连续可用内存，0.5G是很多内存碎片。本来老年代如果都是连续空内存的话，那么可能可以对象占用到将近2G才会触发Full GC。结果现在就是对象占用到了1.5G就需要触发Full GC了，剩下0.5G是没法放任何对象的。所以，在第一步降低了Full GC频率之后，由于老年代使用CMS，它的默认碎片整理次数是每5次Full GC后整理一下内存碎片，务必设置如下参数-XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=0”，每次Full GC后都整理一下内存碎片，否则如果每次Full GC过后，都造成老年代里很多内存碎片，那么必然导致下一次Full GC更快到来。</p>
+<h3 id="2、CMS深度优化"><a href="#2、CMS深度优化" class="headerlink" title="2、CMS深度优化"></a>2、CMS深度优化</h3><p>引入两外两个参数。</p>
+<p>第一个参数是<code>-XX:+CMSParallelInitialMarkEnabled</code>。在使用CMS时的初始标记阶段，是会进行<code>Stop the World</code>的，会导致系统停顿，可以打开参数，这个参数会在CMS垃圾回收器的“初始标记”阶段开启多线程并发执行，可以尽可能优化这个阶段的性能，减少<code>Stop the World</code>的时间，</p>
+<p>另外一个参数是<code>-XX:+CMSScavengeBeforeRemark</code>，这个参数会在CMS的重新标记阶段之前，先尽量执行一次Young GC。CMS的重新标记也是会Stop the World的，所以所以如果在重新标记之前，先执行一次Young GC，就会回收掉一些年轻代里没有人引用的对象。所以如果先提前回收掉一些对象，那么在CMS的重新标记阶段就可以少扫描一些对象，此时就可以提升CMS的重新标记阶段的性能，减少他的耗时。</p>
+<p>小型业务JVM模版</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms4096M -Xmx4096M -Xmn3072M -Xss1M  -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFaction=92 -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=0 -XX:+CMSParallelInitialMarkEnabled -XX:+CMSScavengeBeforeRemark</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、四大频繁Full-GC原因分析"><a href="#二、四大频繁Full-GC原因分析" class="headerlink" title="二、四大频繁Full GC原因分析"></a>二、四大频繁Full GC原因分析</h2><h3 id="1、大量反射代码使永久代类太多导致频繁Full-GC"><a href="#1、大量反射代码使永久代类太多导致频繁Full-GC" class="headerlink" title="1、大量反射代码使永久代类太多导致频繁Full GC"></a>1、大量反射代码使永久代类太多导致频繁Full GC</h3><p>频繁Full GC不光是老年代触发的，有时候也会因为Metaspace区域的类太多而触发，也是就是Metaspace区域被占满，Full GC 的时候回收其中部分类，我们想了解Metaspace为什么被频繁占满，是哪个类不停的被加载进入，就可以使用下面的两个参数，很有用！</p>
+<p>第一个参数是<code>-XX:TraceClassLoading</code>,第二个参数是<code>-XX:TraceClassUnloading</code>，分别追踪类加载和类卸载的情况，他会通过日志打印出来JVM中加载了哪些类，卸载了哪些类。对于这些类，通过查资料就会明白了，有一个案例说是java中反射时加载的类，执行反射代码时，JVM会在你反射调用一定次数之后就动态生成一些类。<strong>只要记住一个结论：如果你在代码里大量用了类似上面的反射的东西，那么JVM就是会动态的去生成一些类放入Metaspace区域里的。</strong></p>
+<h4 id="（1）为什么会这些类会被放进Metaspace呢？"><a href="#（1）为什么会这些类会被放进Metaspace呢？" class="headerlink" title="（1）为什么会这些类会被放进Metaspace呢？"></a>（1）为什么会这些类会被放进Metaspace呢？</h4><p>反射过程中生成的类的Class对象，都是软引用的，正常情况下不会被回收！（什么是Class对象？类自己本身就是一个对象，就是一个Class的对象，一个Class对象代表了一个类，这个Class对象能够派生出很多的实例）</p>
+<h4 id="（2）什么时候软引用会被回收呢？"><a href="#（2）什么时候软引用会被回收呢？" class="headerlink" title="（2）什么时候软引用会被回收呢？"></a>（2）什么时候软引用会被回收呢？</h4><p>通过这个公式来判断<code>clock - timestamp &lt;= freespace * SoftRefLRUPolicyMSPerMB</code>,“clock - timestamp”代表了一个软引用对象他有多久没被访问过了，freespace代表JVM中的空闲内存空间，SoftRefLRUPolicyMSPerMB代表每一MB空闲内存空间可以允许SoftReference对象存活多久,默认是1000毫秒。假如JVM空闲空间为3000MB，那么一个软引用的对象最多可以活50分钟（3000*1000ms）。</p>
+<h4 id="（3）解决方案"><a href="#（3）解决方案" class="headerlink" title="（3）解决方案"></a>（3）解决方案</h4><p>按理说JVM应该会随着反射代码的执行，动态的创建一些奇怪的类，他们的Class对象都是软引用的，正常情况下不会被回收，但是也不应该快速增长才对，问题出在<code>SoftRefLRUPolicyMSPerMB</code>这个参数，别误把它设置为0，一旦这个参数设置为0，任何软引用对象就可以尽快释放掉，但这样并不会提高内存利用率，JVM好不容易给你弄出来100个奇怪的类，结果因为瞎设置软引用的参数，导致突然一次GC就给你回收掉几十个类，接着JVM在反射代码执行的过程中，就会继续创建这种奇怪的类，在JVM的机制之下，会导致这种奇怪类越来越多。</p>
+<p>解决方案：在有大量反射代码的场景下，只要把<code>-XX:SoftRefLRUPolicyMSPerMB=0</code>，这个参数设置大一些即可，千万别让一些新手同学设置为0，可以设置个1000，2000，3000，或者5000毫秒，都可以。提高这个数值，就是让反射过程中JVM自动创建的软引用的一些类的Class对象不要被随便回收，优化这个参数之后，就可以看到系统稳定运行了。</p>
+<h3 id="2、大对象导致频繁Full-GC"><a href="#2、大对象导致频繁Full-GC" class="headerlink" title="2、大对象导致频繁Full GC"></a>2、大对象导致频繁Full GC</h3><p>场景是这样的，有一个线上系统一天频繁Full GC数十次，开始以为是每次Young GC后的存活对象较多，Survivor区域太小，放不下了，但通过jstat工具观察，发现每次Young GC后的对象很少，每次存活也就几十MB，且通过jstat追踪观察，并不是每次Young GC后都有几十MB对象进入老年代的，而是偶尔一次Young GC才会有几十MB对象进入老年代，记住，是偶尔一次！但是不知道为什么突然有几百MB对象进入老年代中，所以才导致Young GC偶尔一次让几十MB对象升入老年代，平均30分钟左右就会触发一次Full GC！这个几百MB的对象就是<strong>大对象</strong>，我们想要知道大对象是谁，可以利用堆内存快照工具jmap，通过使用这个工具我们发现是几个Map之类的数据结构，是从数据库中出来的，通过排查SQL语句，发现有一句<code>select * from tbl</code>，根本没使用where语句，导致它把表中几十万条数据查出来，搞出来一个大对象。</p>
+<p><strong>解决方案</strong>，一是对SQL语句的处理，不要一次性查表里全部数据，二是给新生代分配更多的空间，毕竟每次到老年代的对象较少而且频率很低，同时给老年代调整了参数“-XX:CMSInitiatingOccupancyFraction=92”，避免老年代仅仅占用68%就触发GC。</p>
+<h3 id="3、致命代码：-System-gc-导致频繁Full-GC"><a href="#3、致命代码：-System-gc-导致频繁Full-GC" class="headerlink" title="3、致命代码：**System.gc()**导致频繁Full GC"></a>3、致命代码：**System.gc()**导致频繁Full GC</h3><p>**<code>System.gc()</code>**不能随便瞎写，它每次执行都会指挥JVM去尝试执行一次Full GC，连带年轻代、老年代、永久代都会去回收，一秒一次Full GC太可怕了！如果写了这个代码，平时系统运行时，访问量很低，基本还不会出大乱子！但是在大促活动的时候，访问量一高，立马由<code>System.gc()</code>代码频繁触发了Full GC，导致了这个系统直接被卡死了！</p>
+<p><strong>解决方案</strong>：一是平时写代码不要用<code>System.gc()</code>去随便触发GC，二是在JVM参数中加入<code>-XX:+DisableExplicitGC</code>,这个参数的意思就是禁止显式执行GC，不允许你来通过代码触发GC。</p>
+<h3 id="4、内存泄漏引起CPU高负载导致频繁Full-GC"><a href="#4、内存泄漏引起CPU高负载导致频繁Full-GC" class="headerlink" title="4、内存泄漏引起CPU高负载导致频繁Full GC"></a>4、内存泄漏引起CPU高负载导致频繁Full GC</h3><p>线上系统的机器CPU负载过高的两个常见的场景。</p>
+<p><strong>第一个场景</strong>，是你自己在系统里创建了大量的线程，这些线程同时并发运行，而且工作负载都很重，过多的线程同时并发运行就会导致你的机器CPU负载过高。</p>
+<p><strong>第二个场景</strong>，就是你的机器上运行的JVM在执行频繁的Full GC，Full GC是非常耗费CPU资源的，他是一个非常重负载的过程。所以一旦你的JVM有频繁的Full GC，带来的一个明显的感觉，一个是系统可能时不时会卡死。这可能与内存泄漏有关。</p>
+<p><strong>内存泄漏问题</strong>，就是内存里驻留了大量的对象塞满了老年代，导致稍微有一些对象进入老年代就会引发Full GC，而且Full GC之后还不会回收掉老年代里大量的对象，只是回收一小部分而已！（可以使用mat分析内存泄漏）</p>
+<p>这个内存泄漏问题可能是没有限制JVM本次缓存大小，没有使用LRU之类的算法定期淘汰一些缓存里的数据，导致缓存在内存里的对象越来越多，进而造成了内存泄漏。</p>
+<p>解决问题很简单，只要使用类似EHCache之类的缓存框架就可以了，他会固定最多缓存多少个对象，定期淘汰删除掉一些不怎么访问的缓存，以便于新的数据可以进入缓存中。</p>
+<h2 id="三、JVM优化阶段性总结"><a href="#三、JVM优化阶段性总结" class="headerlink" title="三、JVM优化阶段性总结"></a>三、JVM优化阶段性总结</h2><h3 id="问：如何设置JVM参数？"><a href="#问：如何设置JVM参数？" class="headerlink" title="问：如何设置JVM参数？"></a>问：如何设置JVM参数？</h3><h4 id="1、初步估计"><a href="#1、初步估计" class="headerlink" title="1、初步估计"></a>1、初步估计</h4><p>首先根据拥有的设备、每秒请求量、每秒创建多少个对象以及对象的大小等来估算1秒钟会占用多少内存空间，估算多久发生一次Young GC、每次存活下来多少对象，需要多少Survivor区，接着要去看老年代中对象的增长速度，多久发生一次Full GC，这样初步估算后去分配堆内存中新生代和老年代的空间，以及新生代中区域的比例。进入压测阶段。</p>
+<h4 id="2、压测后调整"><a href="#2、压测后调整" class="headerlink" title="2、压测后调整"></a>2、压测后调整</h4><p>在这里要分析Eden区对象的增长速度有多快，Young GC后有多少对象存活，Young GC频率和耗时，老年代对象增长速率，Full GC后有多少对象存活，Full GC的频率和耗时。压测完全可以通过jstat来看，然后我们调整参数，找到一些问题，主要还是避免对象频繁进入老年代引起频繁的Full GC。</p>
+<h4 id="3、系统上线后监控"><a href="#3、系统上线后监控" class="headerlink" title="3、系统上线后监控"></a>3、系统上线后监控</h4><p>系统上线后要使用监控工具如Zabbix、Open-Falcon等工具来监控运行情况。如果出现了CPU负载过高、频繁Full GC或者系统无法处理请求这种现象，都要去考虑是不是Full GC太频繁了。</p>
+<p>频繁Full GC 的原因就是上面四个大标题</p>
+<ul>
+<li>大量使用反射导致Metaspace拥挤发生频繁的Full GC。</li>
+<li>大对象可能引起频繁Full GC，需要去修改代码和JVM参数。</li>
+<li>可能是内存泄漏引起的，使用MAT工具分析堆内存快照。</li>
+<li>最后一种是使用了System.gc()方法，并且在JVM参数中也没有添加禁止显式执行gc的参数。</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/JVM/">#JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/03/02/JVM11/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">JVM工具使用</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/02/28/JVM9/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">OOM问题的分析与解决</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CMS%E5%86%8D%E4%BC%98%E5%8C%96%E4%B8%8E%E9%A2%91%E7%B9%81Full-GC%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="nav-text">CMS再优化与频繁Full GC问题分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81CMS%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%8C%96%E6%8A%80%E5%B7%A7"><span class="nav-text">一、CMS深度优化技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81CMS%E5%86%85%E5%AD%98%E7%A2%8E%E7%89%87%E9%97%AE%E9%A2%98"><span class="nav-text">1、CMS内存碎片问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81CMS%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%8C%96"><span class="nav-text">2、CMS深度优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%9B%9B%E5%A4%A7%E9%A2%91%E7%B9%81Full-GC%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90"><span class="nav-text">二、四大频繁Full GC原因分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%A4%A7%E9%87%8F%E5%8F%8D%E5%B0%84%E4%BB%A3%E7%A0%81%E4%BD%BF%E6%B0%B8%E4%B9%85%E4%BB%A3%E7%B1%BB%E5%A4%AA%E5%A4%9A%E5%AF%BC%E8%87%B4%E9%A2%91%E7%B9%81Full-GC"><span class="nav-text">1、大量反射代码使永久代类太多导致频繁Full GC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E8%BF%99%E4%BA%9B%E7%B1%BB%E4%BC%9A%E8%A2%AB%E6%94%BE%E8%BF%9BMetaspace%E5%91%A2%EF%BC%9F"><span class="nav-text">（1）为什么会这些类会被放进Metaspace呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%BD%AF%E5%BC%95%E7%94%A8%E4%BC%9A%E8%A2%AB%E5%9B%9E%E6%94%B6%E5%91%A2%EF%BC%9F"><span class="nav-text">（2）什么时候软引用会被回收呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">（3）解决方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%A4%A7%E5%AF%B9%E8%B1%A1%E5%AF%BC%E8%87%B4%E9%A2%91%E7%B9%81Full-GC"><span class="nav-text">2、大对象导致频繁Full GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E8%87%B4%E5%91%BD%E4%BB%A3%E7%A0%81%EF%BC%9A-System-gc-%E5%AF%BC%E8%87%B4%E9%A2%91%E7%B9%81Full-GC"><span class="nav-text">3、致命代码：**System.gc()**导致频繁Full GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E5%BC%95%E8%B5%B7CPU%E9%AB%98%E8%B4%9F%E8%BD%BD%E5%AF%BC%E8%87%B4%E9%A2%91%E7%B9%81Full-GC"><span class="nav-text">4、内存泄漏引起CPU高负载导致频繁Full GC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81JVM%E4%BC%98%E5%8C%96%E9%98%B6%E6%AE%B5%E6%80%A7%E6%80%BB%E7%BB%93"><span class="nav-text">三、JVM优化阶段性总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%EF%BC%9A%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AEJVM%E5%8F%82%E6%95%B0%EF%BC%9F"><span class="nav-text">问：如何设置JVM参数？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81%E5%88%9D%E6%AD%A5%E4%BC%B0%E8%AE%A1"><span class="nav-text">1、初步估计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81%E5%8E%8B%E6%B5%8B%E5%90%8E%E8%B0%83%E6%95%B4"><span class="nav-text">2、压测后调整</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81%E7%B3%BB%E7%BB%9F%E4%B8%8A%E7%BA%BF%E5%90%8E%E7%9B%91%E6%8E%A7"><span class="nav-text">3、系统上线后监控</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

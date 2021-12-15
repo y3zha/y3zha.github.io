@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            HashMap 源码解读 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">HashMap 源码解读</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-09-12 23:15:48</span>
+        <span class="mobile">2019-09-12 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Source-Code/">Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="HashMap源码解读"><a href="#HashMap源码解读" class="headerlink" title="HashMap源码解读"></a>HashMap源码解读</h1><p>JDK 1.7中使用的是数组+链表，就是大学里数据结构课本上的那种实现</p>
+<p>JDK 1.8中，HashMap底层的数据结构是：数组+链表+红黑树。其中当链表的长度大于等于 8 时，链表会转化成红黑树，当红黑树的大小小于等于 6 时，红黑树会转化成链表，整体的数据结构如下:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305234952852.png"
+                     
+                ></p>
+<p>图中左边竖着的是 HashMap 的数组结构，数组的元素可能是单个 Node，也可能是个链表， 也可能是个红黑树</p>
+<p>换一张图，HashMap内部的结构，它可以看作是数组(Node[] table)和链表结合组成的复合结构，数组被分为一个个桶(bucket)，通过哈希值决定了键值对在这个数组的寻址；哈希值相同的键值对，则以链表形式存储你可以参考下面的示意图。这里需要注意的是，如果链表大小超过阈值(TREEIFY_THRESHOLD, 8)，图中的链表就会被改造为红黑树。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191211210845932.png"
+                     
+                ></p>
+<h2 id="一、类注释"><a href="#一、类注释" class="headerlink" title="一、类注释"></a>一、类注释</h2><ul>
+<li>允许 null 值，不同于 HashTable，是线程不安全的</li>
+<li>load factor(影响因子) 默认值是 0.75，是均衡了时间和空间损耗算出来的值，较高的值会减少空间开销(扩容减少，数组大小增长速度变慢)，但增加了查找成本(hash 冲突增加，链表长度变长)，不扩容的条件：数组容量 &gt; 需要的数组大小 /load factor;</li>
+<li>如果有很多数据需要储存到 HashMap 中，建议 HashMap 的容量一开始就设置成足够的大小，这样可以防止在其过程中不断的扩容，影响性能;</li>
+<li>在迭代过程中，如果 HashMap 的结构被修改，会快速失败。</li>
+</ul>
+<h2 id="二、常见属性"><a href="#二、常见属性" class="headerlink" title="二、常见属性"></a>二、常见属性</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//初始容量为16</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>; <span class="comment">// aka 16</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//最大容量</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXIMUM_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//负载因子默认值</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶上的链表长度大于等于8时，链表转化成红黑树</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TREEIFY_THRESHOLD = <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶上的红黑树大小小于等于6时，红黑树转化成链表</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNTREEIFY_THRESHOLD = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//当数组容量大于 64 时，链表才会转化成红黑树</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MIN_TREEIFY_CAPACITY = <span class="number">64</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//记录迭代过程中 HashMap 结构是否发生变化，如果有变化，迭代时会 fail-fast</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> modCount;</span><br><span class="line"></span><br><span class="line"><span class="comment">//HashMap 的实际大小，可能不准(因为当你拿到这个值的时候，可能又发生了变化)</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line"><span class="comment">//存放数据的数组</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩容的门槛，有两种情况</span></span><br><span class="line"><span class="comment">// 如果初始化时，给定数组大小的话，通过 tableSizeFor 方法计算，数组大小永远接近于 2 的幂次方（有一个公式的）</span></span><br><span class="line"><span class="comment">// 如果是通过 resize 方法进行扩容，实际使用长度 = 数组容量 * 0.75</span></span><br><span class="line"><span class="keyword">int</span> threshold;</span><br><span class="line"></span><br><span class="line"><span class="comment">//链表的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">  </span><br><span class="line"><span class="comment">//红黑树的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、新增节点"><a href="#三、新增节点" class="headerlink" title="三、新增节点"></a>三、新增节点</h2><p>新增的步骤如下：</p>
+<ol>
+<li>空数组有没有初始化，没有的话需要初始化</li>
+<li>如果通过 key 的 hash 能够直接找到值，跳转到第6步，否则跳到第3步</li>
+<li>如果 hash 冲突，两种解决方案：链表 or 红黑树</li>
+<li>如果是链表，递归循环，把新元素追加到尾巴</li>
+<li>如果是红黑树，调用红黑树新增的方法</li>
+<li>通过 2、4、5 将新元素追加成功，再根据 onlyIfAbsent 判断是否需要覆盖</li>
+<li>判断是否需要扩容，需要扩容进行扩容，结束</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305235017556.png"
+                     
+                ></p>
+<p>总结：要把键值对&lt;key,value&gt;放进去，首先会根据key计算出它的hash值，应该放到哪个位置，如果一开始数组是空的，那就会先<code>resize</code>初始化数组，初始化完后，就要去放键值对了，找到计算出的位置，如果那个索引位置是空的，就会直接新建Node，那就直接放在索引位置上，如果有值了，发生hash冲突了，那就要进行处理，判断是以红黑树还是链表的方式新增，递增完要更新版本号，并且如果HashMap的大小大于阈值了，就要resize，源码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="comment">// 入参 hash:通过 hash 算法计算出来的值。</span></span><br><span class="line"><span class="comment">// 入参 onlyIfAbsent:false 表示即使 key 已经存在了，仍然会用新值覆盖原来的值，默认为 false</span></span><br><span class="line">  <span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent, <span class="keyword">boolean</span> evict)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">// n 表示数组的长度，i 为数组索引下标，p 为 i 下标位置的 Node 值</span></span><br><span class="line">      Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; <span class="keyword">int</span> n, i;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">//如果数组为空，使用 resize 方法初始化</span></span><br><span class="line">      <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</span><br><span class="line">          n = (tab = resize()).length;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">// 如果当前索引位置是空的，直接生成新的节点在当前索引位置上</span></span><br><span class="line">      <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>)</span><br><span class="line">          tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">    </span><br><span class="line">      <span class="comment">// 如果当前索引位置有值(hash 冲突了),如何解决 hash 冲突</span></span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">        	<span class="comment">// e为当前节点的临时变量</span></span><br><span class="line">          Node&lt;K,V&gt; e; K k;</span><br><span class="line">        </span><br><span class="line">        	<span class="comment">// 如果 key 的 hash 和值都相等，直接把当前下标位置的 Node 值赋值给临时变量</span></span><br><span class="line">          <span class="keyword">if</span> (p.hash == hash &amp;&amp; ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">              e = p;</span><br><span class="line">        </span><br><span class="line">        	<span class="comment">// 如果是红黑树，使用红黑树的方式新增</span></span><br><span class="line">          <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)</span><br><span class="line">              e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</span><br><span class="line">        </span><br><span class="line">        	<span class="comment">// 否则是个链表，把新节点放到链表的尾端</span></span><br><span class="line">          <span class="keyword">else</span> &#123;</span><br><span class="line">            	<span class="comment">//自旋操作</span></span><br><span class="line">              <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</span><br><span class="line">                	<span class="comment">// e = p.next 表示从头开始，遍历链表</span></span><br><span class="line">								<span class="comment">// p.next == null 表明 p 是链表的尾节点</span></span><br><span class="line">                  <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    	<span class="comment">// 把新节点放到链表的尾部</span></span><br><span class="line">                      p.next = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">                    	<span class="comment">// 当链表的长度大于等于 8 时，链表转红黑树</span></span><br><span class="line">                      <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">// -1 for 1st</span></span><br><span class="line">                          treeifyBin(tab, hash);</span><br><span class="line">                      <span class="keyword">break</span>;</span><br><span class="line">                  &#125;</span><br><span class="line">                	<span class="comment">// 链表遍历过程中，发现有元素和新增的元素相等，结束循环</span></span><br><span class="line">                  <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">                      ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                      <span class="keyword">break</span>;</span><br><span class="line">                	<span class="comment">//更改循环的当前元素，使 p 在遍历过程中，一直往后移动。</span></span><br><span class="line">                  p = e;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        	<span class="comment">// 说明新节点的新增位置已经找到了</span></span><br><span class="line">          <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// existing mapping for key</span></span><br><span class="line">              V oldValue = e.value;</span><br><span class="line">            	<span class="comment">// 当 onlyIfAbsent 为 false 时，才会覆盖值</span></span><br><span class="line">              <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>)</span><br><span class="line">                  e.value = value;</span><br><span class="line">              afterNodeAccess(e);</span><br><span class="line">            	<span class="comment">// 返回老值</span></span><br><span class="line">              <span class="keyword">return</span> oldValue;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    	<span class="comment">// 记录 HashMap 的数据结构发生了变化</span></span><br><span class="line">      ++modCount;</span><br><span class="line">    	<span class="comment">//如果 HashMap 的实际大小大于扩容的门槛，开始扩容</span></span><br><span class="line">      <span class="keyword">if</span> (++size &gt; threshold)</span><br><span class="line">          resize();</span><br><span class="line">      afterNodeInsertion(evict);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1、链表新增节点"><a href="#1、链表新增节点" class="headerlink" title="1、链表新增节点"></a>1、链表新增节点</h3><p>链表的新增比较简单，就是把当前节点追加到链表的尾部，和 LinkedList 的追加实现一样的。当链表长度大于等于 8 时，此时的链表就会转化成红黑树，转化的方法是<code>treeifyBin</code>（treeify是树化的意思），<strong>此方法有一个判断，当链表长度大于等于 8，并且整个数组大小大于 64 时，才会转成红黑树，当数组大小小于 64 时，只会触发扩容，不会转化成红黑树</strong>，转化成红黑树的过程也比较简单，具体转 化的过程源码可以去 github:<a class="link"   target="_blank" rel="noopener" href="https://github.com/luanqiu/java8" >https://github.com/luanqiu/java8<i class="fas fa-external-link-alt"></i></a> 上面去查看。</p>
+<p>可能面试的时候，<strong>有人问你为什么是 8</strong>，这个答案在源码中注释有说，中文翻译过来大概的意思是：</p>
+<blockquote>
+<p>链表查询的时间复杂度是 O (n)，红黑树的查询复杂度是 O (log (n))。在链表数据不多的时候， 使用链表进行遍历也比较快，只有当链表数据比较多的时候，才会转化成红黑树，但红黑树需要的占用空间是链表的 2 倍（源码注释中写的），考虑到转化时间和空间损耗，所以要定义出这个转化的边界值：</p>
+<p>在设计 8 这个值的时候，参考了泊松分布概率函数，由泊松分布中得出结论，链表各个长度的命中概率为:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">* <span class="number">0</span>:    <span class="number">0.60653066</span></span><br><span class="line">* <span class="number">1</span>:    <span class="number">0.30326533</span></span><br><span class="line">* <span class="number">2</span>:    <span class="number">0.07581633</span></span><br><span class="line">* <span class="number">3</span>:    <span class="number">0.01263606</span></span><br><span class="line">* <span class="number">4</span>:    <span class="number">0.00157952</span></span><br><span class="line">* <span class="number">5</span>:    <span class="number">0.00015795</span></span><br><span class="line">* <span class="number">6</span>:    <span class="number">0.00001316</span></span><br><span class="line">* <span class="number">7</span>:    <span class="number">0.00000094</span></span><br><span class="line">* <span class="number">8</span>:    <span class="number">0.00000006</span></span><br></pre></td></tr></table></figure>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191211204357542.png"
+                     
+                ></p>
+<p>当链表的长度是 8 的时候，出现的概率是 0.00000006，不到千万分之一，所以说正常情况下，链表的长度不可能到达 8 ，而一旦到达 8 时，肯定是 hash 算法出了问题，所以在这种情况下，为了让 HashMap 仍然有较高的查询性能，所以让链表转化成红黑树，我们正常写代码，使用 HashMap 时，几乎不会碰到链表转化成红黑树的情况，毕竟概念只有千万分之 一。</p>
+</blockquote>
+<h3 id="2、红黑树新增节点"><a href="#2、红黑树新增节点" class="headerlink" title="2、红黑树新增节点"></a>2、红黑树新增节点</h3><ul>
+<li><p>首先判断新增的节点在红黑树上是不是已经存在，判断手段有如下两种：</p>
+<ul>
+<li>如果节点没有实现 Comparable 接口，使用 equals 进行判断;</li>
+<li>如果节点自己实现了 Comparable 接口，使用 compareTo 进行判断。</li>
+</ul>
+</li>
+<li><p>新增的节点如果已经在红黑树上，直接返回;不在的话，判断新增节点是在当前节点的左边还是右边，左边值小，右边值大;</p>
+</li>
+<li><p>自旋递归 1 和 2 步，直到当前节点的左边或者右边的节点为空时，停止自旋，当前节点即为我们新增节点的父节点;</p>
+</li>
+<li><p>把新增节点放到当前节点的左边或右边为空的地方，并于当前节点建立父子节点关系;</p>
+</li>
+<li><p>进行着色和旋转，结束。</p>
+</li>
+</ul>
+<p>源码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">   <span class="comment">//入参h为hash值</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> TreeNode&lt;K,V&gt; <span class="title">putTreeVal</span><span class="params">(HashMap&lt;K,V&gt; map, Node&lt;K,V&gt;[] tab,<span class="keyword">int</span> h, K k, V v)</span> </span>&#123;</span><br><span class="line">         Class&lt;?&gt; kc = <span class="keyword">null</span>;</span><br><span class="line">         <span class="keyword">boolean</span> searched = <span class="keyword">false</span>;</span><br><span class="line">     		<span class="comment">//找到根节点</span></span><br><span class="line">         TreeNode&lt;K,V&gt; root = (parent != <span class="keyword">null</span>) ? root() : <span class="keyword">this</span>;</span><br><span class="line">     		<span class="comment">//自旋</span></span><br><span class="line">         <span class="keyword">for</span> (TreeNode&lt;K,V&gt; p = root;;) &#123;</span><br><span class="line">             <span class="keyword">int</span> dir, ph; K pk;</span><br><span class="line">           	<span class="comment">// p hash 值大于 h，说明 p 在 h 的右边（左小右大）</span></span><br><span class="line">             <span class="keyword">if</span> ((ph = p.hash) &gt; h)</span><br><span class="line">                 dir = -<span class="number">1</span>;</span><br><span class="line">           	<span class="comment">// p hash 值小于 h，说明 p 在 h 的左边</span></span><br><span class="line">             <span class="keyword">else</span> <span class="keyword">if</span> (ph &lt; h)</span><br><span class="line">                 dir = <span class="number">1</span>;</span><br><span class="line">           	<span class="comment">// 要放进去key在当前树中已经存在了(equals来判断)</span></span><br><span class="line">             <span class="keyword">else</span> <span class="keyword">if</span> ((pk = p.key) == k || (k != <span class="keyword">null</span> &amp;&amp; k.equals(pk)))</span><br><span class="line">                 <span class="keyword">return</span> p;</span><br><span class="line">           	<span class="comment">// 自己实现的Comparable的话，不能用hashcode比较了，需要用compareTo</span></span><br><span class="line">             <span class="keyword">else</span> <span class="keyword">if</span> ((kc == <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">                       <span class="comment">// 得到key的Class类型，如果key没有实现Comparable就是null</span></span><br><span class="line">                       (kc = comparableClassFor(k)) == <span class="keyword">null</span>) ||</span><br><span class="line">                      	<span class="comment">//当前节点pk和入参k不等</span></span><br><span class="line">                       (dir = compareComparables(kc, k, pk)) == <span class="number">0</span>) &#123;</span><br><span class="line">                 <span class="keyword">if</span> (!searched) &#123;</span><br><span class="line">                     TreeNode&lt;K,V&gt; q, ch;</span><br><span class="line">                     searched = <span class="keyword">true</span>;</span><br><span class="line">                     <span class="keyword">if</span> (((ch = p.left) != <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">                          (q = ch.find(h, k, kc)) != <span class="keyword">null</span>) ||</span><br><span class="line">                         ((ch = p.right) != <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">                          (q = ch.find(h, k, kc)) != <span class="keyword">null</span>))</span><br><span class="line">                         <span class="keyword">return</span> q;</span><br><span class="line">                 &#125;</span><br><span class="line">                 dir = tieBreakOrder(k, pk);</span><br><span class="line">             &#125;</span><br><span class="line"></span><br><span class="line">             TreeNode&lt;K,V&gt; xp = p;</span><br><span class="line">           	<span class="comment">//找到和当前hashcode值相近的节点(当前节点的左右子节点其中一个为空即可)</span></span><br><span class="line">             <span class="keyword">if</span> ((p = (dir &lt;= <span class="number">0</span>) ? p.left : p.right) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                 Node&lt;K,V&gt; xpn = xp.next;</span><br><span class="line">               	<span class="comment">//生成新的节点</span></span><br><span class="line">                 TreeNode&lt;K,V&gt; x = map.newTreeNode(h, k, v, xpn);</span><br><span class="line">               	<span class="comment">//把新节点放在当前子节点为空的位置上</span></span><br><span class="line">                 <span class="keyword">if</span> (dir &lt;= <span class="number">0</span>)</span><br><span class="line">                     xp.left = x;</span><br><span class="line">                 <span class="keyword">else</span></span><br><span class="line">                     xp.right = x;</span><br><span class="line">               	<span class="comment">//当前节点和新节点建立父子，前后关系</span></span><br><span class="line">                 xp.next = x;</span><br><span class="line">                 x.parent = x.prev = xp;</span><br><span class="line">                 <span class="keyword">if</span> (xpn != <span class="keyword">null</span>)</span><br><span class="line">                     ((TreeNode&lt;K,V&gt;)xpn).prev = x;</span><br><span class="line">               	<span class="comment">//balanceInsertion 对红黑树进行着色或旋转，以达到更多的查找效率</span></span><br><span class="line">               	<span class="comment">//着色:新节点总是为红色;如果新节点的父亲是黑色，则不需要重新着色</span></span><br><span class="line">               	<span class="comment">//如果父亲是红色，则只能是黑色</span></span><br><span class="line">               	<span class="comment">//旋转: 父亲是红色，叔叔是黑色时，进行旋转</span></span><br><span class="line">               	<span class="comment">//如果当前节点是父亲的右节点，则进行左旋 </span></span><br><span class="line">               	<span class="comment">//如果当前节点是父亲的左节点，则进行右旋</span></span><br><span class="line">                 <span class="comment">//moveRootToFront 方法是把算出来的root放到根节点上</span></span><br><span class="line">                 moveRootToFront(tab, balanceInsertion(root, x));</span><br><span class="line">                 <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<p>一般只会问到新增节点到红黑树上大概是什么样的一个过程，着色和旋转的细节不会问，因为很难说清楚，但我们要清楚<strong>着色指的是给红黑树的节点着上红色或黑色</strong>，<strong>旋转是为了让红黑树更加平衡，提高查询的效率</strong>，总的来说都是为了满足红黑树的 5 个原则：</p>
+<ul>
+<li>根是与叶子都是黑色</li>
+<li>节点是红色或黑色</li>
+<li>从任一节点到它每个叶子的所有简单路径都包含相同数目的黑色节点</li>
+<li>从每个叶子到根的所有路径上不能有两个连续的红色节点</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200209232100235.png"
+                     
+                ></p>
+<h2 id="四、查找"><a href="#四、查找" class="headerlink" title="四、查找"></a>四、查找</h2><p>HashMap 的查找主要分为以下三步：</p>
+<ul>
+<li>根据 hash 算法定位数组的索引位置，equals 判断当前节点是否是我们需要寻找的 key，是的话直接返回，不是的话往下。</li>
+<li>判断当前节点有无 next 节点，有的话判断是链表类型，还是红黑树类型。</li>
+<li>分别走链表和红黑树不同类型的查找方法。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200209224029797.png"
+                     
+                ></p>
+<p>链表查找关键源码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 采用自旋方式从链表中查找 key，e 初始为为链表的头节点</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">  <span class="comment">// 如果当前节点 hash 等于 key 的 hash，并且 equals 相等，当前节点就是我们要找的节点</span></span><br><span class="line">  <span class="comment">// 当 hash 冲突时，同一个 hash 值上是一个链表的时候，我们是通过 equals 方法来比较 key是否就是我们要找的那个</span></span><br><span class="line">  <span class="keyword">if</span> (e.hash == hash &amp;&amp;</span><br><span class="line">      ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">    <span class="keyword">return</span> e;</span><br><span class="line">  <span class="comment">// 否则，把当前节点的下一个节点拿出来继续寻找</span></span><br><span class="line">&#125; <span class="keyword">while</span> ((e = e.next) != <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>红黑树查找代码思路：</p>
+<ol>
+<li><p>从根节点递归查找;</p>
+</li>
+<li><p>根据 hashcode，比较查找节点，左边节点，右边节点之间的大小，根本红黑树左小右大的</p>
+<p>特性进行判断;</p>
+</li>
+<li><p>判断查找节点在第 2 步有无定位节点位置，有的话返回，没有的话重复 2，3 两步;</p>
+</li>
+<li><p>一直自旋到定位到节点位置为止。</p>
+</li>
+</ol>
+<p>如果红黑树比较平衡的话，每次查找的次数就是树的深度。</p>
+<h2 id="五、其他问题"><a href="#五、其他问题" class="headerlink" title="五、其他问题"></a>五、其他问题</h2><p>抛两个知乎专栏：<a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/76735726" >专栏1<i class="fas fa-external-link-alt"></i></a>、<a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/87929020" >专栏2<i class="fas fa-external-link-alt"></i></a></p>
+<p>（1）初始容量为什么必须是2的幂次方？能不能传别的数进去？</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>; <span class="comment">// aka 16</span></span><br></pre></td></tr></table></figure>
+
+<p>哈希桶的个数为2的幂次方， 在JDK1.7中，如果还没初始化它就会进行初始化，如果输入其他数字，它初始化的时候会调用一个<code>roundUpToPowerOf2</code>方法，就是把它调整为2的幂。hashCode一共是42亿个数，比如初始一共16个桶，你要把42亿个数放进16个桶里面，如果用取余操作，它缺点很多，比如要对负数额外进行处理，并且处理速度很慢，所以写JDK的有一个很鬼畜的操作，它们用了&amp;，他们将hash值与（length-1）与运算了一下。length是桶的个数（数组长度），它是2的幂次方，比如10000（16的2进制），2^4^-1 = 1111，这个时候把hash值跟它与操作，得到一个二进制数字，就得到了数组下标了，前面都是0根本不用管它。（位运算基本知识：和1做与操作取得这个位上的值）</p>
+<p>（2）JDK7中HashMap的问题</p>
+<blockquote>
+<ul>
+<li>引发HashMap死锁，见<a class="link"   target="_blank" rel="noopener" href="https://coolshell.cn/articles/9606.html" >网页<i class="fas fa-external-link-alt"></i></a></li>
+</ul>
+<p>在多线程环境下，JDK 7中数组+链表的HashMap实现，有可能出现成环，然后就死循环，并且很难重现。<a class="link"   target="_blank" rel="noopener" href="https://www.bilibili.com/video/av71408100?from=search&seid=9615660035464292427" >视频讲解<i class="fas fa-external-link-alt"></i></a>（30分钟左右）</p>
+<p>JAVA 7它是头插法，啥意思呢，比如我们本来有个hash表 某个节点上它是下面这样的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Node1 -&gt; key:1,value:1 -&gt; key:2,value:2 -&gt; key:3,value:3</span><br><span class="line"></span><br><span class="line">经过扩容rehash后，变成了</span><br><span class="line">Node1 -&gt; key:3,value:3</span><br><span class="line">Node2 -&gt; key:2,value:2 -&gt; key:1,value:1</span><br></pre></td></tr></table></figure>
+
+<p>因为它是头插法，我先把key=1的摘下来，插进一个新的节点，然后再把2摘下来，头插刀新的节点，2就变到了1的前面了！那这样一来顺序就反了。在多线程的情况下，线程调度本来就随机的嘛。原先是1-&gt;2，扩容后变为2-&gt;1，这样就可能出现死锁，出现环形链表。正常情况查找元素是找到头，往下挨个找，变成环，就有死循环了，线上系统cpu 100%。</p>
+<ul>
+<li><p>还有一个安全隐患，可以通过精心构造的恶意请求引发Dos</p>
+<p>Tomcat使用了一个hash表来存储http的请求参数，那么就可以构造hashCode值一样的字符串，不断发送请求，这样直接导致hash表退化成链表，链表查找时间复杂度是O(n)，这样大大使得性能损耗， 1.7时通过hashSeeds这么一个补丁，就是对它再hash，来避免，接下来就到了1.8。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191211224529407.png"
+                     
+                ></p>
+</li>
+</ul>
+</blockquote>
+<p>（3）JDK 8中对HashMap的改进</p>
+<blockquote>
+<ul>
+<li><p>数组+链表+红黑树</p>
+</li>
+<li><p>扩容时插入顺序的改进</p>
+<p>JDK 1.7是头插法，1.8改成了尾插把，特别加了个注释preserve order，保持顺序</p>
+</li>
+<li><p>扩容</p>
+<p>之前讲了数组长度为什么是2的幂次方，这里扩容的时候，比如把2^4^扩容成2^5^，就是由1111变为11111，那么hashCode和它与运算，最高位要么多个1，要么多个0，后面四位不变的，那么它针对hash桶上某个index上对应的链表，这个链表会拆分成两部分，一部分留在原地，另一部分被移走了，这边就把这条链表拆分成了高位和低位，判断哪一部分是要移动的，并且移动的时候顺序是保持的，不会再像JDK 7中出现环，完事后，把高位链表和低位链表赋到新的hash桶中的index下去</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191211230350526.png"
+                     
+                ></p>
+</li>
+</ul>
+</blockquote>
+<p>（4）hash方法怎么实现的？为什么要用异或^运算符</p>
+<blockquote>
+<p>JDK 1.8 中，是通过 hashCode() 的高 16 位异或低 16 位实现的：(h = k.hashCode()) ^ (h &gt;&gt;&gt; 16)，主要是从速度，功效和质量来考虑的，减少系统的开销，使用异或保证了对象的 hashCode 的 32 位值只要有一位发生改变，整个 hash() 返回值就会改变。尽可能的减少碰撞。</p>
+</blockquote>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Source-Code/">#Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/09/13/SourceCode-TreeMap/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">TreeMap 源码解读</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/09/11/SourceCode-LinkedList/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">LinkedList 源码解读</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HashMap%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="nav-text">HashMap源码解读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%B1%BB%E6%B3%A8%E9%87%8A"><span class="nav-text">一、类注释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%B8%B8%E8%A7%81%E5%B1%9E%E6%80%A7"><span class="nav-text">二、常见属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%96%B0%E5%A2%9E%E8%8A%82%E7%82%B9"><span class="nav-text">三、新增节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E9%93%BE%E8%A1%A8%E6%96%B0%E5%A2%9E%E8%8A%82%E7%82%B9"><span class="nav-text">1、链表新增节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E7%BA%A2%E9%BB%91%E6%A0%91%E6%96%B0%E5%A2%9E%E8%8A%82%E7%82%B9"><span class="nav-text">2、红黑树新增节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%9F%A5%E6%89%BE"><span class="nav-text">四、查找</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98"><span class="nav-text">五、其他问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text"></span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

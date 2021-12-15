@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            GC场景模拟与日志分析 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">GC场景模拟与日志分析</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-02-27 23:15:48</span>
+        <span class="mobile">2020-02-27 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/JVM/">JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="GC场景模拟与日志分析"><a href="#GC场景模拟与日志分析" class="headerlink" title="GC场景模拟与日志分析"></a>GC场景模拟与日志分析</h1><h2 id="一、Young-GC场景模拟与日志分析"><a href="#一、Young-GC场景模拟与日志分析" class="headerlink" title="一、Young GC场景模拟与日志分析"></a>一、Young GC场景模拟与日志分析</h2><h3 id="1、JVM参数设置"><a href="#1、JVM参数设置" class="headerlink" title="1、JVM参数设置"></a>1、JVM参数设置</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:NewSize=<span class="number">5242880</span>						<span class="comment">//新生代大小为5MB</span></span><br><span class="line">-XX:MaxNewSize=<span class="number">5242880</span>				<span class="comment">//最大新生代大小为5MB</span></span><br><span class="line">-XX:InitialHeapSize=<span class="number">10485760</span>	<span class="comment">//初始堆大小10MB</span></span><br><span class="line">-XX:MaxHeapSize=<span class="number">10485760</span>			<span class="comment">//初始堆最大大小10MB</span></span><br><span class="line">-XX:SurvivorRatio=<span class="number">8</span>						<span class="comment">//新生代5MB，Eden占4MB，两个S区各占0.5MB</span></span><br><span class="line">-XX:PretenureSizeThreshold=<span class="number">10485760</span>		<span class="comment">//大对象阈值为10MB</span></span><br><span class="line">-XX:+UseParNewGC							<span class="comment">//新生代使用PN垃圾回收器</span></span><br><span class="line">-XX:+UseConcMarkSweepGC				<span class="comment">//老年代使用CMS垃圾回收器</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//设置打印JVM日志的参数</span></span><br><span class="line">-XX:+PrintGCDetils			<span class="comment">//打印详细的gc日志</span></span><br><span class="line">-XX:+PrintGCTimeStamps	<span class="comment">//这个参数可以打印出来每次GC发生的时间</span></span><br><span class="line">-Xloggc:gc.log					<span class="comment">//这个参数可以设置将gc日志写入一个磁盘文件</span></span><br></pre></td></tr></table></figure>
+
+<p> <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028163835508.png"
+                     
+                ></p>
+<p>idea参数设置步骤方法</p>
+<h3 id="2、代码测试"><a href="#2、代码测试" class="headerlink" title="2、代码测试"></a>2、代码测试</h3><p>代码如下，<code>new byte[1024 * 1024]</code>这样的代码连续分配了3个数组，每个数组都是1MB（1024B*1024B），通过array1这个局部变量依次引用这三个对象，最后还把array1这个局部变量指向了null。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一行<code>byte[] array1 = new byte[1024 * 1024];</code>代码一旦运行，就会在JVM的Eden区内放入一个1MB的对象，同时在main线程的虚拟机栈中会压入一个main()方法的栈帧，在main()方法的栈帧内部，会有一个“array1”变量，这个变量是指向堆内存Eden区的那个1MB的数组。</p>
+<p>第二行<code> array1 = new byte[1024 * 1024];</code>此时会在堆内存的Eden区中创建第二个数组，并且让局部变量指向第二个数组，然后第一个数组就没人引用了，此时第一个数组就成了没人引用的“垃圾对象”了。</p>
+<p>第三行<code>byte[] array1 = new byte[1024 * 1024];</code>，让array1变量指向了第三个数组，此时前面两个数组都没有人引用了，就都成了垃圾对象。</p>
+<p>第四行<code>array1 = null;</code>array1这个变量什么都不指向了，此时会导致之前创建的3个数组全部变成垃圾对象。最后如图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028164424610.png"
+                     
+                ></p>
+<p>第五行<code>byte[] array2 = new byte[2 * 1024 * 1024];</code>分配一个2MB大小的数组，尝试放入Eden区中,此时Eden放不下了，就会触发Young GC。</p>
+<p>运行程序，得到GC日志文件<code>gc.log</code></p>
+<h3 id="3、日志分析"><a href="#3、日志分析" class="headerlink" title="3、日志分析"></a>3、日志分析</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM (25.212-b10) for bsd-amd64 JRE (1.8.0_212-b10), built on Apr  1 2019 23:10:56 by &quot;java_re&quot; with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)</span><br><span class="line">Memory: 4k page, physical 16777216k(469700k free)</span><br><span class="line"></span><br><span class="line">/proc/meminfo:</span><br><span class="line"></span><br><span class="line">CommandLine flags: -XX:InitialHeapSize=10485760 -XX:MaxHeapSize=10485760 -XX:MaxNewSize=5242880 -XX:NewSize=5242880 -XX:OldPLABSize=16 -XX:PretenureSizeThreshold=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+UseParNewGC </span><br><span class="line"></span><br><span class="line">0.101: [GC (Allocation Failure) 0.102: [ParNew: 3473K-&gt;416K(4608K), 0.0018825 secs] 3473K-&gt;1442K(9728K), 0.0019891 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] </span><br><span class="line"></span><br><span class="line">Heap</span><br><span class="line"> par new generation   total 4608K, used 3650K [0x00000007bf600000, 0x00000007bfb00000, 0x00000007bfb00000)</span><br><span class="line">  eden space 4096K,  78% used [0x00000007bf600000, 0x00000007bf928920, 0x00000007bfa00000)</span><br><span class="line">  from space 512K,  81% used [0x00000007bfa80000, 0x00000007bfae8100, 0x00000007bfb00000)</span><br><span class="line">  to   space 512K,   0% used [0x00000007bfa00000, 0x00000007bfa00000, 0x00000007bfa80000)</span><br><span class="line"> concurrent mark-sweep generation total 5120K, used 1026K [0x00000007bfb00000, 0x00000007c0000000, 0x00000007c0000000)</span><br><span class="line"> Metaspace       used 2934K, capacity 4496K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 320K, capacity 388K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+
+<h3 id="（1）第一部分"><a href="#（1）第一部分" class="headerlink" title="（1）第一部分"></a>（1）第一部分</h3><p><code>CommandLine flags</code>就是一些默认参数以及我们设置的一些参数。</p>
+<h3 id="（2）第二部分"><a href="#（2）第二部分" class="headerlink" title="（2）第二部分"></a>（2）第二部分</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">0.101: [GC (Allocation Failure) 0.102: [ParNew: 3473K-&gt;416K(4608K), 0.0018825 secs] 3473K-&gt;1442K(9728K), 0.0019891 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] </span><br></pre></td></tr></table></figure>
+
+<p>这一段说的是本次GC执行的情况。</p>
+<ul>
+<li><p><code>GC (Allocation Failure)</code>：GC发生原因，分配对象失败0.102,意思是系统运行了0.102s后发生GC</p>
+</li>
+<li><p><code>ParNew: 3473K-&gt;416K(4608K), 0.0018825 secs</code>：前面是我们指定的垃圾回收器，3473K-&gt;416K(4608K)，意思是对新生代执行一次GC前已经使用了3473KB，，但是GC后只有416KB对象是存活下来的，然后(4608)代表新生代可用空间是4.5M（Eden+1个S），后面时间是本次GC耗费的时间。<strong>虽然我们创建的数组是1MB，但是为了存这个数组，JVM还附带了其他的一些信息，导致每个数组实际占的内存大于1M。这些其他信息是什么可以借助专门的工具来分析堆内存快照。</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028180747301.png"
+                     
+                ></p>
+<p>如图所示是放了三个对象与位置对象的情况，共占3473KB</p>
+<p>接下来就进行了Young GC，存活416KB，如图</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028181008019.png"
+                     
+                ></p>
+</li>
+<li><p><code>3473K-&gt;1442K(9728K), 0.0019891 secs</code>：这段话指的是整个Java堆内存的使用情况，总可用空间9728KB（9.5MB），就是年轻代+老年代，GC前整个Java堆内存使用了3473KB，GC后Java堆内存使用了1442KB</p>
+</li>
+<li><p><code>[Times: user=0.01 sys=0.00, real=0.01 secs] </code>：这个是本次GC消耗的时间，从秒为单位来看几乎为0</p>
+</li>
+</ul>
+<h3 id="（3）第三部分"><a href="#（3）第三部分" class="headerlink" title="（3）第三部分"></a>（3）第三部分</h3><p>Heap开始就是JVM退出的时候打印出当前堆内存的使用情况了。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Heap</span><br><span class="line"> par new generation   total 4608K, used 3650K [0x00000007bf600000, 0x00000007bfb00000, 0x00000007bfb00000)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code> par new generation   total 4608K, used 3650K</code>：意思是ParNew垃圾回收器负责的年轻代总共4608KB（4.5MB），目前使用了3650KB（3.5MB）。照理来说应该是（2M对象+之前400多KB未知的对象应该是2.5MB左右，但是为什么变成3.5MB呢？因为我们的2.5MB是理论值，具体情况和使用的IDE有差异。）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">eden space 4096K,  78% used [0x00000007bf600000, 0x00000007bf928920, 0x00000007bfa00000)</span><br><span class="line">from space 512K,  81% used [0x00000007bfa80000, 0x00000007bfae8100, 0x00000007bfb00000)</span><br><span class="line">to   space 512K,   0% used [0x00000007bfa00000, 0x00000007bfa00000, 0x00000007bfa80000)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这是新生代三个区域<code>Eden</code>、<code>Survivor from</code>、<code>Survivor to</code>三个区域的使用率。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">concurrent mark-sweep generation total 5120K, used 1026K [0x00000007bfb00000, 0x00000007c0000000, 0x00000007c0000000)</span><br><span class="line"> Metaspace       used 2934K, capacity 4496K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 320K, capacity 388K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>concurrent mark-sweep generation total 5120K, used 1026K</code>：使用的是CMS回收器，管理老年代大小一共5MB，使用了1026KB</li>
+<li><code>Metaspace</code>：元数据空间，存放一些类信息、常量池的东西</li>
+<li><code>class space</code>：Class 空间</li>
+</ul>
+<h2 id="二、进入老年代的场景模拟与日志分析"><a href="#二、进入老年代的场景模拟与日志分析" class="headerlink" title="二、进入老年代的场景模拟与日志分析"></a>二、进入老年代的场景模拟与日志分析</h2><h3 id="1、对象进入老年代的四个条件"><a href="#1、对象进入老年代的四个条件" class="headerlink" title="1、对象进入老年代的四个条件"></a>1、对象进入老年代的四个条件</h3><ul>
+<li>躲过15次GC后直接进入老年代</li>
+<li>动态年龄判断规则，如果Survivor区域内年龄1+年龄2+年龄3+年龄n的对象总和大于Survivor区的50%，此时年龄n以上的对象会进入老年代，不一定要达到15岁</li>
+<li>Young GC后存活的对象太多而无法放入Survivor区，直接进入老年代</li>
+<li>大对象直接进入老年代</li>
+</ul>
+<h3 id="2、场景一（动态年龄判断规则场景）"><a href="#2、场景一（动态年龄判断规则场景）" class="headerlink" title="2、场景一（动态年龄判断规则场景）"></a>2、场景一（动态年龄判断规则场景）</h3><p><strong>在这里模拟根据动态年龄判断规则进入老年代的那个场景。</strong></p>
+<h4 id="（1）首先设置JVM参数"><a href="#（1）首先设置JVM参数" class="headerlink" title="（1）首先设置JVM参数"></a>（1）首先设置JVM参数</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:NewSize=<span class="number">10485760</span>					<span class="comment">//新生代大小为10MB</span></span><br><span class="line">-XX:MaxNewSize=<span class="number">10485760</span> 			<span class="comment">//新生代最大大小为10MB</span></span><br><span class="line">-XX:InitialHeapSize=<span class="number">20971520</span> 	<span class="comment">//初始化堆大小为20MB</span></span><br><span class="line">-XX:MaxHeapSize=<span class="number">20971520</span> 			<span class="comment">//最大堆大小为20MB</span></span><br><span class="line">-XX:SurvivorRatio=<span class="number">8</span>  					<span class="comment">//新生代区域划分8:1:1</span></span><br><span class="line">-XX:MaxTenuringThreshold=<span class="number">15</span> 	<span class="comment">//默认是躲过15次GC进入老年代</span></span><br><span class="line">-XX:PretenureSizeThreshold=<span class="number">10485760</span> 	<span class="comment">//超过10MB的对象直接进入老年代</span></span><br><span class="line">-XX:+UseParNewGC 							<span class="comment">//新生代使用PN</span></span><br><span class="line">-XX:+UseConcMarkSweepGC 			<span class="comment">//老年代使用CMS</span></span><br><span class="line"><span class="comment">//设置打印JVM日志的参数</span></span><br><span class="line">-XX:+PrintGCDetils			<span class="comment">//打印详细的gc日志</span></span><br><span class="line">-XX:+PrintGCTimeStamps	<span class="comment">//这个参数可以打印出来每次GC发生的时间</span></span><br><span class="line">-Xloggc:gc.log					<span class="comment">//这个参数可以设置将gc日志写入一个磁盘文件</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="（2）代码测试并分析GC日志"><a href="#（2）代码测试并分析GC日志" class="headerlink" title="（2）代码测试并分析GC日志"></a>（2）代码测试并分析GC日志</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//初步代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">byte</span>[] array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>idea+debug模式</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM (25.212-b10) for bsd-amd64 JRE (1.8.0_212-b10), built on Apr  1 2019 23:10:56 by &quot;java_re&quot; with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)</span><br><span class="line">Memory: 4k page, physical 16777216k(573728k free)</span><br><span class="line"></span><br><span class="line">/proc/meminfo:</span><br><span class="line"></span><br><span class="line">CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:MaxNewSize=10485760 -XX:MaxTenuringThreshold=15 -XX:NewSize=10485760 -XX:OldPLABSize=16 -XX:PretenureSizeThreshold=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+UseParNewGC </span><br><span class="line">0.138: [GC (Allocation Failure) 0.138: [ParNew: 8179K-&gt;627K(9216K), 0.0008498 secs] 8179K-&gt;627K(19456K), 0.0009520 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] </span><br><span class="line">Heap</span><br><span class="line"> par new generation   total 9216K, used 2921K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)</span><br><span class="line">  eden space 8192K,  28% used [0x00000007bec00000, 0x00000007bee3d8a0, 0x00000007bf400000)</span><br><span class="line">  from space 1024K,  61% used [0x00000007bf500000, 0x00000007bf59ccb8, 0x00000007bf600000)</span><br><span class="line">  to   space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)</span><br><span class="line"> concurrent mark-sweep generation total 10240K, used 0K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)</span><br><span class="line"> Metaspace       used 2930K, capacity 4556K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 312K, capacity 392K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+
+<p>前四行</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">array1 = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这一块连续创建3个2MB的数组，最后还把array1设置为null，此时的内存图如下所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028212621722.png"
+                     
+                ></p>
+<p>前四行代码运行后堆内存中的结果</p>
+<p>第五行<code>byte[] array2 = new byte[128 * 1024]</code>在Eden区创建一个128KB的数组，由array2来引用。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028213129634.png"
+                     
+                ></p>
+<p>第五行代码运行后堆内存中的结果</p>
+<p>此时运行第六行代码，再分配一个2MB的数组发现Eden区没有空间了，这时候一定会先触发一次Young GC，我们可以在日志中看到有这么一句：<code>ParNew: 8179K-&gt;627K(9216K)</code>，这行日志清晰表明了，在GC之前新生代占用了8179KB的内存，这里大概就是6MB（6144）的3个数组 + 128KB的1个数组 + 几百KB的一些未知对象。接着看GC日志,Young GC存活下来的都进了Survivor区了，占了一半，这些是未知的对象+128KB数组，同时Eden区域内被占据了28%的空间，大概就是2MB左右，这就是新来的数组占用Eden的空间大小。此时如图所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">par new generation   total 9216K, used 2921K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)</span><br><span class="line"> eden space 8192K,  28% used [0x00000007bec00000, 0x00000007bee3d8a0, 0x00000007bf400000)</span><br><span class="line"> from space 1024K,  61% used [0x00000007bf500000, 0x00000007bf59ccb8, 0x00000007bf600000)</span><br><span class="line"> to   space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)</span><br></pre></td></tr></table></figure>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028213713681.png"
+                     
+                ></p>
+<p>第六行代码运行后堆内存中的结果。</p>
+<p>此时Survivor From区里的那些对象，他们都是1岁，熬过1次GC，年龄就增加1，而此时占用了总Survivor区域的61%，超过50%了。</p>
+<h4 id="（3）再完善代码并分析GC日志"><a href="#（3）再完善代码并分析GC日志" class="headerlink" title="（3）再完善代码并分析GC日志"></a>（3）再完善代码并分析GC日志</h4><p>把上述代码完善成这样子，我们要出发出来第二次Young GC，来看Survivor区域中的动态年龄判断规则是否生效。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="comment">//新增加的代码</span></span><br><span class="line">        array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line">        array3 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>GC日志（idea，Debug模式）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM (25.212-b10) for bsd-amd64 JRE (1.8.0_212-b10), built on Apr  1 2019 23:10:56 by &quot;java_re&quot; with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)</span><br><span class="line">Memory: 4k page, physical 16777216k(578716k free)</span><br><span class="line"></span><br><span class="line">/proc/meminfo:</span><br><span class="line"></span><br><span class="line">CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:MaxNewSize=10485760 -XX:MaxTenuringThreshold=15 -XX:NewSize=10485760 -XX:OldPLABSize=16 -XX:PretenureSizeThreshold=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+UseParNewGC </span><br><span class="line">0.400: [GC (Allocation Failure) 0.400: [ParNew: 8179K-&gt;617K(9216K), 0.0011641 secs] 8179K-&gt;617K(19456K), 0.0012530 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span><br><span class="line">0.403: [GC (Allocation Failure) 0.403: [ParNew: 7085K-&gt;0K(9216K), 0.0042709 secs] 7085K-&gt;521K(19456K), 0.0043461 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] </span><br><span class="line">Heap</span><br><span class="line"> par new generation   total 9216K, used 2130K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)</span><br><span class="line">  eden space 8192K,  26% used [0x00000007bec00000, 0x00000007bee14930, 0x00000007bf400000)</span><br><span class="line">  from space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)</span><br><span class="line">  to   space 1024K,   0% used [0x00000007bf500000, 0x00000007bf500000, 0x00000007bf600000)</span><br><span class="line"> concurrent mark-sweep generation total 10240K, used 521K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)</span><br><span class="line"> Metaspace       used 2931K, capacity 4556K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 312K, capacity 392K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+
+<p>分析这4行代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line">array3 = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这些代码就是再生成2个2MB数组和个128KB数组，最后array3指向null，示意图如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028215314854.png"
+                     
+                ></p>
+<p>接下来就运行最后一行代码<code>byte[] array4 = new byte[2 * 1024 * 1024];</code>这时候是放不下去的，必然会触发一次Young GC，看一下日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">0.403: [GC (Allocation Failure) 0.403: [ParNew: 7085K-&gt;0K(9216K), 0.0042709 secs] 7085K-&gt;521K(19456K), 0.0043461 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] </span><br></pre></td></tr></table></figure>
+
+<p>第二次出发Young GC，此时发现<code>7085K-&gt;0K(9216K)</code>这就说明，第二次GC后新生代中没有对象了。没有任何对象是不可能的啊，我们的array2还指向这个变量呢。其实这会根据动态年龄判断规则，年龄1+年龄2+年龄n的对象总大小超过了Survivor区域的50%，年龄n以上的对象进入老年代。当然这里的对象都是年龄1的，所以直接全部进入老年代了。可以看到CMS管理的区域多了这么512KB。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">concurrent mark-sweep generation total 10240K, used 521K [0x00000007bf600000, 0x00000007c0000000, </span><br></pre></td></tr></table></figure>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028221106024.png"
+                     
+                ></p>
+<p>然后array4变量引用的那个2MB的数组，此时就会分配到Eden区域中，如下图所示。所以日志中有这么几行（此时Survivor区域中的对象都到老年代去了）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">eden space 8192K,  26% used [0x00000007bec00000, 0x00000007bee14930, 0x00000007bf400000)</span><br><span class="line">from space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)</span><br><span class="line">  to   space 1024K,   0% used [0x00000007bf500000, 0x00000007bf500000, 0x00000007bf600000)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028221134196.png"
+                     
+                ></p>
+<h3 id="3、场景二（Survivor放不下则直接进老年代）"><a href="#3、场景二（Survivor放不下则直接进老年代）" class="headerlink" title="3、场景二（Survivor放不下则直接进老年代）"></a>3、场景二（Survivor放不下则直接进老年代）</h3><p>抛出问题：那些放不下的对象，是全部进入老年代还是部分进入老年代呢？</p>
+<p>JVM参数和场景一相同</p>
+<h4 id="（1）代码测试并分析GC日志"><a href="#（1）代码测试并分析GC日志" class="headerlink" title="（1）代码测试并分析GC日志"></a>（1）代码测试并分析GC日志</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line">        array2 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM (25.212-b10) for bsd-amd64 JRE (1.8.0_212-b10), built on Apr  1 2019 23:10:56 by &quot;java_re&quot; with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)</span><br><span class="line">Memory: 4k page, physical 16777216k(407972k free)</span><br><span class="line"></span><br><span class="line">/proc/meminfo:</span><br><span class="line"></span><br><span class="line">CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:MaxNewSize=10485760 -XX:MaxTenuringThreshold=15 -XX:NewSize=10485760 -XX:OldPLABSize=16 -XX:PretenureSizeThreshold=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+UseParNewGC </span><br><span class="line">0.150: [GC (Allocation Failure) 0.150: [ParNew: 8179K-&gt;488K(9216K), 0.0023498 secs] 8179K-&gt;2538K(19456K), 0.0024491 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] </span><br><span class="line">Heap</span><br><span class="line"> par new generation   total 9216K, used 2782K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)</span><br><span class="line">  eden space 8192K,  28% used [0x00000007bec00000, 0x00000007bee3d8a0, 0x00000007bf400000)</span><br><span class="line">  from space 1024K,  47% used [0x00000007bf500000, 0x00000007bf57a0a8, 0x00000007bf600000)</span><br><span class="line">  to   space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)</span><br><span class="line"> concurrent mark-sweep generation total 10240K, used 2050K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)</span><br><span class="line"> Metaspace       used 2930K, capacity 4556K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 312K, capacity 392K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+
+<p><strong>分析：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">byte[] array1 = new byte[2 * 1024 * 1024];</span><br><span class="line">array1 = new byte[2 * 1024 * 1024];</span><br><span class="line">array1 = new byte[2 * 1024 * 1024];</span><br><span class="line"></span><br><span class="line">byte[] array2 = new byte[128 * 1024];</span><br><span class="line">array2 = null;</span><br></pre></td></tr></table></figure>
+
+<p>首先创建3个2MB的数组，最开始两个变成垃圾，只有最后一个被array1指向了，接着创建了一个128KB的数组，然后array2指向空，128KB的数组也变成垃圾，如图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028225839758.png"
+                     
+                ></p>
+<p>此时我们执行<code>byte[] array3 = new byte[2 * 1024 * 1024];</code>代码，发现放不进Eden了，要进行第一次Young GC。查看日志，发现<code>ParNew: 8179K-&gt;488K(9216K)</code>，GC后还剩余488KB。情况是这样的，2个2MB和1个128KB的数组被回收掉了，最后剩下一个2MB的数组和488KB的未知对象，这两个加起来大于Survivor区的大小，所以直接进入老年代，但是并不是全部进去的，我们可以看到日志中又这么几行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">par new generation   total 9216K, used 2782K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)</span><br><span class="line">  eden space 8192K,  28% used [0x00000007bec00000, 0x00000007bee3d8a0, 0x00000007bf400000)</span><br><span class="line">  from space 1024K,  47% used [0x00000007bf500000, 0x00000007bf57a0a8, 0x00000007bf600000)</span><br><span class="line">  to   space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)</span><br><span class="line"> concurrent mark-sweep generation total 10240K, used 2050K [0x00000007bf600000, 0x00000007c0000000, </span><br></pre></td></tr></table></figure>
+
+<p><code>concurrent mark-sweep generation total 10240K, used 2050K</code>说明那个原来存在的2MB的数组进了老年代，另外<code>from space 1024K,  47% used</code>说明了把这个位置对象放进了S1区，以及<code>eden space 8192K,  28% used</code>这个说明我们新创建的对象也放进了了Eden区。最后如图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028230455552.png"
+                     
+                ></p>
+<h2 id="三、Old-GC场景模拟与日志分析"><a href="#三、Old-GC场景模拟与日志分析" class="headerlink" title="三、Old GC场景模拟与日志分析"></a>三、Old GC场景模拟与日志分析</h2><h3 id="1、JVM参数设置-1"><a href="#1、JVM参数设置-1" class="headerlink" title="1、JVM参数设置"></a>1、JVM参数设置</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:NewSize=<span class="number">10485760</span> </span><br><span class="line">-XX:MaxNewSize=<span class="number">10485760</span> </span><br><span class="line">-XX:InitialHeapSize=<span class="number">20971520</span> </span><br><span class="line">-XX:MaxHeapSize=<span class="number">20971520</span> </span><br><span class="line">-XX:SurvivorRatio=<span class="number">8</span>  </span><br><span class="line">-XX:MaxTenuringThreshold=<span class="number">15</span> </span><br><span class="line">-XX:PretenureSizeThreshold=<span class="number">3145728</span> 	<span class="comment">//这里最大对象是3MB，超过则进入老年代</span></span><br><span class="line">-XX:+UseParNewGC </span><br><span class="line">-XX:+UseConcMarkSweepGC </span><br><span class="line">-XX:+PrintGCDetails </span><br><span class="line">-XX:+PrintGCTimeStamps </span><br><span class="line">-Xloggc:gc.log</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2、代码测试与日志分析"><a href="#2、代码测试与日志分析" class="headerlink" title="2、代码测试与日志分析"></a>2、代码测试与日志分析</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] array1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        array1 = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] array2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] array3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] array4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] array5 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">128</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] array6 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>日志如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM (25.212-b10) for bsd-amd64 JRE (1.8.0_212-b10), built on Apr  1 2019 23:10:56 by &quot;java_re&quot; with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)</span><br><span class="line">Memory: 4k page, physical 16777216k(912216k free)</span><br><span class="line"></span><br><span class="line">/proc/meminfo:</span><br><span class="line"></span><br><span class="line">CommandLine flags: -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:MaxNewSize=10485760 -XX:MaxTenuringThreshold=15 -XX:NewSize=10485760 -XX:OldPLABSize=16 -XX:PretenureSizeThreshold=3145728 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+UseParNewGC </span><br><span class="line">0.125: [GC (Allocation Failure) 0.125: [ParNew (promotion failed): 8179K-&gt;8785K(9216K), 0.0032460 secs]0.129: [CMS: 8194K-&gt;6722K(10240K), 0.0026381 secs] 12275K-&gt;6722K(19456K), [Metaspace: 2924K-&gt;2924K(1056768K)], 0.0060166 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] </span><br><span class="line">0.132: [GC (CMS Initial Mark) [1 CMS-initial-mark: 6722K(10240K)] 8770K(19456K), 0.0001890 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span><br><span class="line">0.132: [CMS-concurrent-mark-start]</span><br><span class="line">Heap</span><br><span class="line"> par new generation   total 9216K, used 2294K [0x00000007bec00000, 0x00000007bf600000, 0x00000007bf600000)</span><br><span class="line">  eden space 8192K,  28% used [0x00000007bec00000, 0x00000007bee3d8a0, 0x00000007bf400000)</span><br><span class="line">  from space 1024K,   0% used [0x00000007bf500000, 0x00000007bf500000, 0x00000007bf600000)</span><br><span class="line">  to   space 1024K,   0% used [0x00000007bf400000, 0x00000007bf400000, 0x00000007bf500000)</span><br><span class="line"> concurrent mark-sweep generation total 10240K, used 6722K [0x00000007bf600000, 0x00000007c0000000, 0x00000007c0000000)</span><br><span class="line"> Metaspace       used 2930K, capacity 4556K, committed 4864K, reserved 1056768K</span><br><span class="line">  class space    used 312K, capacity 392K, committed 512K, reserved 1048576K</span><br></pre></td></tr></table></figure>
+
+<p>分析：</p>
+<p>首先<code>byte[] array1 = new byte[4 * 1024 * 1024];</code>直接分配一个4MB大的对象，直接进入老年代，然后array1不指向它，它就变成了垃圾，接着有3个2MB大小的数组和1个128KB的数组进入Eden，如图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191028234906490.png"
+                     
+                ></p>
+<p>再接下来去运行<code>byte[] array6 = new byte[2 * 1024 * 1024];</code>这个代码，新来的2MB数组放不下了就会产生第一次Young GC，日志中有一条<code>ParNew (promotion failed): 8179K-&gt;8785K(9216K),</code>这行日志显示了，Eden区原来是有8179多KB的对象，但是回收之后发现一个都回收不掉，因为都有引用，所以要放到老年代去，但是此时新生代对象总大小大于老年代可用空间，所以会先发生一次Old GC</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[CMS: 8194K-&gt;6722K(10240K), 0.0026381 secs] 12275K-&gt;6722K(19456K), [Metaspace: 2924K-&gt;2924K(1056768K)], 0.0060166 secs]</span><br></pre></td></tr></table></figure>
+
+<p>此时执行了CMS垃圾回收器的Full GC，我们之前讲过Full GC其实就是会对老年代进行Old GC，同时一般会跟一次Young GC关联，还会触发一次元数据区（永久代）的GC。这里看到<code>CMS: 8194K-&gt;6722K(10240K)</code>，老年代从8MB左右的对象占用，变成了6MB左右的对象占用，这个过程是这样的：在CMS Full GC之前，就已经触发过Young GC了，它先把2个2MB的数组放进了老年代，剩下1个2MB和1和128KB的数组放不下了此时已用空间8MB（4+2+2）如图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191029000219984.png"
+                     
+                ></p>
+<p>然后触发Full GC，回收掉其中的一个4MB的数组，接着放入进去1个2MB的数组和1个128KB的数组，就是8MB-4MB+2MB+128KB，大约6MB，此时最后一行代码要在年轻代分配2MB的数组就可以成功了，如图</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191029000346921.png"
+                     
+                ></p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/JVM/">#JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/02/28/JVM9/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">OOM问题的分析与解决</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/02/26/JVM7/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">G1垃圾回收器详解与回收性能优化</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GC%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-text">GC场景模拟与日志分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Young-GC%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-text">一、Young GC场景模拟与日志分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81JVM%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE"><span class="nav-text">1、JVM参数设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BB%A3%E7%A0%81%E6%B5%8B%E8%AF%95"><span class="nav-text">2、代码测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-text">3、日志分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86"><span class="nav-text">（1）第一部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86"><span class="nav-text">（2）第二部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86"><span class="nav-text">（3）第三部分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%BF%9B%E5%85%A5%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-text">二、进入老年代的场景模拟与日志分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%AF%B9%E8%B1%A1%E8%BF%9B%E5%85%A5%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%9B%9B%E4%B8%AA%E6%9D%A1%E4%BB%B6"><span class="nav-text">1、对象进入老年代的四个条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%88%E5%8A%A8%E6%80%81%E5%B9%B4%E9%BE%84%E5%88%A4%E6%96%AD%E8%A7%84%E5%88%99%E5%9C%BA%E6%99%AF%EF%BC%89"><span class="nav-text">2、场景一（动态年龄判断规则场景）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E9%A6%96%E5%85%88%E8%AE%BE%E7%BD%AEJVM%E5%8F%82%E6%95%B0"><span class="nav-text">（1）首先设置JVM参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E4%BB%A3%E7%A0%81%E6%B5%8B%E8%AF%95%E5%B9%B6%E5%88%86%E6%9E%90GC%E6%97%A5%E5%BF%97"><span class="nav-text">（2）代码测试并分析GC日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E5%86%8D%E5%AE%8C%E5%96%84%E4%BB%A3%E7%A0%81%E5%B9%B6%E5%88%86%E6%9E%90GC%E6%97%A5%E5%BF%97"><span class="nav-text">（3）再完善代码并分析GC日志</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%88Survivor%E6%94%BE%E4%B8%8D%E4%B8%8B%E5%88%99%E7%9B%B4%E6%8E%A5%E8%BF%9B%E8%80%81%E5%B9%B4%E4%BB%A3%EF%BC%89"><span class="nav-text">3、场景二（Survivor放不下则直接进老年代）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E4%BB%A3%E7%A0%81%E6%B5%8B%E8%AF%95%E5%B9%B6%E5%88%86%E6%9E%90GC%E6%97%A5%E5%BF%97"><span class="nav-text">（1）代码测试并分析GC日志</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Old-GC%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-text">三、Old GC场景模拟与日志分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81JVM%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE-1"><span class="nav-text">1、JVM参数设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BB%A3%E7%A0%81%E6%B5%8B%E8%AF%95%E4%B8%8E%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="nav-text">2、代码测试与日志分析</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

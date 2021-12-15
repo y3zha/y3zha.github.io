@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            区间型动态规划 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">区间型动态规划</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-12-10 23:15:48</span>
+        <span class="mobile">2019-12-10 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Algorithm/">Algorithm</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Dynamic-programming/">Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="动态规划：区间型"><a href="#动态规划：区间型" class="headerlink" title="动态规划：区间型"></a>动态规划：区间型</h2><p><strong>背景：</strong>给定一个序列或字符串要进行一些操作，最后一步要将序列或字符串<strong>去头、去尾</strong>，区间[i,j]变为区间[i+1,j-1]，力扣上面的最长回文子串就是这样子操作。区间型dp一般用dp[i] [j]，i代表左端点，j代表右端点，若有其他维度可再添加，若两个端点之间存在联系，则可再压缩空间。</p>
+<p><strong>区间型dp不开n+1，开n，区间型dp要按照长度去算。不能按照i，要按照j-i。</strong></p>
+<h3 id="1、LintCode-667-Longest-Palindromic-Subsequence"><a href="#1、LintCode-667-Longest-Palindromic-Subsequence" class="headerlink" title="1、LintCode 667 Longest Palindromic Subsequence"></a>1、<a target="_blank" rel="noopener" href="https://www.lintcode.com/problem/longest-palindromic-subsequence/description"><strong>LintCode 667 Longest Palindromic Subsequence</strong></a></h3><p>【问题】给一字符串 s,，找出在 s 中的最长回文子序列的长度.。你可以假设 s 的最大长度为 1000。</p>
+<p>【分析】注意区分子串和子序列，子串是连续的，子序列可以不连续，这个题是子序列，可以不连续。从最后一步出发，假设S是最长回文子序列，长度为<code>len</code>，分析这个子序列有两种情况</p>
+<ul>
+<li>子序列长度为1，只有一个字母</li>
+<li>子序列长度大于1，必有<code>S[0] = S[len-1]</code></li>
+</ul>
+<p>S是在区间<code>[i,j]</code>中的最长回文子串，对于最长子序列S去头去尾后<code>S[1..len-2]</code>仍然是一个回文串，并且是在区间<code>[i+1,j-1]</code>中的最长回文子序列（应该说是在在长度为j-i+1 - 2时的最长回文子序列），并且可以得出<code>S[i,j] = S[i+1,j-1] + 2</code></p>
+<p>【转移方程】头尾不想等，去头、去尾各一种情况；头尾相等，同时去头去尾</p>
+<ul>
+<li><code>dp[i][j] = max{dp[i+1][j],dp[i][j-1],dp[i+1][j-1]+2 &amp;&amp; chs[i] == chs[j]}</code></li>
+</ul>
+<p>【初始条件】</p>
+<ul>
+<li><code>dp[0][0] = dp[1][1] = ...=dp[n-1][n-1] = 1</code>，每个字母都是长度为1的回文串</li>
+<li>不能按照i去算，要按照长度len去算</li>
+</ul>
+<p>【答案】<code>dp[0][n-1]</code> 两个端点,画出图来就是右上三角</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">longestPalindromeSubseq</span><span class="params">(String s)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = s.length();</span><br><span class="line">        <span class="keyword">char</span>[] chs = s.toCharArray();</span><br><span class="line">        <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">return</span> n;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            dp[i][i] = <span class="number">1</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//region length : 2 &lt;= len &lt;= n</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> len = <span class="number">2</span>; len &lt;= n; len++) {</span><br><span class="line">            <span class="comment">//startIndex i &lt;= n - len</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n - len; i++) {</span><br><span class="line">                <span class="keyword">int</span> j = i + len - <span class="number">1</span>;</span><br><span class="line">                dp[i][j] = Math.max(dp[i + <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">                <span class="keyword">if</span> (chs[i] == chs[j]) {</span><br><span class="line">                    dp[i][j] = Math.max(dp[i][j], dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][n - <span class="number">1</span>];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>要求打印路径</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//要求打印出路径</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">LPS</span><span class="params">(String s)</span> </span>{</span><br><span class="line"></span><br><span class="line">        <span class="keyword">char</span>[] chs = s.toCharArray();</span><br><span class="line">        <span class="keyword">int</span> n = chs.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];</span><br><span class="line">        <span class="keyword">int</span>[][] path = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];   <span class="comment">//路径数组</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            dp[i][i] = <span class="number">1</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> len = <span class="number">2</span>; len &lt;= n; len++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n - len; i++) {</span><br><span class="line">                <span class="keyword">int</span> j = i + len - <span class="number">1</span>;</span><br><span class="line">                dp[i][j] = Math.max(dp[i + <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">                <span class="comment">//去头记为0</span></span><br><span class="line">                <span class="keyword">if</span> (dp[i][j] == dp[i + <span class="number">1</span>][j]) {</span><br><span class="line">                    path[i][j] = <span class="number">0</span>;</span><br><span class="line">                }</span><br><span class="line">                <span class="comment">//去尾记为1</span></span><br><span class="line">                <span class="keyword">if</span> (dp[i][j] == dp[i][j - <span class="number">1</span>]) {</span><br><span class="line">                    path[i][j] = <span class="number">1</span>;</span><br><span class="line">                }</span><br><span class="line">                <span class="comment">//相等记为2</span></span><br><span class="line">                <span class="keyword">if</span> (chs[i] == chs[j]) {</span><br><span class="line">                    dp[i][j] = Math.max(dp[i][j], dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>);</span><br><span class="line">                    <span class="keyword">if</span> (dp[i][j] == dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>) {</span><br><span class="line">                        path[i][j] = <span class="number">2</span>;</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//最长的长度为dp[0][n - 1]</span></span><br><span class="line">        <span class="keyword">char</span>[] res = <span class="keyword">new</span> <span class="keyword">char</span>[dp[<span class="number">0</span>][n - <span class="number">1</span>]];</span><br><span class="line">        <span class="comment">//开始与结束两个指针</span></span><br><span class="line">        <span class="keyword">int</span> p = <span class="number">0</span>, q = dp[<span class="number">0</span>][n - <span class="number">1</span>] - <span class="number">1</span>;</span><br><span class="line">        <span class="comment">//chs数组的两个指针</span></span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>, j = n - <span class="number">1</span>;</span><br><span class="line">        <span class="comment">//从两头分别往中间去走</span></span><br><span class="line">        <span class="keyword">while</span> (i &lt;= j) {</span><br><span class="line">            <span class="comment">//如果字符串长度为1</span></span><br><span class="line">            <span class="keyword">if</span> (i == j) {</span><br><span class="line">                res[p] = chs[i];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//如果字符串长度为2</span></span><br><span class="line">            <span class="keyword">if</span> (i + <span class="number">1</span> == j) {</span><br><span class="line">                res[p] = chs[i];</span><br><span class="line">                res[q] = chs[j];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//其他情况,如果来自去头的情况</span></span><br><span class="line">            <span class="keyword">if</span> (path[i][j] == <span class="number">0</span>) {</span><br><span class="line">                i++;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                <span class="keyword">if</span> (path[i][j] == <span class="number">1</span>) {  <span class="comment">//如果来自去尾的情况</span></span><br><span class="line">                    --j;</span><br><span class="line">                } <span class="keyword">else</span> {</span><br><span class="line">                    res[p++] = chs[i++];</span><br><span class="line">                    res[q--] = chs[j--];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; res.length; k++) {</span><br><span class="line">            System.out.print(res[k]);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][n - <span class="number">1</span>];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>使用记忆化搜索优化，记忆化搜索使用递归，自上而下，递推是自下而上。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span>[][] dp = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">char</span>[] chs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">compute</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>{</span><br><span class="line">        <span class="comment">//如果算过了就直接返回</span></span><br><span class="line">        <span class="keyword">if</span> (dp[i][j] != -<span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (i == j) {</span><br><span class="line">            dp[i][j] = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//first recursion</span></span><br><span class="line">        compute(i + <span class="number">1</span>, j);</span><br><span class="line">        compute(i, j - <span class="number">1</span>);</span><br><span class="line">        compute(i + <span class="number">1</span>, j - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//then dp</span></span><br><span class="line">        dp[i][j] = Math.max(dp[i + <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span> (chs[i] == chs[j]) {</span><br><span class="line">            dp[i][j] = Math.max(dp[i][j], dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">longestPalindromeSubseq</span><span class="params">(String s)</span> </span>{</span><br><span class="line">        chs = s.toCharArray();</span><br><span class="line">        n = chs.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//初始化所有格子标记为没有被访问过</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; n; j++) {</span><br><span class="line">                dp[i][j] = -<span class="number">1</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        compute(<span class="number">0</span>, n - <span class="number">1</span>);      <span class="comment">//通过递归的方式来填充f数组</span></span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][n - <span class="number">1</span>];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、LintCode-200-Longest-Palindromic-Substring"><a href="#2、LintCode-200-Longest-Palindromic-Substring" class="headerlink" title="2、LintCode 200 Longest Palindromic Substring"></a>2、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/longest-palindromic-substring/description">LintCode 200 Longest Palindromic Substring<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】给出一个字符串（假设长度最长为1000），求出它的最长回文子串，你可以假定只有一个满足条件的最长回文串。</p>
+<p>【分析】一种方法是中心扩展法，另一种以区间型dp来做，假设最长回文字串是<code>s(i,j)</code>,那么它的去头去尾的子串<code>s'(i+1..j-1)</code>也是在这个区间内的最长回文子串。假设最长回文子串的长度为<code>len</code>，len的范围是<code>0 &lt;= len &lt;= n</code>，枚举len，只需要记录最长的长度以及起点，就能得到子串。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">longestPalindrome2</span><span class="params">(String s)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = s.length();</span><br><span class="line">        <span class="keyword">char</span>[] chs = s.toCharArray();</span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[n][n];</span><br><span class="line">        <span class="keyword">int</span> start = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> longest = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            dp[i][i] = <span class="keyword">true</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//要单独处理下相邻的</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) {</span><br><span class="line">            dp[i][i + <span class="number">1</span>] = chs[i] == chs[i + <span class="number">1</span>];</span><br><span class="line">            <span class="keyword">if</span> (dp[i][i + <span class="number">1</span>]) {</span><br><span class="line">                longest = <span class="number">2</span>;</span><br><span class="line">                start = i;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//长度从3开始</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> len = <span class="number">3</span>; len &lt;= n; len++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n - len; i++) {</span><br><span class="line">                <span class="keyword">int</span> j = i + len - <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span> (dp[i + <span class="number">1</span>][j - <span class="number">1</span>] &amp;&amp; chs[i] == chs[j]) {</span><br><span class="line">                    dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                }</span><br><span class="line">                <span class="keyword">if</span> (dp[i][j] &amp;&amp; len &gt; longest) {</span><br><span class="line">                    longest = len;</span><br><span class="line">                    start = i;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> s.substring(start, start + longest);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、LintCode-396-Coins-In-A-Line-III——博弈-区间"><a href="#3、LintCode-396-Coins-In-A-Line-III——博弈-区间" class="headerlink" title="3、LintCode 396 Coins In A Line III——博弈+区间"></a>3、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/coins-in-a-line-iii/">LintCode 396 Coins In A Line III<i class="fas fa-external-link-alt"></i></a>——博弈+区间</h3><p>【问题】给定一个序列a[0], a[1], …, a[N-1]，两个玩家Alice和Bob轮流取数，每个人每次只能取第一个数或最后一个数，双方都用最优策略，使得自己的数字和尽量比对手大，问先手是否必胜。（如果数字和一样，也算是先手胜）</p>
+<p>【分析】不需要存己方数字和与对方数字和，只需记录差。两个人都记录着自己与对方的数字之差：S<del>A</del> = A - B，S<del>B</del> = B - A。A取走一个数字m后，B就变为先手，他想要最大化S<del>B</del> = B-A，对于A来说，此时S<del>A</del> = -S<del>B</del>+m，m就是当前这步的数字，m可能是头也可能是尾，选择能最大化S<del>A</del>的即可。取走之后对手也同样采取最优策略去拿。</p>
+<p>【转移方程】</p>
+<ul>
+<li><p>状态：A先手取头，a[0],B此时最大数字差为S<del>B</del>，此时最大数字差为-S<del>B</del>+a[0]</p>
+</li>
+<li><p>状态：A先手取尾，a[n-1],B此时最大数字差为S<del>B</del>，此时最大数字差为-S<del>B</del>+a[n-1]</p>
+</li>
+<li><p>方程：<code>dp[i][j] = max{a[i] - dp[i+1][j],a[j] - dp[i][j-1]}</code></p>
+</li>
+</ul>
+<p>【答案】<code>dp[0][n-1] &gt;= 0 </code>则先生胜  </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">firstWillWin</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            dp[i][i] = A[i];</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//枚举长度</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> len = <span class="number">2</span>; len &lt;= n; len++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n - len; i++) {</span><br><span class="line">                <span class="keyword">int</span> j = i + len - <span class="number">1</span>;</span><br><span class="line">                dp[i][j] = Math.max(A[i] - dp[i + <span class="number">1</span>][j], A[j] - dp[i][j - <span class="number">1</span>]);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][n - <span class="number">1</span>] &gt;= <span class="number">0</span>;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、LintCode-430-Scramble-String"><a href="#4、LintCode-430-Scramble-String" class="headerlink" title="4、LintCode 430 Scramble String"></a>4、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/scramble-string/description">LintCode 430 Scramble String<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】攀爬字符串。给定一个字符串S，按照树结构每次二分成左右两个部分，直至单个字符，在树上某些节点交换左右儿子，可以形成新的字符串，判断一个字符串T是否由S经过这样的变换而成。</p>
+<p>下面是 <code>s1 = "great"</code> 可能得到的一棵二叉树:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    great</span><br><span class="line">   /    \</span><br><span class="line">  gr    eat</span><br><span class="line"> / \    /  \</span><br><span class="line">g   r  e   at</span><br><span class="line">           / \</span><br><span class="line">          a   t</span><br></pre></td></tr></table></figure>
+
+<p>在攀爬字符串的过程中, 我们可以选择其中任意一个非叶节点, 交换该节点的两个子节点.</p>
+<p>例如，我们选择了 <code>"gr"</code> 节点,，并将该节点的两个子节点进行交换，并且将祖先节点对应的子串部分也交换,，最终得到了 <code>"rgeat"</code>。 我们认为 <code>"rgeat"</code> 是 <code>"great"</code> 的一个攀爬字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    rgeat</span><br><span class="line">   /    \</span><br><span class="line">  rg    eat</span><br><span class="line"> / \    /  \</span><br><span class="line">r   g  e   at</span><br><span class="line">           / \</span><br><span class="line">          a   t</span><br></pre></td></tr></table></figure>
+
+<p>类似地, 如果我们继续将其节点 <code>"eat"</code> 和 <code>"at"</code> 的子节点交换， 又可以得到 <code>"great"</code> 的一个攀爬字符串 <code>"rgtae"</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">   rgtae</span><br><span class="line">   /    \</span><br><span class="line">  rg    tae</span><br><span class="line"> / \    /  \</span><br><span class="line">r   g  ta   e</span><br><span class="line">       / \</span><br><span class="line">      t   a</span><br></pre></td></tr></table></figure>
+
+<p>给定两个相同长度的字符串 <code>s1</code> 和 <code>s2</code>，判断 <code>s2</code> 是否为 <code>s1</code> 的攀爬字符串。</p>
+<p>【分析】给定两个字符串T和S，假设T是由S变换而来</p>
+<ul>
+<li>如果T和S长度不一样，必定不能变来</li>
+<li>如果长度一样，顶层字符串S能够划分为S1和S2，同样字符串T也能够划分为T1和T2<ul>
+<li>情况一：没交换，<code>S1 ==&gt; T1，S2 ==&gt; T2</code></li>
+<li>情况二：交换了，<code>S1 ==&gt; T2，S2 ==&gt; T1</code></li>
+</ul>
+</li>
+<li>子问题就是分别讨论两种情况，T1是否由S1变来，T2是否由S2变来，或 T1是否由S2变来，T2是否由S1变来。</li>
+</ul>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304170802189.png"></p>
+<p>【状态】<code>dp[i][j][k][h]</code>表示T[k..h]是否由S[i..j]变来。由于变换必须长度是一样的，因此这边有个关系<code>j - i = h - k</code>，可以把四维数组降成三维。<code>dp[i][j][len] </code> 表示从字符串S中i开始长度为len的字符串是否能变换为从字符串T中j开始长度为len的字符串</p>
+<blockquote>
+<p>dp[i] [j] [k] = OR<del>1&lt;=w&lt;=k-1</del>{dp[i] [j] [w] AND dp[i+w] [j+w] [k-w]}  或 OR<del>1&lt;=w&lt;=k-1</del>{dp[i] [j+k-w] [w] AND dp[i+w] [j] [k-w]}</p>
+<p>枚举S1长度w（1～k-1，因为要划分），f[i] [j] [w]表示S1能变成T1，f[i+w] [j+w] [k-w]表示S2能变成T2，或者是S1能变成T2，S2能变成T1。</p>
+</blockquote>
+<p>【初始条件】对于长度是1的子串，只有相等才能变过去，相等为true，不相等为false。</p>
+<p>【答案】<code>dp[0][0][n]</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isScramble</span><span class="params">(String s1, String s2)</span> </span>{</span><br><span class="line">        <span class="keyword">char</span>[] chs1 = s1.toCharArray();</span><br><span class="line">        <span class="keyword">char</span>[] chs2 = s2.toCharArray();</span><br><span class="line">        <span class="keyword">int</span> n = s1.length();</span><br><span class="line">        <span class="keyword">int</span> m = s2.length();</span><br><span class="line">        <span class="keyword">if</span> (n != m) {</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">boolean</span>[][][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[n][n][n + <span class="number">1</span>];</span><br><span class="line">        <span class="comment">//初始化单个字符的情况</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">                dp[i][j][<span class="number">1</span>] = chs1[i] == chs2[j];</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//枚举长度2～n</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> len = <span class="number">2</span>; len &lt;= n; len++) {</span><br><span class="line"></span><br><span class="line">            <span class="comment">//枚举S中的起点位置</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n - len; i++) {</span><br><span class="line"></span><br><span class="line">                <span class="comment">//枚举T中的起点位置</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= n - len; j++) {</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//枚举划分位置</span></span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">1</span>; k &lt;= len - <span class="number">1</span>; k++) {</span><br><span class="line"></span><br><span class="line">                        <span class="comment">//第一种情况：S1-&gt;T1,S2-&gt;T2</span></span><br><span class="line">                        <span class="keyword">if</span> (dp[i][j][k] &amp;&amp; dp[i + k][j + k][len - k]) {</span><br><span class="line">                            dp[i][j][len] = <span class="keyword">true</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        }</span><br><span class="line">                        <span class="comment">//第二种情况：S1-&gt;T2,S2-&gt;T1</span></span><br><span class="line">                        <span class="keyword">if</span> (dp[i][j + len - k][k] &amp;&amp; dp[i + k][j][len - k]) {</span><br><span class="line">                            dp[i][j][len] = <span class="keyword">true</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        }</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][<span class="number">0</span>][n];</span><br><span class="line">    }`</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、LintCode-168-Burst-Balloons"><a href="#5、LintCode-168-Burst-Balloons" class="headerlink" title="5、LintCode 168 Burst Balloons"></a>5、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/burst-balloons/description">LintCode 168 Burst Balloons<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】有n个气球，编号为<code>0</code>到<code>n-1</code>，每个气球都有一个分数，存在<code>nums</code>数组中。每次吹气球i可以得到的分数为 <code>nums[left] * nums[i] * nums[right]</code>，left和right分别表示<code>i</code>气球相邻的两个气球。当i气球被吹爆后，其左右两气球即为相邻。要求吹爆所有气球，得到最多的分数。（最后一个气球被扎破即它本身，算作<code>1 * nums[i] * 1</code>）</p>
+<p>【分析】区间型dp，从最后一步出发，最后一步必定扎破一个气球，编号为i，这一步获得金币<code>1*  nums[i] * 1</code>，此时i前面的气球<code>1～i-1</code>以及i后面的气球<code>i+1～n</code>都被扎破了，需要知道两边最多能获得多少个金币，再加上最后一步，就是结果。</p>
+<p>【状态转移方程】由于最后一步是<code>1 * nums[i] * 1</code>，我们可以认为两端有两个不能扎破的气球，值为1，dp[i] [j]代表扎破i+1号气球～j-1号气球能获得的金币数，i和j是不能被扎破的，因为是两端，并且当前气球k不能被扎破，要分别考虑k的左侧（i～k-1）和右侧（k+1～j），状态转移方程为：</p>
+<ul>
+<li><code>dp[i][j] = max{dp[i][k] + dp[k][j] + a[i] * a[k] * a[j]},k∈(i,j)</code></li>
+<li>dp[i] [k]代表扎破i+1～k-1号气球，dp[k] [j]代表扎破k+1～j-1号气球，再加上扎破这个气球获得的金币数</li>
+</ul>
+<p>【初始条件】没有气球要扎破就获得0个金币</p>
+<ul>
+<li><code>dp[0][1] = dp[1][2] = ... = dp[n-2][n-1] = 0</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">maxCoins</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = nums.length;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] A = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">2</span>];   <span class="comment">//左右两个不能扎破的</span></span><br><span class="line">        A[<span class="number">0</span>] = A[n + <span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            A[i + <span class="number">1</span>] = nums[i];</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        n += <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];</span><br><span class="line">        <span class="comment">//初始化没有气球要扎破的情况</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) {</span><br><span class="line">            dp[i][i + <span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//从长度为3开始</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> len = <span class="number">3</span>; len &lt;= n; len++) {</span><br><span class="line">            <span class="comment">//开头</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n - len; i++) {</span><br><span class="line">                <span class="comment">//结尾</span></span><br><span class="line">                <span class="keyword">int</span> j = i + len - <span class="number">1</span>;</span><br><span class="line">                dp[i][j] = Integer.MIN_VALUE;</span><br><span class="line">                <span class="comment">//枚举中间的气球 作为不扎破的气球</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = i + <span class="number">1</span>; k &lt;= j - <span class="number">1</span>; k++) {</span><br><span class="line">                    dp[i][j] = Math.max(dp[i][j], dp[i][k] + dp[k][j] + A[i] * A[k] * A[j]);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][n-<span class="number">1</span>];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Dynamic-programming/">#Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/12/11/dp-double-sequence/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">双序列型动态规划</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/12/10/shortest-path-algorithm/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">最短路算法</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%9A%E5%8C%BA%E9%97%B4%E5%9E%8B"><span class="nav-text">动态规划：区间型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81LintCode-667-Longest-Palindromic-Subsequence"><span class="nav-text">1、LintCode 667 Longest Palindromic Subsequence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81LintCode-200-Longest-Palindromic-Substring"><span class="nav-text">2、LintCode 200 Longest Palindromic Substring</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81LintCode-396-Coins-In-A-Line-III%E2%80%94%E2%80%94%E5%8D%9A%E5%BC%88-%E5%8C%BA%E9%97%B4"><span class="nav-text">3、LintCode 396 Coins In A Line III——博弈+区间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81LintCode-430-Scramble-String"><span class="nav-text">4、LintCode 430 Scramble String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81LintCode-168-Burst-Balloons"><span class="nav-text">5、LintCode 168 Burst Balloons</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

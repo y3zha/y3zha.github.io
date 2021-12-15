@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            ThreadPool 源码解读 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">ThreadPool 源码解读</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-01-14 23:15:48</span>
+        <span class="mobile">2019-01-14 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Source-Code/">Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="线程池源码"><a href="#线程池源码" class="headerlink" title="线程池源码"></a>线程池源码</h1><h2 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311165430764.png"
+                     
+                ></p>
+<blockquote>
+<p>首先来了一个任务，先判断下核心线程池里的线程数有没有达到设定的值，如果没有，就可以新建个Worker出来处理任务，处理任务的时候如果这个任务为空，那这个worker就阻塞住，因为这个任务不需要处理，如果这个任务不为空，就会准备执行任务，这个Worker实现了Runnable接口，并且继承了AQS，那么它就会重写run方法，它重写的run方法里面调用了runWorker()，这个是真正执行任务的，执行任务时，那么首先就会所在执行任务前看看你有没有重写beforeExecute，如果重写了，那就会执行下，然后再执行任务，执行完也会看下有没有重写afterExecute。</p>
+<p>如果来了一个任务，队列没满，就尝试放进阻塞队列，在尝试放入阻塞队列的时候，如果线程池状态异常，那就会拒绝任务，如果队列满了，那就要看此时你设置的maxinumPoolSize，看线程池里的线程有没有达到这个最大值，如果没有，那就可以创建线程出来执行任务，如果达到了，没有线程了，那就只能采取拒绝策略，常用的拒绝策略是 abortpolicy（抛异常），还有discardPolicy（直接丢弃任务），还有discardOldestPolicy（直接丢弃队列中最老的任务），还有个忘了</p>
+</blockquote>
+<h3 id="1、Executor"><a href="#1、Executor" class="headerlink" title="1、Executor"></a>1、Executor</h3><p>这个是多线程的顶级接口，只有一个execute方法</p>
+<h3 id="2、ExecutorService"><a href="#2、ExecutorService" class="headerlink" title="2、ExecutorService"></a>2、ExecutorService</h3><p>Executor 的功能太弱，只有一个execute，ExecutorService接口 丰富了对任务的执行和管理的功能，它继承了Executor接口</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 线程池关闭，不会接受新的任务，也不会等待未完成的任务</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// executor 是否已经关闭了，返回值 true 表示已关闭</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isShutdown</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 所有的任务是否都已经终止，是的话，返回 true</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isTerminated</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在超时时间内，等待剩余的任务终止</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">awaitTermination</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span></span></span><br><span class="line"><span class="function">  </span></span><br><span class="line"><span class="function"><span class="comment">// 提交有返回值的任务，使用 get 方法可以阻塞等待任务的执行结果返回</span></span></span><br><span class="line"><span class="function">&lt;T&gt; Future&lt;T&gt; <span class="title">submit</span><span class="params">(Callable&lt;T&gt; task)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//传入Runnable就没有返回结果了</span></span><br><span class="line">Future&lt;?&gt; submit(Runnable task);</span><br><span class="line"></span><br><span class="line"><span class="comment">//还有其他一些方法，这里只是举例</span></span><br></pre></td></tr></table></figure>
+
+
+</blockquote>
+<h3 id="3、AbstractExecutorService"><a href="#3、AbstractExecutorService" class="headerlink" title="3、AbstractExecutorService"></a>3、AbstractExecutorService</h3><p>这个是个一个抽象类，封装ExecutorService里的功能</p>
+<h3 id="4、注释得到的信息"><a href="#4、注释得到的信息" class="headerlink" title="4、注释得到的信息"></a>4、注释得到的信息</h3><ul>
+<li>线程池可以使用Executors进行配置<ul>
+<li>Executors.newCachedThreadPool 无界的线程池，并且可以自动回收;</li>
+<li>Executors#newFixedThreadPool 固定大小线程池;</li>
+<li>Executors#newSingleThreadExecutor 单个线程的线程池;</li>
+</ul>
+</li>
+<li>线程池提供可供扩展的参数设置,corsSize和maxSize，一般来说这两个值初始化时候就设定了，当然我们可以自己set，来修改这两个值</li>
+<li>线程池创建时有多种队列可供选择，有四种队列，可见我另一篇博客<ul>
+<li>LinkedBlockingQueue，无界阻塞队列</li>
+<li>ArrayBlockingQueue，有界阻塞队列</li>
+<li>DelayBlockingQueue，延迟队列</li>
+<li>SynchronousQueue，同步阻塞队列</li>
+</ul>
+</li>
+<li>线程池用了模版方法模式，提供了很多hook函数，比如beforeExecute()、afterExecute()，在线程执行前后需要做什么</li>
+<li>还有很多信息就不写了</li>
+</ul>
+<h3 id="5、ThreadPoolExecutor的重要属性"><a href="#5、ThreadPoolExecutor的重要属性" class="headerlink" title="5、ThreadPoolExecutor的重要属性"></a>5、ThreadPoolExecutor的重要属性</h3><ul>
+<li><code>ctl</code>：线程池状态字段，它是由两部分构成的<ul>
+<li><code>workerCount</code>，wc 工作线程数， workerCount 最大到(2^29)-1，大概 5 亿个线程</li>
+<li>runState，rs 线程池的状态</li>
+</ul>
+</li>
+<li><code>RUNNING</code>：值为-536870912，表示线程池正在接受新任务或者处理队列里的任务</li>
+<li><code>SHUTDOWN</code>：值为0，表示不接受新任务，但仍在处理已经在队列里面的任务</li>
+<li><code>STOP</code>：值为-536870912，不接受新任务，也不处理队列中的任务，有正在执行的任务就中断</li>
+<li><code>TIDYING</code>：值为1073741824，它是整理状态，所有任务都被中断，此时wc是0</li>
+<li><code>TERMINATED</code>：terminated() 已经完成的时候</li>
+<li><code>ThreadFactory threadFactory</code>：使用 threadFactory 创建 thread</li>
+<li><code>RejectedExecutionHandler handler</code>：拒绝任务的 handler 处理类</li>
+<li><code>corePoolSize</code>：线程池线程核心数</li>
+<li><code>maximumPoolSize</code>：线程池最大线程数</li>
+</ul>
+<p>Worker是线程池中运行任务的最小单元，Worker实现了Runnable接口，继承了AQS类。Worker本身就是一个Runnable，在它的构造方法中，<code>getThreadFactory().newThread(this)</code>这是话是说它是把自己作为任务传递给了thread</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Worker(Runnable firstTask) &#123;</span><br><span class="line">  setState(-<span class="number">1</span>); <span class="comment">// inhibit interrupts until runWorker</span></span><br><span class="line">  <span class="keyword">this</span>.firstTask = firstTask;</span><br><span class="line">  <span class="keyword">this</span>.thread = getThreadFactory().newThread(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Worker就像是任务的一个代理，Worker实现了Runnable，所以要重写run方法，这个run方法调用了<code>runWorker()</code>，</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  runWorker(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Worker继承了AQS，那么它本身就是一个锁，在执行任务的时候，它会锁住它自己，执行完任务然后再释放自己，Worker里面也是重写了<code>tryAcquire()</code>和<code>tryRelease（）</code></p>
+<h2 id="创建线程池及一些线上问题"><a href="#创建线程池及一些线上问题" class="headerlink" title="创建线程池及一些线上问题"></a>创建线程池及一些线上问题</h2><p>第一种线程池的创建方式是利用线程池的工具类Executors来new一个这个线程池</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ExecutorService threadPool = Executors.newFixedThreadPool(<span class="number">3</span>) <span class="comment">//3就是corePoolSize，核心线程数量</span></span><br></pre></td></tr></table></figure>
+
+<p>第二线程池的创建方式是直接new一个ThreadPollExecutor()，下面这种方式更推荐</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311152100833.png"
+                     
+                ></p>
+<p>这边有几个参数</p>
+<ul>
+<li><code>corePollSize</code>：指定核心线程数量，这个就是线程池里</li>
+<li><code>maximumPoolSize</code>：这个是假设我线程池里已经有<code>corePollSize</code>个线程了，但是它们处理任务很慢，然后阻塞队列也满了，如果此时<code>maximumPoolSize</code>它是大于这个核心线程数的，那就会再创建这个线程出来执行任务，那么这个<code>maximumPoolSize</code>创建出来的线程什么时候被回收呢，就用到了下面这个参数</li>
+<li><code>keepAliveTime</code>：这个也就是说，我<code>maximumPoolSize</code>里面的线程空闲时间达到<code>keepAliveTime</code>，那就可以回收了</li>
+<li>还有一种情况是这个<code>corePollSize</code>满了，队列满了，<code>maximumPoolSize</code>也满了，那就不能再创建额外的线程出来了，所以这边就有拒绝策略，常见的拒绝策略是 <code>AbortPolicy</code>，就直接丢弃任务，还有<code>DiscardPolicy</code>、<code>DiscardOldestPolicy</code>等等</li>
+<li>一般用的是fixed线程池，它的<code>corePollSize</code>和<code>maximumPoolSize</code>是一样大的，然后默认的阻塞队列是无界阻塞队列，可以无限制放任务，如果用无界阻塞队列不设置上限，然后处理任务也很慢，队列积压很多，那么内存飙升，回收也没法回收，就可能导致<code>OOM</code></li>
+<li>针对上面的解决策略是，我可以自定义一个拒绝策略，队列满了，来任务了，我就持久化到磁盘上去，等我任务处理的差不多了，再从磁盘上读进来再处理任务。</li>
+<li>当然线程机器可能宕机，那么这个任务不就没了吗，所以一种处理措施是，我在提交任务的时候，往数据库里写上这个任务的信息，然后给他设置个状态，是未提交、提交了、已完成，提交成功后更改状态，如果此时系统宕机也没关系，系统重启再去扫描数据库里面未提交和已提交的任务，再执行</li>
+</ul>
+<h2 id="submit-和execute"><a href="#submit-和execute" class="headerlink" title="submit()和execute()"></a>submit()和execute()</h2><p>首先看一下结构</p>
+<p><code>Executor</code>是线程池最顶级的接口，它的一个子接口是<code>ExecutorService</code>，然后是有一个抽象类<code>AbstractExecutorService</code>实现了<code>ExecutorService</code>这个接口，最后才是这个<code>ThreadPoolExecutor</code>来继承这个抽象类。</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ExecutorService</span>（二级接口） <span class="keyword">extends</span> <span class="title">Executor</span>（线程顶级接口）</span></span><br><span class="line"><span class="class"><span class="title">abstract</span> <span class="title">class</span> <span class="title">AbstractExecutorService</span>（第三级） <span class="keyword">implements</span> <span class="title">ExecutorService</span></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">ThreadPoolExecutor</span>（第四级） <span class="keyword">extends</span> <span class="title">AbstractExecutorService</span></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>但是我们new一个<code>ThreadPoolExecutor</code>出来后，既可以执行<code>submit()</code>，也可以执行<code>execute()</code>，实际上这两个是有区别的</p>
+<ul>
+<li><p>顶级接口<code>Executor</code>这个接口它只有一个<code>execute()</code>方法</p>
+<ul>
+<li><p>```java<br>public interface Executor {</p>
+<pre><code>void execute(Runnable command);
+</code></pre>
+<p>}</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- 二级接口`ExecutorService`，在这一层，添加了`submit()`方法</span><br><span class="line"></span><br><span class="line">  - command+F12</span><br><span class="line"></span><br><span class="line">    ![](https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311160725648.png)</span><br><span class="line"></span><br><span class="line">- 到了第三层`AbstractExecutorService`，它实现了`ExecutorService`这个接口，自然有`submit`和`execute`这两个方法</span><br><span class="line"></span><br><span class="line">- 到了第四层`ThreadPoolExecutor`这个实现类，它没有` submit`这个方法，但是有`execute`方法</span><br><span class="line"></span><br><span class="line">  - 那么实际上`ThreadPoolExecutor`的实例调用的是`AbstractExecutorService`的`submit`方法</span><br><span class="line"></span><br><span class="line">  - ```java</span><br><span class="line">    //AbstractExecutorService的submit方法，举例两个</span><br><span class="line">    public &lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task) &#123;</span><br><span class="line">        if (task == null) throw new NullPointerException();</span><br><span class="line">        RunnableFuture&lt;T&gt; ftask = newTaskFor(task);</span><br><span class="line">        execute(ftask);</span><br><span class="line">        return ftask;</span><br><span class="line">    &#125;</span><br><span class="line">    public &lt;T&gt; Future&lt;T&gt; submit(Runnable task, T result) &#123;</span><br><span class="line">        if (task == null) throw new NullPointerException();</span><br><span class="line">        RunnableFuture&lt;T&gt; ftask = newTaskFor(task, result);</span><br><span class="line">        execute(ftask);</span><br><span class="line">        return ftask;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>可以看到这个<code>AbstractExecutorService</code>的submit方法本质上还是调用了Executor的execute方法</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>注意submit的返回值是 Future 类的，而execute的返回值是void</p>
+<p><strong>submit做了两件事情</strong></p>
+<ul>
+<li>submit的参数可以是实现了runnable接口的，也可以是实现了callable接口的，第一件事情就是把Runnable接口和Callable都转化成FutureTask</li>
+<li>第二件事情就是让execute方法执行FutureTask</li>
+</ul>
+<h3 id="execute"><a href="#execute" class="headerlink" title="execute()"></a>execute()</h3><p><strong>那么<code>ThreadPoolExecutor</code>的execute()这个方法的实现是怎样的呢？</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311220043075.png"
+                     
+                ></p>
+<p>这一道这边有个，这个意思是说，并发的时候，可能线程还没启动，任务已经跑起来了，所以会预先搞个非核心线程出来</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (workerCountOf(recheck) == <span class="number">0</span>)</span><br><span class="line">      addWorker(<span class="keyword">null</span>, <span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="addWorker-与runWorker"><a href="#addWorker-与runWorker" class="headerlink" title="addWorker()与runWorker()"></a>addWorker()与runWorker()</h3><p>接着看一下<code>addWorker()</code>方法，它就是结合线程池的情况看要不要添加Worker</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311220801057.png"
+                     
+                ></p>
+<p>注意addWorker方法传进来的参数是firstTask， 在初始化的过程中，会把 worker自己作为任务传给 thread 去初始化，上文说了 Worker 在初始化时的关键代码，<code>this.thread = getThreadFactory ().newThread (this)</code>，<code>Worker(this)</code> 是作为新建线程的构造器入参的，所以 t.start () 会执行到 Worker 的 run 方法上</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311164323092.png"
+                     
+                ></p>
+<p>这个worker的run调用了一个runWorker</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311164444333.png"
+                     
+                ></p>
+<p>这个runWorker才是真正去执行run方法的，也是比较重要的方法</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311221727104.png"
+                     
+                ></p>
+<p>通过<code>w.firstTask</code>拿到的task，此时的task是FutureTask类（Future接口的子接口又个RunnableFuture，这个RunnableFuture的父接口是Future和Runnable，然后FutureTask实现了RunnableFuture这个接口，所以FutureTask里面也有run方法），直接看FutureTask的run的源码，它是没有返回值的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311223336589.png"
+                     
+                ></p>
+<h3 id="执行完任务之后呢"><a href="#执行完任务之后呢" class="headerlink" title="执行完任务之后呢"></a>执行完任务之后呢</h3><p>上面代码也看到了，在runWorker()方法中是一个while循环，如果队列中有任务就继续执行</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311223729888.png"
+                     
+                ></p>
+<p>那么关键就是这个getTask方法</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311225053893.png"
+                     
+                ></p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Source-Code/">#Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/09/10/SourceCode-ArrayList/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">ArrayList 源码解读</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%BA%90%E7%A0%81"><span class="nav-text">线程池源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-text">整体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81Executor"><span class="nav-text">1、Executor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81ExecutorService"><span class="nav-text">2、ExecutorService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81AbstractExecutorService"><span class="nav-text">3、AbstractExecutorService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E6%B3%A8%E9%87%8A%E5%BE%97%E5%88%B0%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="nav-text">4、注释得到的信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81ThreadPoolExecutor%E7%9A%84%E9%87%8D%E8%A6%81%E5%B1%9E%E6%80%A7"><span class="nav-text">5、ThreadPoolExecutor的重要属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8F%8A%E4%B8%80%E4%BA%9B%E7%BA%BF%E4%B8%8A%E9%97%AE%E9%A2%98"><span class="nav-text">创建线程池及一些线上问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#submit-%E5%92%8Cexecute"><span class="nav-text">submit()和execute()</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#execute"><span class="nav-text">execute()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#addWorker-%E4%B8%8ErunWorker"><span class="nav-text">addWorker()与runWorker()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%AE%8C%E4%BB%BB%E5%8A%A1%E4%B9%8B%E5%90%8E%E5%91%A2"><span class="nav-text">执行完任务之后呢</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            ArrayList 源码解读 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">ArrayList 源码解读</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-09-10 22:15:48</span>
+        <span class="mobile">2019-09-10 22:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Source-Code/">Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><p>ArrayList就是一个数组，源码中有几个重要概念</p>
+<blockquote>
+<ul>
+<li>index：表示数组下标</li>
+<li>elementData：表示数组本身</li>
+<li>DEFAULT_CAPACITY：表示初始数组的大小，默认是10！！！（无参构造器初始化是0，10 是在第一次 add 的时候扩容的数组值。）</li>
+<li>size：表示当前数组的大小，没有用volatile修饰，非线程安全</li>
+<li>modCount：统计当前数组被修改的次数，数组结构有变动，就会+1</li>
+</ul>
+</blockquote>
+<p>一些重要注释</p>
+<blockquote>
+<ul>
+<li>ArrayList允许put null值</li>
+<li>size、isEmpty、get、set、add 等方法时间复杂度都是 O(1)</li>
+<li>是非线程安全的，多线程情况下，推荐使用线程安全类</li>
+<li>增强 for 循环，或者使用迭代器迭代过程中，如果数组大小被改变，会快速失败，抛出异常。</li>
+</ul>
+</blockquote>
+<h4 id="1、-初始化"><a href="#1、-初始化" class="headerlink" title="1、 初始化"></a>1、 初始化</h4><p>有三种初始化办法:无参数直接初始化、指定大小初始化、指定初始数据初始化，源码如下:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 无参初始化，数组大小为空</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 指定初始数据来初始化</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">  			<span class="comment">// elementData是保存数组的容器，默认为null</span></span><br><span class="line">        elementData = c.toArray();</span><br><span class="line">  			<span class="comment">// 如果初始集合c有值</span></span><br><span class="line">        <span class="keyword">if</span> ((size = elementData.length) != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果集合元素不是Object类型，则转成Object类型</span></span><br><span class="line">            <span class="comment">// c.toArray might (incorrectly) not return Object[] (see 6260652)</span></span><br><span class="line">            <span class="keyword">if</span> (elementData.getClass() != Object[].class)</span><br><span class="line">                elementData = Arrays.copyOf(elementData, size, Object[].class);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 如果初始集合c没值，则默认空数组</span></span><br><span class="line">            <span class="keyword">this</span>.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong></p>
+<ul>
+<li>ArrayList 无参构造器初始化时，<strong>默认大小是空数组</strong>，并不是10，10 是在第一次 add 的时候扩容的数组值。</li>
+</ul>
+<h4 id="2、-新增与扩容"><a href="#2、-新增与扩容" class="headerlink" title="2、 新增与扩容"></a>2、 新增与扩容</h4><p>新增就是往数组中添加元素，主要分为两步。</p>
+<blockquote>
+<ul>
+<li>首先看要不要扩容，如果需要就先扩容</li>
+<li>直接赋值</li>
+</ul>
+<p>新增源码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//确保数组大小是否足够，不够则直接扩容，size是当前数组的大小，+1就是增加后的大小</span></span><br><span class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></span><br><span class="line">    <span class="comment">//直接赋值，这是线程不安全的</span></span><br><span class="line">    elementData[size++] = e;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>扩容(ensureCapacityInternal)源码</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacityInternal</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">//确保容量足够</span></span><br><span class="line">      ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureExplicitCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">// 记录数组被修改的次数</span></span><br><span class="line">      modCount++;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 如果我们需要的最小容量 大于 当前数组的长度，那就需要扩容了</span></span><br><span class="line">      <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>)</span><br><span class="line">          grow(minCapacity);</span><br><span class="line">  &#125;</span><br><span class="line"><span class="comment">//扩容，把现有数据拷贝到新的数组中</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> oldCapacity = elementData.length;</span><br><span class="line">   		<span class="comment">//新数组容量</span></span><br><span class="line">      <span class="keyword">int</span> newCapacity = oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    	<span class="comment">//如果扩容后的容量 &lt; 期望的容量，那就让期望容量成为新容量，因为至少需要这么多的</span></span><br><span class="line">      <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">          newCapacity = minCapacity;</span><br><span class="line">    </span><br><span class="line">      <span class="comment">//如果扩容后的容量 &gt; jvm能分配的最大值，那么就用 Integer 的最大值，上界</span></span><br><span class="line">      <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">          newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    </span><br><span class="line">      <span class="comment">//通过复制进行扩容</span></span><br><span class="line">      elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>扩容成原来大小的1.5倍</li>
+<li>ArrayList 中的数组的最大值是 Integer.MAX_VALUE，超过这个值，JVM 就不会给数组分配内存空间了。</li>
+<li>新增时，并没有对值进行严格的校验，所以 ArrayList 是允许 null 值的。</li>
+</ul>
+<p><strong>扩容本质</strong></p>
+<blockquote>
+<p>通过代码<code>Arrays.copyOf(elementData, newCapacity);</code>来实现扩容，就是数组的拷贝，新建一个符合预期容量的新数组，然后把老数据拷贝过去。<code>Arrays.copyOf</code>是通过<code>System.arraycopy</code>来实现的，这个方法是native方法，源码如下。</p>
+</blockquote>
+<h4 id="3、-删除"><a href="#3、-删除" class="headerlink" title="3、 删除"></a>3、 删除</h4><p>&emsp;&emsp;ArrayList 删除元素有很多种方式，比如根据数组索引删除、根据值删除或批量删除等等，原理和思路都差不多，这里选取根据值删除方式来进行源码说明：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//如果要删除的是null，找到第一个为null的删除</span></span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; size; index++)</span><br><span class="line">            <span class="keyword">if</span> (elementData[index] == <span class="keyword">null</span>) &#123;</span><br><span class="line">              	<span class="comment">//调用根据索引位置来删除</span></span><br><span class="line">                fastRemove(index);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      	<span class="comment">//如果要删除的值不为null，找到第一个和要删除的值相等的元素删除</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; size; index++)</span><br><span class="line">          	<span class="comment">//！！注意！！这里是根据equals来判断值是否相等，然后根据索引位置来删除</span></span><br><span class="line">            <span class="keyword">if</span> (o.equals(elementData[index])) &#123;</span><br><span class="line">                fastRemove(index);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新增元素时可以增加null元素，所以删除时也是允许删除null元素的</li>
+<li>找到值在数组中的索引位置，通过equals来判断相不相等等。</li>
+</ul>
+<p>下面是fastRemove方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">fastRemove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">  			<span class="comment">//记录修改次数</span></span><br><span class="line">        modCount++;</span><br><span class="line">  			<span class="comment">//numMoved表示删除index上的元素后，有多少个元素要移动到元素前面去（数据结构知识）</span></span><br><span class="line">        <span class="keyword">int</span> numMoved = size - index - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</span><br><span class="line">          	<span class="comment">//把index后面的元素拷贝过去</span></span><br><span class="line">            System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index,numMoved);</span><br><span class="line">  					<span class="comment">//数组最后一个元素赋值null，帮助GC</span></span><br><span class="line">        		elementData[--size] = <span class="keyword">null</span>; <span class="comment">// clear to let GC do its work</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、-迭代器"><a href="#4、-迭代器" class="headerlink" title="4、 迭代器"></a>4、 迭代器</h4><p>&emsp;&emsp;如果要自己实现迭代器，实现 java.util.Iterator 类就好了，ArrayList 也是这样做的，它里面的Itr实现了迭代器接口。迭代器有三个重要参数，如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cursor;       <span class="comment">// 迭代过程中下一个元素的位置，默认从0开始</span></span><br><span class="line">    <span class="keyword">int</span> lastRet = -<span class="number">1</span>; <span class="comment">// add场景：表示上一次迭代过程中索引的位置，remove场景：-1</span></span><br><span class="line">    <span class="keyword">int</span> expectedModCount = modCount;	<span class="comment">//迭代过程中期望的版本次数。</span></span><br></pre></td></tr></table></figure>
+
+<p>ArrayList迭代器的三个方法源码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cursor;       </span><br><span class="line">    <span class="keyword">int</span> lastRet = -<span class="number">1</span>; </span><br><span class="line">    <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line"></span><br><span class="line">    Itr() &#123;&#125;</span><br><span class="line"><span class="comment">//有没有值可以迭代</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      	<span class="comment">//如果下一个元素位置和大小相等，说明已经迭代完了，不等则还可以继续迭代</span></span><br><span class="line">        <span class="keyword">return</span> cursor != size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      	<span class="comment">//迭代过程中判断版本号有没有被修改，如果被修改了，抛出ConcurrentModificationException异常</span></span><br><span class="line">        checkForComodification();</span><br><span class="line">      	<span class="comment">//下一个元素位置</span></span><br><span class="line">        <span class="keyword">int</span> i = cursor;</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= size)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">        Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">      	<span class="comment">//为下一次迭代做准备</span></span><br><span class="line">        cursor = i + <span class="number">1</span>;</span><br><span class="line">        <span class="comment">//返回元素值</span></span><br><span class="line">        <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      	<span class="comment">//如果lastRet值为-1，说明数组已经被删完了</span></span><br><span class="line">        <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">      	<span class="comment">//迭代过程中判断版本号有没有被修改</span></span><br><span class="line">        checkForComodification();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ArrayList.<span class="keyword">this</span>.remove(lastRet);</span><br><span class="line">            cursor = lastRet;</span><br><span class="line">          	<span class="comment">//-1表示元素已经被删除，写这一句是为了避免重复删除的操作</span></span><br><span class="line">            lastRet = -<span class="number">1</span>;</span><br><span class="line">            <span class="comment">//删除后modCount已经发生变化，要把它赋值给expectedModCount，下一次迭代两个值就一致了</span></span><br><span class="line">            expectedModCount = modCount;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//补上</span></span><br><span class="line">  <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;只有当 ArrayList 作为共享变量时，才会有线程安全问题，当 ArrayList 是方法内的局部变量时，是没有线程安全的问题的。ArrayList 有线程安全问题的本质，是因为 ArrayList 自身的 elementData、size、modConut 在进行各种操作时，都没有加锁，而且这些变量的类型是不可见(volatile)的，所以如果多个线程对这些变量进行操作时，可能会有值被覆盖的情况。</p>
+<p>&emsp;&emsp;类注释中推荐我们使用 Collections#synchronizedList 来保证线程安全，SynchronizedList 是通过在每个方法上面加上锁来实现，虽然实现了线程安全，但是性能大大降低。</p>
+<h4 id="5、-面试问题"><a href="#5、-面试问题" class="headerlink" title="5、 面试问题"></a>5、 面试问题</h4><p>（1）<strong>ArrayList 无参数构造器构造，现在 add 一个值进去，此时数组的大小是多少，下一次扩容前最大可用大小是多少?</strong></p>
+<blockquote>
+<p>答:此处数组的实际大小是 1，但下一次扩容前最大可用大小是 10，因为 ArrayList 第一次扩容时， 是有默认值的，默认值是 10，在第一次 add 一个值进去时，数组的可用大小被扩容到 10 了。</p>
+</blockquote>
+<p>（2） <strong>如果我连续往 list 里面新增值，增加到第 11 个的时候，数组的大小是多少?</strong></p>
+<blockquote>
+<p>答:这里的考查点就是扩容的公式，当增加到 11 的时候，此时我们希望数组的大小为 11，但 实际上数组的最大容量只有 10，不够了就需要扩容，扩容的公式是:oldCapacity + (oldCapacity&gt;&gt; 1)，oldCapacity 表示数组现有大小，目前场景计算公式是:10 + 10 /2 = 15，然后我们发现 15 已经够用了，所以数组的大小会被扩容到 15。</p>
+</blockquote>
+<p>（3）<strong>数组初始化，被加入一个值后，如果我使用 addAll 方法，再一下子加入 15 个值，那么最终数组的大小是多少?</strong></p>
+<blockquote>
+<p>答:第一题中我们已经计算出来数组在加入一个值后，实际大小是 1，最大可用大小是 10 ，现在需要一下子加入 15 个值，那我们期望数组的大小值就是 16，此时数组最大可用大小只有 10，明显不够，需要扩容，扩容后的大小是:10 + 10 /2 = 15，这时候发现扩容后的大小仍 然不到我们期望的值 16，这时候源码中有一种策略如下:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果扩容后的值 &lt; 我们的期望值，我们的期望值就等于本次扩容的大小 </span></span><br><span class="line"><span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">		newCapacity = minCapacity;</span><br></pre></td></tr></table></figure>
+
+<p>所以最终数组扩容后的大小为 16。</p>
+</blockquote>
+<p>（4）<strong>现在我有一个很大的数组需要拷贝，原数组大小是 5k，请问如何快速拷贝?</strong></p>
+<blockquote>
+<p>答:因为原数组比较大，如果新建新数组的时候，不指定数组大小的话，就会频繁扩容，频繁扩容就会有大量拷贝的工作，造成拷贝的性能低下，所以说新建数组时，指定新数组的大小为 5k 即可。</p>
+</blockquote>
+<p>（5）<strong>有一个 ArrayList，数据是 2、3、3、3、4，中间有三个 3，现在我通过 for 循环的方式想把3删除，可以删除干净吗？最终结果是什么？为什么</strong></p>
+<blockquote>
+<p>答:不能删除干净，最终删除的结果是 2、3、4，有一个 3 删除不掉，原因我们看下图</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304171218373.png"
+                      alt="例子"
+                ></p>
+<p>每次删除一个元素后，该元素后面的元素就会往前移动，而此时循环的 i 在不断地增长，最终会使每次删除 3 的后一个 3 被遗漏，导致删除不掉。</p>
+</blockquote>
+<p>（6）<strong>还是上面的 ArrayList 数组，我们通过增强 for 循环进行删除，可以么?</strong></p>
+<blockquote>
+<p>答:不可以，会报错。因为增强 for 循环调用的就是迭代器的 next () 方法，当你调用 remove () 方法进行删除时，modCount 的值会 +1，而这时候迭代器中的 expectedModCount 的值却没有变，导致在迭代器下次执行 next () 方法时， expectedModCount != modCount 就会报 ConcurrentModificationException 的错误。</p>
+</blockquote>
+<p>（7）<strong>还是上面的数组，如果删除时使用list. Iterator 然后remove () 可以删除么，为什么?</strong></p>
+<blockquote>
+<p>答：可以的，因为 Iterator.remove () 方法在执行的过程中，会把最新的 modCount 赋值给 expectedModCount，这样在下次循环过程中，modCount 和 expectedModCount 两者就会相等。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    list.add(<span class="number">1</span>);</span><br><span class="line">    list.add(<span class="number">2</span>);</span><br><span class="line">    list.add(<span class="number">3</span>);</span><br><span class="line">    list.add(<span class="number">3</span>);</span><br><span class="line">    list.add(<span class="number">3</span>);</span><br><span class="line">    list.add(<span class="number">4</span>);</span><br><span class="line">    <span class="comment">// for (int i = 0; i &lt; list.size(); i++) &#123;</span></span><br><span class="line">    <span class="comment">//     if (list.get(i) == 3) &#123;</span></span><br><span class="line">    <span class="comment">//         list.remove(i);</span></span><br><span class="line">    <span class="comment">//     &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">  	<span class="comment">//增强型for循环调用的是迭代器的next，list.remove然后会调用fastRemove</span></span><br><span class="line">    <span class="comment">//前面是迭代器的版本号，后面是list里面持有的版本号，list调用remove，版本号+1</span></span><br><span class="line">    <span class="comment">//但是前面迭代器的版本号是没变的。</span></span><br><span class="line">    <span class="comment">// for (Integer i : list) &#123;</span></span><br><span class="line">    <span class="comment">//     if (i == 3) &#123;</span></span><br><span class="line">    <span class="comment">//         list.remove(i);</span></span><br><span class="line">    <span class="comment">//     &#125;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    Iterator&lt;Integer&gt; it = list.iterator();</span><br><span class="line">    <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">        Integer next = it.next();</span><br><span class="line">        <span class="keyword">if</span> (next == <span class="number">3</span>) &#123;</span><br><span class="line">            it.remove();	<span class="comment">//迭代器的remove，而不是list的</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="comment">//主要就是看这个迭代器是不是list自己的</span></span><br><span class="line">    System.out.println(list);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Source-Code/">#Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/09/11/SourceCode-LinkedList/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">LinkedList 源码解读</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/01/14/SourceCode-ThreadPool/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">ThreadPool 源码解读</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ArrayList"><span class="nav-text">ArrayList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">1、 初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81-%E6%96%B0%E5%A2%9E%E4%B8%8E%E6%89%A9%E5%AE%B9"><span class="nav-text">2、 新增与扩容</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81-%E5%88%A0%E9%99%A4"><span class="nav-text">3、 删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%E3%80%81-%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="nav-text">4、 迭代器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5%E3%80%81-%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98"><span class="nav-text">5、 面试问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text"></span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

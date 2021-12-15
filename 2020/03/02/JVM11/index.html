@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            JVM工具使用 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">JVM工具使用</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-03-02 23:15:48</span>
+        <span class="mobile">2020-03-02 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/JVM/">JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="JVM工具的使用"><a href="#JVM工具的使用" class="headerlink" title="JVM工具的使用"></a>JVM工具的使用</h1><h2 id="一、jstat"><a href="#一、jstat" class="headerlink" title="一、jstat"></a>一、jstat</h2><h3 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h3><p>jstat可以让你看到当前运行中的系统，他的JVM内的Eden、Survivor、老年代的内存使用情况，还有Young GC和Full gC的执行次数以及耗时。通过这些指标，我们可以轻松的分析出当前系统的运行情况，判断当前系统的内存使用压力以及GC压力，还有就是内存分配是否合理。</p>
+<h3 id="2、命令"><a href="#2、命令" class="headerlink" title="2、命令"></a>2、命令</h3><h4 id="（1）jps命令"><a href="#（1）jps命令" class="headerlink" title="（1）jps命令"></a>（1）jps命令</h4><p>jps(Java Virtual Machine Process Status Tool)是JDK 1.5提供的一个显示当前所有java进程pid的命令。</p>
+<ul>
+<li><code>jps -q</code>：只显示pid</li>
+<li><code>jps -m</code>：输出传递给main 方法的参数</li>
+<li><code>jps -l</code>：输出应用程序main class的完整package名 或者 应用程序的jar文件完整路径名</li>
+<li><code>jps -v</code>：输出传递给JVM的参数</li>
+</ul>
+<h4 id="（2）jstat命令"><a href="#（2）jstat命令" class="headerlink" title="（2）jstat命令"></a>（2）jstat命令</h4><p>命令格式：jstat [option] LVMID [interval] [count]</p>
+<ul>
+<li><code>option</code> : 操作参数、<code>LVMID </code>: 本地虚拟机进程ID、<code>interval]</code>: 连续输出的时间间隔、<code>count</code> : 连续输出的次数</li>
+<li><code>jstat -gc PID</code>：查看Java进程（JVM）的内存和GC情况，最常用的命令</li>
+<li><code>jstat -gccapacity PID</code>：堆内存分析</li>
+<li><code>jstat -gcnew PID</code>：年轻代GC分析，这里的TT和MTT可以看到对象在年轻代存活的年龄和存活的最大年龄</li>
+<li><code>jstat -gcnewcapacity PID</code>：年轻代内存分析</li>
+<li><code>jstat -gcold PID</code>：老年代GC分析</li>
+<li><code>jstat -gcoldcapacity PID</code>：老年代内存分析</li>
+<li><code>jstat -gcmetacapacity PID</code>：元数据区内存分析</li>
+</ul>
+<h4 id="（3）命令结果解释"><a href="#（3）命令结果解释" class="headerlink" title="（3）命令结果解释"></a>（3）命令结果解释</h4><ul>
+<li><code>S0C</code>：这是From Survivor区的大小</li>
+<li><code>S1C</code>：这是To Survivor区的大小</li>
+<li><code>S0U</code>：这是From Survivor区当前使用的内存大小</li>
+<li><code>S1U</code>：这是To Survivor区当前使用的内存大小</li>
+<li><code>EC</code>：这是Eden区的大小</li>
+<li><code>EU</code>：这是Eden区当前使用的内存大小</li>
+<li><code>OC</code>：这是老年代的大小</li>
+<li><code>OU</code>：这是老年代当前使用的内存大小</li>
+<li><code>MC</code>：这是方法区（永久代、元数据区）的大小</li>
+<li><code>MU</code>：这是方法区（永久代、元数据区）的当前使用的内存大小</li>
+<li><code>YGC</code>：这是系统运行迄今为止的Young GC次数</li>
+<li><code>YGCT</code>：这是Young GC的耗时</li>
+<li><code>FGC</code>：这是系统运行迄今为止的Full GC次数</li>
+<li><code>FGCT</code>：这是Full GC的耗时</li>
+<li><code>GCT</code>：这是所有GC的总耗时</li>
+</ul>
+<h3 id="3、工具使用姿势"><a href="#3、工具使用姿势" class="headerlink" title="3、工具使用姿势"></a>3、工具使用姿势</h3><p>使用jstat来分析线上的JVM进程，要知道的信息有如下几个：新生代对象增长的速率、Young GC的触发频率、Young GC的耗时、每次Young GC后有多少对象是存活下来的、每次Young GC过后有多少对象进入了老年代、老年代对象增长的速率、Full GC的触发频率、Full GC的耗时等。知道了这些就能进行优化了。</p>
+<h4 id="（1）新生代对象增长速率"><a href="#（1）新生代对象增长速率" class="headerlink" title="（1）新生代对象增长速率"></a>（1）新生代对象增长速率</h4><p>使用<code>jstat -gc PID 1000 10</code>，每隔1秒钟更新出来最新的一行jstat统计信息，通过这个命令，你可以非常灵活的对线上机器通过固定频率输出统计信息，观察每隔一段时间的jvm中的Eden区对象占用变化。时间段可以根据对象增长速度来设定。还有就是一般系统都有高峰和日常两种状态，比如系统高峰期用的人很多，此时你就应该在系统高峰期去用上述命令看看高峰期的对象增长速率。然后你再得在非高峰的日常时间段内看看对象的增长速率。</p>
+<h4 id="（2）Young-GC触发一频率和耗时"><a href="#（2）Young-GC触发一频率和耗时" class="headerlink" title="（2）Young GC触发一频率和耗时"></a>（2）Young GC触发一频率和耗时</h4><p>知道了新生代对象增长速度，就可以估计Young GC的时间了，同时jstat会告诉你迄今为止系统已经发生了多少次Young GC以及这些Young GC的总耗时。比如系统运行24小时后共发生了100次Young GC，总耗时为20s。那么平均下来每次Young GC大概就耗时二十毫秒的时间。</p>
+<h4 id="（3）每次Young-GC后有多少对象进入老年代"><a href="#（3）每次Young-GC后有多少对象进入老年代" class="headerlink" title="（3）每次Young GC后有多少对象进入老年代"></a>（3）每次Young GC后有多少对象进入老年代</h4><p>这个对象量只能估算出来，我们知道了多久发生一次Young GC，假设为t，可以利用<code>jstat -gc PID t 10</code>看看，每隔t分钟后Eden、Survivor、老年代的对象变化。老年代中内存占用会慢慢增加，这里的关键，就是观察老年代的对象增长速率。正常的角度来看，老年代的对象是不太可能不停的快速增长的，普通的系统其实没那么多长期存活的对象。如果你发现比如每次Young GC过后，老年代对象都要增长几十MB，那很有可能就是你一次Young GC过后存活对象太多了。如果老年代对象快速增长，那一定是不正常的。</p>
+<h4 id="（4）Full-GC出发时机和耗时"><a href="#（4）Full-GC出发时机和耗时" class="headerlink" title="（4）Full GC出发时机和耗时"></a>（4）Full GC出发时机和耗时</h4><p>知道了老年代对象的增长速率，那么Full GC的触发时机就很清晰了，jstat可以打印Full GC次数以及总耗时。</p>
+<h2 id="二、jmap和jhat"><a href="#二、jmap和jhat" class="headerlink" title="二、jmap和jhat"></a>二、jmap和jhat</h2><p>这两个工具可以帮助我们观察线上JVM中的对象分布，了解到系统运行过程中，到底哪些对象占据了主角位置，他们占据了多少内存空间。这篇<a class="link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/ityouknow/p/5714703.html" >博客<i class="fas fa-external-link-alt"></i></a>写的非常详细！</p>
+<h3 id="1、jmap"><a href="#1、jmap" class="headerlink" title="1、jmap"></a>1、jmap</h3><p>单单看JVM运行状况，jstat足够用了，如果发现JVM新对象增加速度很快，想看这个对象是谁，可以用jmap。</p>
+<ul>
+<li><code>jmap -heap PID</code>：系统运行时内存区域信息。这个会打印出来堆内存相关的一些参数设置，以及当前堆内存里的一些基本各个区域的情况。</li>
+<li><code>jmap -histo PID</code>：系统运行时的对象分布，他会按照各种对象占用内存空间的大小降序排列，把占用内存最多的对象放在最上面。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191030143932022.png"
+                     
+                ></p>
+<ul>
+<li><code>jmap -dump:live,format=b,file=dump.hprof PID</code>:把这一时刻JVM堆内存里所有对象的快照放到文件里去了，供你后续去分析。</li>
+</ul>
+<h3 id="2、jhat"><a href="#2、jhat" class="headerlink" title="2、jhat"></a>2、jhat</h3><p>通过jmap得到了堆内存快照，可以利用jhat去分析堆内存快照，jhat内置了web服务器，他会支持你通过浏览器来以图形化的方式分析堆转储快照。使用<code>jhat dump.hprof -port 7000</code>命令即可启动jhat服务器，还可以指定自己想要的http端口号，默认是7000端口号,接着你就在浏览器上访问当前这台机器的7000端口号，就可以通过图形化的方式去分析堆内存里的对象分布情况了。</p>
+<h2 id="三、JVM监控工具"><a href="#三、JVM监控工具" class="headerlink" title="三、JVM监控工具"></a>三、JVM监控工具</h2><p>很多中大型公司都会部署专门的监控系统，比较常见的有Zabbix、OpenFalcon、Ganglia，此时你就可以在这些监控系统可视化的界面里，看到你需要的所有指标，包括你的各个内存区域的对象占用变化曲线，直接可以看到Eden区的对象增速，还会告诉你Young GC发生的频率以及耗时，包括老年代的对象增速以及Full GC的频率和耗时。<strong>对线上运行的系统，要不然用命令行工具手动监控，发现问题就优化，要不然就是依托公司的监控系统进行自动监控，可视化查看日常系统的运行状态。</strong></p>
+<h2 id="四、Young-GC实战"><a href="#四、Young-GC实战" class="headerlink" title="四、Young GC实战"></a>四、Young GC实战</h2><p>模拟电商订单系统，机器4核8G，堆内存中的新生代分配的内存都在1.5G左右，Eden区大概也就1G左右的空间，假设每台机器500个请求，每个请求需要加载100KB的数据，1秒就是50MB，大概20s左右就会填满Eden区然后触发Young GC进行回收。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-XX:NewSize=104857600 		//新生代100MB</span><br><span class="line">-XX:MaxNewSize=104857600 </span><br><span class="line">-XX:InitialHeapSize=209715200		//堆内存200MB</span><br><span class="line">-XX:MaxHeapSize=209715200 </span><br><span class="line">-XX:SurvivorRatio=8		//Eden80MB，S区各占10MB  	</span><br><span class="line">-XX:MaxTenuringThreshold=15 </span><br><span class="line">-XX:PretenureSizeThreshold=3145728 </span><br><span class="line">-XX:+UseParNewGC </span><br><span class="line">-XX:+UseConcMarkSweepGC </span><br><span class="line">-XX:+PrintGCDetails </span><br><span class="line">-XX:+PrintGCTimeStamps </span><br><span class="line">-Xloggc:gc.log</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line">		<span class="comment">//模拟系统按照每秒钟50个请求，每个请求加载100KB数据的方式不停的运行，每秒5MB</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Thread.sleep(<span class="number">30000</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            loadData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</span><br><span class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">100</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        data = <span class="keyword">null</span>;</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动！首先找到进程号</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191030153448868.png"
+                     
+                ></p>
+<p>接着输入jstat命令</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191030153630314.png"
+                     
+                ></p>
+<p>观察<code>EU</code>可以发现Eden刚开始被用了8MB左右，然后以5MB/s速度增长，Eden一共80MB，当使用量达到70多MB的时候，再要分配5MB的对象就失败了，此时就会触发一次Young GC，Eden区的使用量从70多MB降低为了1MB多，大致在十几秒左右会触发一次Young GC，同时我们也看到回收对象也只用了0.002s，速度非常快。，<code>S1U</code>就是Survivor中被使用的内存，之前一直是0，在一次Young GC过后变成了875.3KB，所以一次Young GC后也就存活875.3KB的对象而已，轻松放入10MB的Survivor中。同时<code>OU</code>一直都是0 ，说明这个系统运行良好，Young GC都不会导致对象进入老年代，这就几乎不需要什么优化了。因为几乎可以默认老年代对象增速为0，Full  GC发生频率趋向于0，对系统无影响。</p>
+<h2 id="五、Full-GC实战"><a href="#五、Full-GC实战" class="headerlink" title="五、Full GC实战"></a>五、Full GC实战</h2><h3 id="1、背景"><a href="#1、背景" class="headerlink" title="1、背景"></a>1、背景</h3><p>百亿数据量计算系统，从数据库中提取数据到内存中来计算。这是一套分布式运行系统，平均每台机器每分钟执行100次数据提取和计算，每次会提取大概1万条左右的数据到内存里来计算，平均每次计算大概需要耗费10秒左右的时间。机器4核8G，JVM内存给4G，新生代老年代分别1.5G。这里每条数据都是比较大的，大概每条数据包含了平均20个字段，可以认为平均每条数据在1KB左右的大小，1万条数据就对应了10MB的大小。新生代按8:1:1，则Eden占1.2GB，每个S区占100MB，这样一分钟大概对应100次计算任务，Eden区大概满了，执行Young GC前会检查老年代可用空间，那么此时Eden区里有多少对象还是存活的，无法被垃圾回收呢？每个计算任务1万条数据需要计算10秒钟，所以假设此时80个计算任务都执行结束了，但是还有20个计算任务共计200MB的数据，还在计算中，那么此时就是200MB的对象是存活的，不能被垃圾回收掉，然后有1GB的对象是可以垃圾回收的，由于Survivor区实际上就100MB的空间，此时就会通过空间担保机制，让这200MB对象直接进入老年代去。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191030155206552.png"
+                     
+                ></p>
+<p>按照上述计算，每分钟都是一个轮回，大概算下来是每分钟都会把新生代的Eden区填满，然后触发一次Minor GC，然后大概都会有200MB左右的数据进入老年代，所以大概在8分钟左右，新生代慢了，要进入老年代，但是老年代放不下了，要进行GC。假设此时老年代被占据的1.4G空间里，全部都是可以回收的对象，那么此时一次性就会把这些对象都给回收了，然后这200MB对象再进入老年代，再回到上图的结果。</p>
+<h3 id="2、优化"><a href="#2、优化" class="headerlink" title="2、优化"></a>2、优化</h3><p>因为这个系统是数据计算系统，每次Minor GC的时候，必然会有一批数据没计算完毕，但是按照现有的内存模型，最大的问题，其实就是 每次Survivor区域放不下存活对象。所以就增加了新生代的内存比例，3GB左右的堆内存，其中2GB分配给新生代，1GB留给老年代，这样Survivor区大概就是200MB，每次刚好能放得下Minor GC过后存活的对象了。</p>
+<h3 id="3、场景模拟"><a href="#3、场景模拟" class="headerlink" title="3、场景模拟"></a>3、场景模拟</h3><p>JVM参数唯一修改的就是“**-XX:PretenureSizeThreshold**”，把大对象阈值修改为了20MB，避免程序里分配的大对象直接进入老年代。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-XX:NewSize=104857600 </span><br><span class="line">-XX:MaxNewSize=104857600 </span><br><span class="line">-XX:InitialHeapSize=209715200 </span><br><span class="line">-XX:MaxHeapSize=209715200 </span><br><span class="line">-XX:SurvivorRatio=8  </span><br><span class="line">-XX:MaxTenuringThreshold=15 </span><br><span class="line">-XX:PretenureSizeThreshold=20971520 </span><br><span class="line">-XX:+UseParNewGC </span><br><span class="line">-XX:+UseConcMarkSweepGC </span><br><span class="line">-XX:+PrintGCDetails </span><br><span class="line">-XX:+PrintGCTimeStamps </span><br><span class="line">-Xloggc:gc.log</span><br></pre></td></tr></table></figure>
+
+<p>代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Thread.sleep(<span class="number">30000</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            loadData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        data = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] data1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">byte</span>[] data2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        </span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每秒钟都会执行一次loadData()方法，他会分配4个10MB的数组，但是都立马成为垃圾，但是会有data1和data2两个10MB的数组是被变量引用必须存活的，此时Eden区已经占用了六七十MB空间了，接着是data3变量依次指向了两个10MB的数组，这是为了在1s内触发Young GC的。采用jstat监控其运行状态可以看到如下的信息：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191030160946794.png"
+                     
+                ></p>
+<p>按照我们上述的代码，他一定会在一秒内触发一次Young GC，Young GC过后，我们发现S1U中有798.8KB的存活对象，就是未知存活对象，同时每秒会发生一次Young GC，都会导致20MB~30MB左右的对象进入老年代（因为Survivor区域是放不下只能进老年代），然后老年代的对象占用从30KB一路到60MB左右，此时突然在60MB之后下一秒，明显发生了一次Full GC。</p>
+<p>从<code>YGC</code>可以看到，23次Young GC，结果耗费了105毫秒，平均下来一次Young GC要5毫秒左右。但是11次Full GC才耗费22毫秒，平均下来一次Full GC才耗费2毫秒，这是因为这个Full GC是由Young GC触发的，必须得等Full GC执行完毕了，Young GC才能把存活对象放入老年代才算结束，导致Young GC速度非常慢。</p>
+<h3 id="4、场景优化"><a href="#4、场景优化" class="headerlink" title="4、场景优化"></a>4、场景优化</h3><p>JVM参数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-XX:NewSize=209715200 </span><br><span class="line">-XX:MaxNewSize=209715200 </span><br><span class="line">-XX:InitialHeapSize=314572800 	//调整到300MB</span><br><span class="line">-XX:MaxHeapSize=314572800 </span><br><span class="line">-XX:SurvivorRatio=2			//调整为2:1:1</span><br><span class="line">-XX:MaxTenuringThreshold=15 </span><br><span class="line">-XX:PretenureSizeThreshold=20971520 </span><br><span class="line">-XX:+UseParNewGC </span><br><span class="line">-XX:+UseConcMarkSweepGC </span><br><span class="line">-XX:+PrintGCDetails </span><br><span class="line">-XX:+PrintGCTimeStamps </span><br><span class="line">-Xloggc:gc.log</span><br></pre></td></tr></table></figure>
+
+<p>把堆大小从200MB调整到300MB，新生代给了200MB，同时<code>-XX:SurvivorRatio=2</code>表明，Eden:Survivor:Survivor的比例为2:1:1，所以Eden区是100MB，每个Survivor区是50MB，老年代也是100MB。运行程序，结果如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191030162026117.png"
+                     
+                ></p>
+<p>可以看到，只有Young GC，没有Full GC，没有Full GC的干扰后，Young GC速度是很快的</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/JVM/">#JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/03/01/JVM10/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">CMS再优化与频繁FullGC问题分析</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">JVM工具的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81jstat"><span class="nav-text">一、jstat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%AE%80%E4%BB%8B"><span class="nav-text">1、简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%91%BD%E4%BB%A4"><span class="nav-text">2、命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89jps%E5%91%BD%E4%BB%A4"><span class="nav-text">（1）jps命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89jstat%E5%91%BD%E4%BB%A4"><span class="nav-text">（2）jstat命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E5%91%BD%E4%BB%A4%E7%BB%93%E6%9E%9C%E8%A7%A3%E9%87%8A"><span class="nav-text">（3）命令结果解释</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E5%A7%BF%E5%8A%BF"><span class="nav-text">3、工具使用姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E6%96%B0%E7%94%9F%E4%BB%A3%E5%AF%B9%E8%B1%A1%E5%A2%9E%E9%95%BF%E9%80%9F%E7%8E%87"><span class="nav-text">（1）新生代对象增长速率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89Young-GC%E8%A7%A6%E5%8F%91%E4%B8%80%E9%A2%91%E7%8E%87%E5%92%8C%E8%80%97%E6%97%B6"><span class="nav-text">（2）Young GC触发一频率和耗时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E6%AF%8F%E6%AC%A1Young-GC%E5%90%8E%E6%9C%89%E5%A4%9A%E5%B0%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E5%85%A5%E8%80%81%E5%B9%B4%E4%BB%A3"><span class="nav-text">（3）每次Young GC后有多少对象进入老年代</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89Full-GC%E5%87%BA%E5%8F%91%E6%97%B6%E6%9C%BA%E5%92%8C%E8%80%97%E6%97%B6"><span class="nav-text">（4）Full GC出发时机和耗时</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81jmap%E5%92%8Cjhat"><span class="nav-text">二、jmap和jhat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81jmap"><span class="nav-text">1、jmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81jhat"><span class="nav-text">2、jhat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81JVM%E7%9B%91%E6%8E%A7%E5%B7%A5%E5%85%B7"><span class="nav-text">三、JVM监控工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Young-GC%E5%AE%9E%E6%88%98"><span class="nav-text">四、Young GC实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Full-GC%E5%AE%9E%E6%88%98"><span class="nav-text">五、Full GC实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E8%83%8C%E6%99%AF"><span class="nav-text">1、背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BC%98%E5%8C%96"><span class="nav-text">2、优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F"><span class="nav-text">3、场景模拟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E5%9C%BA%E6%99%AF%E4%BC%98%E5%8C%96"><span class="nav-text">4、场景优化</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

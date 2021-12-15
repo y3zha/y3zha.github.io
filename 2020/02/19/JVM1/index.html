@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            初识JVM |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">初识JVM</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-02-19 23:15:48</span>
+        <span class="mobile">2020-02-19 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/JVM/">JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="认识-JVM"><a href="#认识-JVM" class="headerlink" title="认识 JVM"></a>认识 JVM</h1><h2 id="一、初识JVM"><a href="#一、初识JVM" class="headerlink" title="一、初识JVM"></a>一、初识JVM</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们写好一份Java代码，要将其部署到线上的机器去运行，就要将其打包成<code>.jar</code>或<code>.war</code>后缀的包，再进行部署。其中关键的一步是<strong>编译</strong>，也就是要把<code>.java</code>文件编译成<code>.class</code>字节码文件，有了字节码文件可以通过java命令来启动一个<code>JVM</code>进程，由JVM来负责运行这些字节码文件。所以说，在某个机器上部署某个系统后，一旦启动这个系统，实际上就是启动了<code>JVM</code>。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们写好了一个个类是通过<code>类加载器</code>把字节码文件加载到JVM中的，JVM会首先从<code>main()</code>方法开始执行里面的代码，它需要哪个类就会使用类加载器来加载对应的类，反正对应的类就在<code>.class</code>文件中。</p>
+<p><strong>注意</strong>：如果一个项目中有多个<code>main()</code>方法，在启动一个jar包的时候，就制定了是走哪个<code>main()</code>方法，所以入口是唯一的。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmRwb244ajMxMnMwcnNnbmcuanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<p>程序运行机制</p>
+<h2 id="二、初识JVM类加载器机制"><a href="#二、初识JVM类加载器机制" class="headerlink" title="二、初识JVM类加载器机制"></a>二、初识JVM类加载器机制</h2><h3 id="2-1引入"><a href="#2-1引入" class="headerlink" title="2.1引入"></a>2.1引入</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;问题：JVM什么时候会加载一个类？</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最简单的例子是直接从<code>main()</code>进入开始执行，比如</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Kafka</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmZsb2U5ajMwZGkwYXFxMzMuanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果碰到了实例化对象的操作，才把实例化的这个类的<code>.class</code>文件加载到内存（之前是没有加载进来的）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Kafka</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ReplicaManager replicaManager = <span class="keyword">new</span> ReplicaManager();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmJkamxwajMwa3MwYmNqcnUuanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;首先是包含<code>main()</code>方法的主类会在JVM启动之后首先被加载到内存中，然后开始执行<code>main()</code>中的代码，碰到需要使用的类，才去加载这个类对应的字节码文件，也就是说是按需加载。</p>
+<h3 id="2-2类加载过程"><a href="#2-2类加载过程" class="headerlink" title="2.2类加载过程"></a>2.2类加载过程</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类加载的过程为：加载、验证、准备、解析、初始化、使用、卸载</p>
+<ul>
+<li><p><code>验证</code>：就是看字节码文件是否符合规范。</p>
+</li>
+<li><p><code>准备</code>：给类<strong>分配内存空间</strong>，其次为<code>类变量</code>分配内存空间，并设定一个默认值。<strong>不执行赋值！</strong></p>
+</li>
+<li><p><code>解析</code>：符号引用替换为直接引用的过程</p>
+</li>
+<li><p><code>初始化</code>：正式执行类初始化的代码，在这里才是执行赋值代码等操作，<code>准备阶段</code>仅仅为类和变量开辟空间。在这个阶段执行初始化操作有很多，比如对于静态代码块的初始化就是在这个阶段执行的（JVM设计者设计先执行静态代码块的机制是希望开发者把类使用之前的准备工作在这准备好类级别的数据）。要记住，类的初始化就是初始化这个类，和里头的对象无关，只有new关键字才会构造出一个对象。</p>
+</li>
+<li><p><strong>什么时候会初始化一个类呢？</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一般来说包含<code>main()</code>方法的类是必须立马初始化的，或者说执行到new对象了，就会把这个对象的类初始化，如果这个类初始化过了，就不用进行第二次初始化。初始化重要的一个规则是：<strong>初始化一个类的时候，如果该类的父类没有初始化，（如果父类也没有加载的话）必须先加载并初始化它的父类！</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReplicaManager</span> <span class="keyword">extends</span> <span class="title">AbstractDataManager</span> </span>&#123;</span><br><span class="line">    <span class="comment">//ReplicaManager继承AbstractDataManager，在初始化ReplicaManager时必须先初始化它的父类</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-3类加载器和双亲委派机制"><a href="#2-3类加载器和双亲委派机制" class="headerlink" title="2.3类加载器和双亲委派机制"></a>2.3类加载器和双亲委派机制</h3><p>1、Java中的类加载器</p>
+<ul>
+<li><code>启动类加载器</code>：负责加载机器上安装的Java目录下的核心类，Java安装目录下有个<code>lib</code>文件存放了Java的核心库，JVM启动后，首先会依托<code>启动类加载器</code>去加载lib。</li>
+<li><code>扩展类加载器</code>：就是加载<code>lib/ext</code>目录，和启动类加载器差不多，但它是启动类加载器的儿子。</li>
+<li><code>应用程序类加载器</code>：负责加载<code>ClassPath</code>环境变量指定路径中的类，就是把你写好的代码加载进内存。</li>
+<li><code>自定义类加载器</code>：自己写的类加载器，继承<code>ClassLoader</code>类，重写类加载方法</li>
+</ul>
+<p>2、双亲委派机制</p>
+<p>JVM的加载器是有亲子结构的，如图所示，提出了<strong>双亲委派机制</strong>。</p>
+<p><code>双亲委派机制</code>：如果应用程序要加载一个类，首先会委派自己的父类加载器去加载，直至传到最顶层的加载器去加载，如果父类加载器在自己的职责范围内没有找到这个类，就会把加载权利下放给子类加载器。<strong>总的来说，就说先找父类去加载，不行再由儿子来加载</strong>。先从顶层加载器开始，发现自己加载不到，往下推给子类，这样能<strong>保证绝不会重复加载某个类</strong>。</p>
+<p>双亲委派的好处：避免了类的重复加载，如果两个不同层级的类加载器可以加载同一个类，就重复了。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmU3ajJiajMwZW8waG1qcnouanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmc2eDF0ajMweDIwdTBhZ3EuanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<h2 id="三、初识JVM内存区域"><a href="#三、初识JVM内存区域" class="headerlink" title="三、初识JVM内存区域"></a>三、初识JVM内存区域</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们写好的代码中有很多的类，类中有许多的方法，同时方法中也有许多变量，它们都需要放到合适的区域，这就是JVM为什么要划分出不同内存区域的原因，下面介绍下JVM中的内存区域分类。</p>
+<h3 id="3-1存放类的区域——方法区"><a href="#3-1存放类的区域——方法区" class="headerlink" title="3.1存放类的区域——方法区"></a>3.1存放类的区域——方法区</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>方法区</code>主要存放从<code>class</code>文件中加载进来的类，JDK 1.8后这块区域改名为<code>Metaspace</code>，即元数据空间，放的还是我们自己写的各种类相关的信息。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Kafka</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ReplicaManager replicaManager = <span class="keyword">new</span> ReplicaManager();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;假设我们有上面这个例子，JVM首先类加载<code>Kafka.class</code>到方法区，当程序运行到实例化对象那句，就把<code>ReplicaManager.class</code>加载到方法区。如果<code>Kafka</code>类中有静态变量，也一样会进入方法区。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmVvZGkwajMwczYwZjgzem8uanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<h3 id="3-2程序计数器——执行代码指令用的"><a href="#3-2程序计数器——执行代码指令用的" class="headerlink" title="3.2程序计数器——执行代码指令用的"></a>3.2程序计数器——执行代码指令用的</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们写好的Java文件被编译成.class文件后就应对成了一行行的字节码指令，JVM加载类信息到方法区后，会去执行编译出来的字节码指令，执行的时候用到了<code>程序计数器</code>，它用来记录我们的程序执行到了哪一行字节码指令。由于JVM是支持多线程的，如果写好的代码开启了多个线程，那么每个线程都会有对应的程序计数器，来表示当前线程执行到了哪一条指令。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmQ5aGU0ajMwejIwbTRkaHouanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<h3 id="3-3存放方法的区域——Java虚拟机栈"><a href="#3-3存放方法的区域——Java虚拟机栈" class="headerlink" title="3.3存放方法的区域——Java虚拟机栈"></a>3.3存放方法的区域——Java虚拟机栈</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在<code>main()</code>方法中有程序计数器来记录指令执行到哪了，但在方法中我们也会定义一些<code>局部变量</code>，JVM有一块区域是专门用来放<code>局部变量</code>的，即<code>Java虚拟机栈</code>，同样的，对于每个线程，它们有自己的<code>Java虚拟机栈</code>，如果一个线程执行了一个方法，会为这个方法调用创建一个对应的<code>栈帧</code>，<code>栈帧</code>中包含着局部变量表、操作数栈、动态链接、方法出口等。比如main线程执行了<code>main()</code>方法，那就为<code>main()</code>方法创建了一个<code>栈帧</code>，并将其压入了<code>Java虚拟机栈</code>，同时在<code>main()</code>方法的栈帧中也存放着它的局部变量。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmF3cWhmajMwYnkwNzhhYTguanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//含有main方法的Kafka类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Kafka</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ReplicaManager replicaManager = <span class="keyword">new</span> ReplicaManager();</span><br><span class="line">        replicaManager.loadReplicasFromDisk();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReplicaManager</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadReplicasFromDisk</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Boolean hasFinishedLoad = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (isLocalDataCorrupt()) &#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Boolean <span class="title">isLocalDataCorrupt</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Boolean isCorrect = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">return</span> isCorrect;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;比如上面这段代码，对应的Java虚拟机栈如下。在栈帧里存放了这个方法对应的局部变量之类的数据，包括这个方法执行的其他相关的信息，方法执行完毕之后就出栈。如果<code>isLocalDataCorrupt</code>方法执行完毕了，就会把<code>isLocalDataCorrupt</code>方法对应的栈帧从Java虚拟机栈里给出栈，然后如果<code>loadReplicasFromDisk</code>方法也执行完毕了，就会把<code>loadReplicasFromDisk</code>方法也从Java虚拟机栈里出栈。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmNxb3MyajMwYnUwZWVteHYuanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<h3 id="3-4存放对象的区域——Java内存堆"><a href="#3-4存放对象的区域——Java内存堆" class="headerlink" title="3.4存放对象的区域——Java内存堆"></a>3.4存放对象的区域——Java内存堆</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在main方法里创建了ReplicaManager对象的时候，就会在main方法对应的栈帧的局部变量表里，让一个引用类型的“replicaManager”局部变量来存放ReplicaManager对象的地址。</p>
+<p><strong>注意：</strong></p>
+<ul>
+<li>新建的实例在堆内存，实例变量（对象变量）也是在堆内存的</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmYzZW93ajMwdmUwaDhqc3QuanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmFrZzl1ajMwdmEwbW03NmIuanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;总结一下这个过程：JVM进程启动后，首先会加载含有<code>main</code>方法的<code>Kafka</code>类到内存里（方法区），生成一个main线程，然后为这个线程分配一个程序计数器，开始执行程序。先生成main方法的栈帧，压入Java虚拟机栈，然后执行到<code>new ReplicaManager()</code>时，就会把<code>ReplicaManager</code>类加载进内存（方法区），接着发现要实例化一个对象，把这个对象的内存分配在Java内存堆中，并在main方法的栈帧里的局部变量表引入一个<code>replicaManager</code>局部变量，把它指向堆内存中的地址，然后main线程开始执行<code>ReplicaManager</code>对象中的方法依次把方法压栈，执行完出栈。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;总结：<strong>类都是加载到方法区里的，而且是按需加载，只加载一次，要new对象时候，对象被分配在堆汇总，执行方法时为这个方法生成栈栈压入虚拟机栈，然后对应变量指向堆内存中的地址，完成方法则出栈。</strong></p>
+<h2 id="四、初识垃圾回收机制"><a href="#四、初识垃圾回收机制" class="headerlink" title="四、初识垃圾回收机制"></a>四、初识垃圾回收机制</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一个方法执行完后的结果是怎样的？如图，也就是没有变量指向这个变量了，由于我们在内存堆里创建的对象都是占用内存资源的，所以需要回收它。JVM本身带有垃圾回收机制，它是<strong>后台自动运行的线程</strong>。它检索这个对象是否有人引用，如果没有任何人指向他，就会把这个对象给回收掉，从内存中清除。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndseTFnYWN1dmNib3R2ajMwejgwYmlhYXIuanBn?x-oss-process=image/format,png"
+                     
+                ></p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/JVM/">#JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/02/20/JVM2/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">JVM分代模型与内存参数设置</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/12/12/SegmentTree/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">线段树</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A4%E8%AF%86-JVM"><span class="nav-text">认识 JVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%88%9D%E8%AF%86JVM"><span class="nav-text">一、初识JVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%88%9D%E8%AF%86JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E6%9C%BA%E5%88%B6"><span class="nav-text">二、初识JVM类加载器机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E5%BC%95%E5%85%A5"><span class="nav-text">2.1引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-text">2.2类加载过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%92%8C%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="nav-text">2.3类加载器和双亲委派机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%88%9D%E8%AF%86JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F"><span class="nav-text">三、初识JVM内存区域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1%E5%AD%98%E6%94%BE%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%9F%9F%E2%80%94%E2%80%94%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="nav-text">3.1存放类的区域——方法区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8%E2%80%94%E2%80%94%E6%89%A7%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%8C%87%E4%BB%A4%E7%94%A8%E7%9A%84"><span class="nav-text">3.2程序计数器——执行代码指令用的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3%E5%AD%98%E6%94%BE%E6%96%B9%E6%B3%95%E7%9A%84%E5%8C%BA%E5%9F%9F%E2%80%94%E2%80%94Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="nav-text">3.3存放方法的区域——Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4%E5%AD%98%E6%94%BE%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%8C%BA%E5%9F%9F%E2%80%94%E2%80%94Java%E5%86%85%E5%AD%98%E5%A0%86"><span class="nav-text">3.4存放对象的区域——Java内存堆</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%88%9D%E8%AF%86%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="nav-text">四、初识垃圾回收机制</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

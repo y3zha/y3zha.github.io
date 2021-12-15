@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            坐标型动态规划 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">坐标型动态规划</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-12-01 23:15:48</span>
+        <span class="mobile">2019-12-01 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Algorithm/">Algorithm</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Dynamic-programming/">Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="动态规划解题模版：：坐标型"><a href="#动态规划解题模版：：坐标型" class="headerlink" title="动态规划解题模版：：坐标型"></a>动态规划解题模版：：坐标型</h2><p>坐标型dp一般都是给定网格、序列，来求满足某种性质的最大值、最小值。开数组时，<code>f[i]</code>代表以a<del>i</del> 结尾的满足条件的子序列，<code>f[i][j]</code>代表以i、j结尾的满足条件的某种情况。</p>
+<p>做题思路：</p>
+<ul>
+<li>从最后一步出发思考，确定状态</li>
+<li>分析子问题是什么</li>
+<li>得到状态转移方程</li>
+<li>确定初始条件与边界条件</li>
+<li>编程</li>
+</ul>
+<h3 id="1、Lintcode-114-UniquePaths"><a href="#1、Lintcode-114-UniquePaths" class="headerlink" title="1、Lintcode 114 UniquePaths"></a>1、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/unique-paths/">Lintcode 114 UniquePaths<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】有一个机器人的位于一个 <code>m × n </code>个网格左上角。机器人每一时刻只能向下或者向右移动一步。机器人试图达到网格的右下角。问有多少条不同的路径？</p>
+<p>【分析】最后一步：要么从左边来，要么从上边来，故<code>dp[i][j] = dp[i][j-1] + dp[i-1][j]</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">uniquePaths</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[m][n];</span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">//初始化第一行</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">            dp[<span class="number">0</span>][j] = <span class="number">1</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//初始化第一列</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) {</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//处理其他</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; m; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; n; j++) {</span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j] + dp[i][j - <span class="number">1</span>];</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[m - <span class="number">1</span>][n - <span class="number">1</span>];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、Lintcode-115-UniquePathsWithObstacles"><a href="#2、Lintcode-115-UniquePathsWithObstacles" class="headerlink" title="2、Lintcode 115 UniquePathsWithObstacles"></a>2、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/unique-paths-ii/">Lintcode 115 UniquePathsWithObstacles<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】上一题的跟进问题，现在考虑网格中有障碍物，那样将会有多少条不同的路径？网格中的障碍和空位置分别用 1 和 0 来表示。</p>
+<p>【分析】从最后一步出发，要选一条没有障碍的路径到达右下角，当前位置i,j所有可能路径依然是 <code>dp[i] [j] = dp[i] [j-1] + dp[i-1] [j]</code>，但必须是没有障碍的</p>
+<ul>
+<li>起点和终点若有障碍，直接返回0</li>
+<li>初始化第一行和第一列，也要考虑有障碍的情况</li>
+<li>起点和终点没有障碍，若途中碰到障碍了，令<code>dp[i][j] = 0</code>，表示不可达</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">uniquePathsWithObstacles</span><span class="params">(<span class="keyword">int</span>[][] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">int</span> m = A[<span class="number">0</span>].length;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//判断起点和终点有没有障碍，有障碍直接返回0</span></span><br><span class="line">        <span class="keyword">if</span> (A[<span class="number">0</span>][<span class="number">0</span>] == <span class="number">1</span> || A[n - <span class="number">1</span>][m - <span class="number">1</span>] == <span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][m];</span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> i, j;</span><br><span class="line">        <span class="comment">//初始化第一行</span></span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt; m; j++) {</span><br><span class="line">            <span class="keyword">if</span> (A[<span class="number">0</span>][j] == <span class="number">1</span>) {</span><br><span class="line">                dp[<span class="number">0</span>][j] = <span class="number">0</span>;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                dp[<span class="number">0</span>][j] = dp[<span class="number">0</span>][j - <span class="number">1</span>];</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//初始化第一列</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="keyword">if</span> (A[i][<span class="number">0</span>] == <span class="number">1</span>) {</span><br><span class="line">                dp[i][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                dp[i][<span class="number">0</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//处理其他</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt; m; j++) {</span><br><span class="line">                <span class="keyword">if</span> (A[i][j] == <span class="number">1</span>) {</span><br><span class="line">                    dp[i][j] = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                } <span class="keyword">else</span> {</span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j] + dp[i][j - <span class="number">1</span>];</span><br><span class="line">                } </span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n - <span class="number">1</span>][m - <span class="number">1</span>];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、Lintcode-397-Longest-Increasing-Continuous-Subsequence"><a href="#3、Lintcode-397-Longest-Increasing-Continuous-Subsequence" class="headerlink" title="3、Lintcode 397 Longest Increasing Continuous Subsequence"></a>3、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/en/problem/longest-increasing-continuous-subsequence/">Lintcode 397 Longest Increasing Continuous Subsequence<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】给定一个整数数组（下标从 0 到 n-1， n 表示整个数组的规模），请找出该数组中的最长上升连续子序列。（最长上升连续子序列可以定义为从右到左或从左到右的序列。）</p>
+<p>【分析】也就是求“最长连续单调子序列”，也就是LIS+LDS。实际上只要求个LIS再倒过来求一遍。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">longestIncreasingContinuousSubsequence</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> res = LIS(A);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//倒过来求一遍</span></span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> j = A.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j) {</span><br><span class="line">            <span class="keyword">int</span> temp = A[i];</span><br><span class="line">            A[i] = A[j];</span><br><span class="line">            A[j] = temp;</span><br><span class="line">            i++;</span><br><span class="line">            j--;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> Math.max(res, LIS(A));</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">LIS</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">1</span>;        <span class="comment">//最少长度是1</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;  </span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="comment">//长度至少是1，它本身</span></span><br><span class="line">            dp[i] = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (A[i] &gt; A[i - <span class="number">1</span>]) {</span><br><span class="line">                dp[i] = dp[i - <span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">            }</span><br><span class="line">            res = Math.max(res, dp[i]);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、LintCode-110-Minimum-Path-Sum"><a href="#4、LintCode-110-Minimum-Path-Sum" class="headerlink" title="4、LintCode 110 Minimum Path Sum"></a>4、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/minimum-path-sum/">LintCode 110 Minimum Path Sum<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】给定一个只含非负整数的<code>m x n</code>网格，找到一条从左上角到右下角的可以使数字和最小的路径。简而言之求最小路径和。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//普通方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minPathSum</span><span class="params">(<span class="keyword">int</span>[][] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">int</span> m = A[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][m];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++) {</span><br><span class="line">                <span class="keyword">if</span> (i == <span class="number">0</span> &amp;&amp; j == <span class="number">0</span>) {</span><br><span class="line">                    dp[i][j] = A[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                }</span><br><span class="line">                dp[i][j] = Integer.MAX_VALUE;</span><br><span class="line">                <span class="comment">//来自上方的情况</span></span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span>) {</span><br><span class="line">                    dp[i][j] = Math.min(dp[i][j], dp[i - <span class="number">1</span>][j] + A[i][j]);</span><br><span class="line">                }</span><br><span class="line">                <span class="comment">//来自左侧的情况</span></span><br><span class="line">                <span class="keyword">if</span> (j &gt; <span class="number">0</span>) {</span><br><span class="line">                    dp[i][j] = Math.min(dp[i][j], dp[i][j - <span class="number">1</span>] + A[i][j]);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n-<span class="number">1</span>][m - <span class="number">1</span>];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>使用滚动数组进行优化，当前行只和上面一行有关系，实际上只需要开两行，使用<code>old</code>和<code>new</code>指针，old存放i-1行，new存放当前第i行，关键语句在于old和now进行交换</p>
+<blockquote>
+<p>old = now;</p>
+<p>now = 1 - now</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//滚动数组优化</span></span><br><span class="line"><span class="comment">//只需要把i变为now，i-1变为old即可</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minPathSum</span><span class="params">(<span class="keyword">int</span>[][] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">int</span> m = A[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>][m];</span><br><span class="line">        <span class="keyword">int</span> old = <span class="number">0</span>, now = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            old = now;</span><br><span class="line">            now = <span class="number">1</span> - now;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++) {</span><br><span class="line">                <span class="keyword">if</span> (i == <span class="number">0</span> &amp;&amp; j == <span class="number">0</span>) {</span><br><span class="line">                    dp[now][j] = A[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                }</span><br><span class="line">                dp[now][j] = Integer.MAX_VALUE;</span><br><span class="line">                <span class="comment">//来自上方</span></span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span>) {</span><br><span class="line">                    dp[now][j] = Math.min(dp[now][j], dp[old][j] + A[i][j]);</span><br><span class="line">                }</span><br><span class="line">                <span class="comment">//来自左侧</span></span><br><span class="line">                <span class="keyword">if</span> (j &gt; <span class="number">0</span>) {</span><br><span class="line">                    dp[now][j] = Math.min(dp[now][j], dp[now][j - <span class="number">1</span>] + A[i][j]);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[now][m - <span class="number">1</span>];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://img-blog.csdnimg.cn/20191208000116507.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDQyNDY2OA==,size_16,color_FFFFFF,t_70"></p>
+<h3 id="5、LintCode-553-Bomb-Enemy"><a href="#5、LintCode-553-Bomb-Enemy" class="headerlink" title="5、LintCode 553 Bomb Enemy"></a>5、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/bomb-enemy/description">LintCode 553 Bomb Enemy<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】给定一个二维矩阵, 每一个格子可能是一堵墙 <code>W</code>,或者 一个敌人 <code>E</code> 或者空 <code>0</code> (数字 ‘0’), 返回你可以用一个炸弹杀死的最大敌人数. 炸弹会杀死所有在同一行和同一列没有墙阻隔的敌人。 由于墙比较坚固，所以墙不会被摧毁。</p>
+<p>【分析】原本只能在空地放炸弹，现在假设有敌人和有墙的地方也能放炸弹，有敌人的地方，格子里的敌人能被炸死，再加上其他炸死的人，有墙的地方，炸死人数为0。现在分析一个方向，比如向上，有三种情况：</p>
+<ul>
+<li>（i,j）是空地：结果就是从（i-1,j）格开始向上能炸死的敌人数</li>
+<li>（i,j）是敌人：结果就是从（i-1,j）格开始向上能炸死的敌人数 + 1</li>
+<li>（i,j）是墙：0</li>
+</ul>
+<p>原来要求（i,j）格子放炸弹向上能炸死的敌人数，子问题就转化为（i-1,j）格向上能炸死的敌人数，上述三种情况就如下：</p>
+<ul>
+<li><code>Up[i][j] = Up[i-1][j]</code>，(i,j)是空地的情况</li>
+<li><code>Up[i][j] = Up[i-1][j] + 1</code>，(i,j)是敌人的情况</li>
+<li><code>Up[i][j] = 0</code>，(i,j)是墙的情况</li>
+</ul>
+<p>初始条件就是第0行，如果是敌人，向上炸死人数为1，如果是空地或墙，向上炸死人数为0。</p>
+<p>另外三个方向<code>Down[i][j], Left[i][j], Right[i][j]</code>也是一样考虑。炸死的敌人数就是四个方向加起来，每次更新一下最大值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">maxKilledEnemies</span><span class="params">(<span class="keyword">char</span>[][] grid)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (grid == <span class="keyword">null</span> || grid.length == <span class="number">0</span> || grid[<span class="number">0</span>].length == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> m = grid.length;</span><br><span class="line">        <span class="keyword">int</span> n = grid[<span class="number">0</span>].length;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[][] up = <span class="keyword">new</span> <span class="keyword">int</span>[m][n];</span><br><span class="line">        <span class="keyword">int</span>[][] down = <span class="keyword">new</span> <span class="keyword">int</span>[m][n];</span><br><span class="line">        <span class="keyword">int</span>[][] left = <span class="keyword">new</span> <span class="keyword">int</span>[m][n];</span><br><span class="line">        <span class="keyword">int</span>[][] right = <span class="keyword">new</span> <span class="keyword">int</span>[m][n];</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[m][n];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">                <span class="comment">//i,j处为炸弹放置的位置</span></span><br><span class="line">                <span class="comment">//如果是墙,其实四种情况都是0</span></span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="string">'W'</span>) {</span><br><span class="line">                    up[i][j] = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                }</span><br><span class="line">                up[i][j] = grid[i][j] == <span class="string">'E'</span> ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span>) {</span><br><span class="line">                    up[i][j] += up[i - <span class="number">1</span>][j];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//down应该从下往上算，自底向上</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = m - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="string">'W'</span>) {</span><br><span class="line">                    down[i][j] = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                }</span><br><span class="line">                down[i][j] = grid[i][j] == <span class="string">'E'</span> ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span> (i &lt; m - <span class="number">1</span>) {</span><br><span class="line">                    down[i][j] += down[i + <span class="number">1</span>][j];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//left，从左往右算</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="string">'W'</span>) {</span><br><span class="line">                    left[i][j] = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                }</span><br><span class="line">                left[i][j] = grid[i][j] == <span class="string">'E'</span> ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span> (j &gt; <span class="number">0</span>) {</span><br><span class="line">                    left[i][j] += left[i][j - <span class="number">1</span>];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//right，从右往左算</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = n - <span class="number">1</span>; j &gt;= <span class="number">0</span>; j--) {</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="string">'W'</span>) {</span><br><span class="line">                    right[i][j] = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                }</span><br><span class="line">                right[i][j] = grid[i][j] == <span class="string">'E'</span> ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span> (j &lt; n - <span class="number">1</span>) {</span><br><span class="line">                    right[i][j] += right[i][j + <span class="number">1</span>];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//结果填充dp</span></span><br><span class="line">        <span class="keyword">int</span> res = Integer.MIN_VALUE;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">                <span class="comment">//只有在空地能放炸弹</span></span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="string">'0'</span>) {</span><br><span class="line">                    dp[i][j] = up[i][j] + down[i][j] + left[i][j] + right[i][j];</span><br><span class="line">                    <span class="keyword">if</span> (dp[i][j] &gt; res) {</span><br><span class="line">                        res = dp[i][j];</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (res != Integer.MIN_VALUE) {</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Dynamic-programming/">#Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/12/02/prefixsum/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">前缀和</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/11/05/DataWarehouse/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据仓库</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E8%A7%A3%E9%A2%98%E6%A8%A1%E7%89%88%EF%BC%9A%EF%BC%9A%E5%9D%90%E6%A0%87%E5%9E%8B"><span class="nav-text">动态规划解题模版：：坐标型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81Lintcode-114-UniquePaths"><span class="nav-text">1、Lintcode 114 UniquePaths</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81Lintcode-115-UniquePathsWithObstacles"><span class="nav-text">2、Lintcode 115 UniquePathsWithObstacles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81Lintcode-397-Longest-Increasing-Continuous-Subsequence"><span class="nav-text">3、Lintcode 397 Longest Increasing Continuous Subsequence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81LintCode-110-Minimum-Path-Sum"><span class="nav-text">4、LintCode 110 Minimum Path Sum</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81LintCode-553-Bomb-Enemy"><span class="nav-text">5、LintCode 553 Bomb Enemy</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

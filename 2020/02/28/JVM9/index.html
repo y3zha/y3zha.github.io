@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            OOM问题的分析与解决 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">OOM问题的分析与解决</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-02-28 08:15:48</span>
+        <span class="mobile">2020-02-28 08:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/JVM/">JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="OOM-问题的分析与解决"><a href="#OOM-问题的分析与解决" class="headerlink" title="OOM 问题的分析与解决"></a>OOM 问题的分析与解决</h1><h2 id="一、OOM原因与场景模拟"><a href="#一、OOM原因与场景模拟" class="headerlink" title="一、OOM原因与场景模拟"></a>一、OOM原因与场景模拟</h2><h3 id="1、Metaspace内存溢出"><a href="#1、Metaspace内存溢出" class="headerlink" title="1、Metaspace内存溢出"></a>1、Metaspace内存溢出</h3><h4 id="（1）原因"><a href="#（1）原因" class="headerlink" title="（1）原因"></a>（1）原因</h4><p>首先来讲Metaspace的回收，当Metaspace快满了就要进行回收，但是这个回收条件比较苛刻，比如这个类的类加载器要先被回收、这个类的所有实例对象要被回收等等，所以即使Metaspace满了，未必能回收掉很多类，腾不出太多空间，又要放进入，就会导致OOM，一般来说，Metaspace的OOM有两个原因</p>
+<p><strong>第一个原因</strong>是我们忘记去设置永久区的大小了，默认永久区大小只有几十MB，太小了，我们一般设置为256MB～512MB。有两个参数是来设置区域大小的：<code>-XX:MetaspaceSize=512m </code>和<code>-XX:MaxMetaspaceSize=512m</code>。一般来说512MB足够！</p>
+<p><strong>第二个原因</strong>是写系统的时候使用了cglib之类的技术，来动态的生成一些类，一旦没控制好生成类的个数就很容易把Metaspace塞满，引发内存溢出。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191101103540944.png"
+                     
+                ></p>
+<p>示意图：内存溢出</p>
+<h4 id="（2）场景模拟"><a href="#（2）场景模拟" class="headerlink" title="（2）场景模拟"></a>（2）场景模拟</h4><p>这里使用cglib来模拟Metaspace的OOM</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191101104842624.png"
+                     
+                ></p>
+<p>使用cglib来增强Car类的run方法，实质就是cglib的Enhancer能在系统运行期间动态的生成Car的子类。在JVM参数中动点手脚，把Metaspace的区域限制得小一点：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-XX:MetaspaceSize=10m </span><br><span class="line">-XX:MaxMetaspaceSize=10m</span><br></pre></td></tr></table></figure>
+
+<p>然后价格计数器来看它能生成多少个子类，得到日志</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.IllegalStateException: Unable to load cache item</span><br><span class="line">at net.sf.cglib.core.internal.LoadingCache.createEntry(LoadingCache.java:79)</span><br><span class="line">at net.sf.cglib.core.internal.LoadingCache.get(LoadingCache.java:34)</span><br><span class="line">at net.sf.cglib.core.AbstractClassGenerator$ClassLoaderData.get(AbstractClassGenerator.java:119)</span><br><span class="line">at net.sf.cglib.core.AbstractClassGenerator.create(AbstractClassGenerator.java:294)</span><br><span class="line">at net.sf.cglib.reflect.FastClass$Generator.create(FastClass.java:65)</span><br><span class="line">at net.sf.cglib.proxy.MethodProxy.helper(MethodProxy.java:121)</span><br><span class="line">at net.sf.cglib.proxy.MethodProxy.init(MethodProxy.java:75)</span><br><span class="line">at net.sf.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:226)</span><br><span class="line">at com.limao.demo.jvm.Demo1$1.intercept(Demo1.java:22)</span><br><span class="line">at com.limao.demo.jvm.Demo1$Car$$EnhancerByCGLIB$$7e5aa3a5_264.run(&lt;generated&gt;)</span><br><span class="line">at com.limao.demo.jvm.Demo1.main(Demo1.java:30)</span><br><span class="line">Caused by: java.lang.OutOfMemoryError: Metaspace</span><br><span class="line">at java.lang.Class.forName0(Native Method)</span><br><span class="line">at java.lang.Class.forName(Class.java:348)</span><br><span class="line">at net.sf.cglib.core.ReflectUtils.defineClass(ReflectUtils.java:467)</span><br><span class="line">at net.sf.cglib.core.AbstractClassGenerator.generate(AbstractClassGenerator.java:339)</span><br><span class="line">at net.sf.cglib.core.AbstractClassGenerator$ClassLoaderData$3.apply(AbstractClassGenerator.java:96)</span><br><span class="line">at net.sf.cglib.core.AbstractClassGenerator$ClassLoaderData$3.apply(AbstractClassGenerator.java:94)</span><br><span class="line">at net.sf.cglib.core.internal.LoadingCache$2.call(LoadingCache.java:54)</span><br><span class="line">at java.util.concurrent.FutureTask.run(FutureTask.java:266)</span><br><span class="line">at net.sf.cglib.core.internal.LoadingCache.createEntry(LoadingCache.java:61)</span><br></pre></td></tr></table></figure>
+
+<p>发送有一行就是OOM，明确告诉你溢出了。</p>
+<p><strong>一般使用动态代理要记得用缓存！这个子类只要生成一次就可以了，下次能直接用，如果没有缓存这个动态生成的类，每次调用生成一个类，若线上负载很高，可能导致瞬间创建一大堆类，塞满元数据空间，直接OOM，系统崩溃。</strong></p>
+<h3 id="2、栈内存溢出"><a href="#2、栈内存溢出" class="headerlink" title="2、栈内存溢出"></a>2、栈内存溢出</h3><h4 id="（1）原因-1"><a href="#（1）原因-1" class="headerlink" title="（1）原因"></a>（1）原因</h4><p>JVM把类加载进内存后，就通过main线程执行main方法，方法调用的栈帧不断压入虚拟机栈，这都是占栈内存的，每一个虚拟机栈的大小是固定的，比如1MB，虽然说一些变量和其他数据占卜了太多，但是这个<code>栈帧</code>是会占内存的，一个方法调用的栈帧要占个几百字节。如果我们不停的调用方法，不停的往栈里放入栈帧，就会导致OOM。</p>
+<h4 id="（2）场景模拟-1"><a href="#（2）场景模拟-1" class="headerlink" title="（2）场景模拟"></a>（2）场景模拟</h4><p>代码设置</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        work();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;目前是第&quot;</span> + (++counter) + <span class="string">&quot;次调用方法&quot;</span>);</span><br><span class="line">        work();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>JVM参数设置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-XX:ThreadStackSize=1m</span><br></pre></td></tr></table></figure>
+
+<p>直接打印出结果</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">目前是第5729次调用方法</span><br><span class="line">目前是第5730次调用方法</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.StackOverflowError</span><br></pre></td></tr></table></figure>
+
+<h4 id="（3）处理思路"><a href="#（3）处理思路" class="headerlink" title="（3）处理思路"></a>（3）处理思路</h4><p>在JVM参数中加入打印日志参数和内存快照参数，但是内存快照参数主要是分析堆内存的Metaspace的，对于栈内存而言不需要用。运行本地代码能够得到异常报错的调用栈，直接告诉你溢出问题来自哪个类的哪个方法，可以直接定位到。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">at com.demo.jvm.Demo2.work(Demo2.java:<span class="number">13</span>)</span><br><span class="line">at com.demo.jvm.Demo2.work(Demo2.java:<span class="number">13</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、堆内存溢出"><a href="#3、堆内存溢出" class="headerlink" title="3、堆内存溢出"></a>3、堆内存溢出</h3><h4 id="（1）原因-2"><a href="#（1）原因-2" class="headerlink" title="（1）原因"></a>（1）原因</h4><p>对象进来先进入Eden区，Eden区满了则Young GC，多次GC后S区也满了，S区放不下放进了老年代，慢慢的，老年代也满了，那就得等CMS进行回收，如果此时Full GC后，依然存活下来很多对象，而此时又有对象要放进老年代，如果老年代空间不足，就会再出发Full GC，触发后还是没足够空间，如果还坚持要放就会导致OOM。</p>
+<p><strong>总的来说，就是有限的空间放了过多的对象，大多数都是存活的，即使GC后也有很多存活的，再放进新的对象就不行了，此时就引发OOM了。</strong></p>
+<p><strong>内存溢出的两个场景</strong></p>
+<p><strong>第一个场景</strong>：系统承载高并发请求，因为请求量过大，导致大量对象都是存活的，所以要继续放入新的对象实在是不行了，此时就会引发OOM。</p>
+<p><strong>第二个场景</strong>：系统有内存泄漏的问题，莫名其妙弄了很多的对象，结果对象都是存活的，没有及时取消对他们的引用，导致触发GC还是无法回收，此时只能引发内存溢出</p>
+<p><strong>总的来说，一般引发OOM不是系统负载过高就是有内存泄漏问题。</strong></p>
+<h4 id="（2）场景模拟-2"><a href="#（2）场景模拟-2" class="headerlink" title="（2）场景模拟"></a>（2）场景模拟</h4><p>代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> counter = <span class="number">0</span>;</span><br><span class="line">        ArrayList&lt;Object&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            list.add(<span class="keyword">new</span> Object());</span><br><span class="line">            System.out.println(<span class="string">&quot;目前创建了第&quot;</span> + (++counter) + <span class="string">&quot;个对象&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>JVM参数设置堆内存大小总共10MB，尽快触发溢出</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-XX:InitialHeapSize=10485760</span><br><span class="line">-XX:MaxHeapSize=10485760</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">目前创建了第360145个对象</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: Java heap space</span><br></pre></td></tr></table></figure>
+
+<h4 id="（3）处理思路-1"><a href="#（3）处理思路-1" class="headerlink" title="（3）处理思路"></a>（3）处理思路</h4><p>添加打印日志参数和堆内存快照参数，得到日志文件，中有这么几行，告诉我们堆内存溢出了</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">java.lang.OutOfMemoryError: Java heap space</span><br><span class="line">Dumping heap to ./java_pid1023.hprof ...</span><br><span class="line">Heap dump file created [13409210 bytes in 0.033 secs]</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: Java heap space</span><br></pre></td></tr></table></figure>
+
+<p>接着我们用mat来分析</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191101123713956.png"
+                     
+                ></p>
+<p>第一句话，这个main线程的局部变量引用了7203536个字节对象（7MB），我测试时候给堆内存总共是10MB，所以7MB差不多极限。第二句话，表明内存被一个Object的实例对象占满了。点开下方的Details就真相大白了</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191101124003886.png"
+                     
+                ></p>
+<p>我们要知道这些对象是怎么创建的，就可以使用<code>See stacktrace</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191101124105414.png"
+                     
+                ></p>
+<h2 id="二、OOM时自动dump内存快照"><a href="#二、OOM时自动dump内存快照" class="headerlink" title="二、OOM时自动dump内存快照"></a>二、OOM时自动dump内存快照</h2><p>解决OOM首先就要知道是什么对象导致了OOM，获取dump内存快照，使用mat工具来分析，此时需要在JVM中加入两个参数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-XX:+HeapDumpOnOutOfMemoryError  	//在OOM的时候自动dump内存快照出来</span><br><span class="line">-XX:HeapDumpPath=/usr/local/app/oom		//内存快照dump地址</span><br></pre></td></tr></table></figure>
+
+<p>JVM参数模版</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms4096M </span><br><span class="line">-Xmx4096M </span><br><span class="line">-Xmn3072M </span><br><span class="line">-Xss1M  </span><br><span class="line">-XX:MetaspaceSize=256M </span><br><span class="line">-XX:MaxMetaspaceSize=256M </span><br><span class="line">-XX:+UseParNewGC </span><br><span class="line">-XX:+UseConcMarkSweepGC </span><br><span class="line">-XX:CMSInitiatingOccupancyFaction=92 </span><br><span class="line">-XX:+UseCMSCompactAtFullCollection </span><br><span class="line">-XX:CMSFullGCsBeforeCompaction=0 </span><br><span class="line">-XX:+CMSParallelInitialMarkEnabled </span><br><span class="line">-XX:+CMSScavengeBeforeRemark </span><br><span class="line">-XX:+DisableExplicitGC </span><br><span class="line">-XX:+PrintGCDetails </span><br><span class="line">-Xloggc:gc.log </span><br><span class="line">-XX:+HeapDumpOnOutOfMemoryError  </span><br><span class="line">-XX:HeapDumpPath=/usr/local/app/oom”</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、导致OOM的实例"><a href="#三、导致OOM的实例" class="headerlink" title="三、导致OOM的实例"></a>三、导致OOM的实例</h2><h3 id="1、每秒仅上百请求的事故现场"><a href="#1、每秒仅上百请求的事故现场" class="headerlink" title="1、每秒仅上百请求的事故现场"></a>1、每秒仅上百请求的事故现场</h3><p>每秒仅100+请求的系统报警发生异常，第一件事就是登陆到线上机器去看日志文件。看到有这么一行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Exception in thread &quot;http-nio-8080-exec-1089&quot; java.lang.OutOfMemoryError: Java heap space</span><br></pre></td></tr></table></figure>
+
+<p>这里<code>http-nio-8080-exec-1089</code>说的其实就是Tomcat的工作线程。我们写的系统都是部署在Tomcat中的。最早我们会在IDE上写一堆的Servlet，然后打包之后放入Tomcat，再启动Tomcat，接着我们访问Tomcat监听的一个端口号（一般是8080），然后系统的功能就可以运行起来了。后来随着技术发展，我们不再写Servlet这么原始的东西了，有一些类似Spring MVC之类的框架把Servlet封装起来了，我们就基于Spring MVC之类的框架去开发。再到后来，越来越先进了，出现了Spring Boot，我们可以把Tomcat之类的Web容器都内嵌在系统里。再到后来甚至是基于Spring Cloud去开发分布式的系统。我们基于Spring Cloud、Spring Boot、Spring Web MVC等技术，写好一套系统，给打包之后，放入线上服务器中部署的Tomcat目录下，然后启动Tomcat就可以了。每当Tomcat间听到了请求，就会把请求交给框架去处理，框架会根据请求路径，找到代码中处理这个请求的Controller组件。如图。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191101125402691.png"
+                     
+                ></p>
+<p>Tomcat自己本身就是个JVM进程，我们写好的系统只不过是一些代码，一个个类被Tomcat加载到内存中，由Tomcat来执行。Tomcat有很多的线程，少则100来个，多则三四百个，从8080端口上收到的请求就交给这些线程去做，这些线程收到请求后就回去调用框架的代码，框架再调用我们写好的代码，这基本就是Tomcat的底层原理了。如图</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191101125659399.png"
+                     
+                ></p>
+<p>碰到事故，首先先看是三个区域中哪里溢出了，其次看是哪个线程溢出的（MAT可以看有哪些线程存在），可能是Tomcat的线程，也可能是我们自己的线程。每个系统上线务必设置<code>-XX:+HeapDumpOnOutOfMemoryError</code>以及导出内存快照，排查问题基本依靠内存快照。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/JVM/">#JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/03/01/JVM10/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">CMS再优化与频繁FullGC问题分析</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/02/27/JVM8/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">GC场景模拟与日志分析</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OOM-%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3"><span class="nav-text">OOM 问题的分析与解决</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81OOM%E5%8E%9F%E5%9B%A0%E4%B8%8E%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F"><span class="nav-text">一、OOM原因与场景模拟</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81Metaspace%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="nav-text">1、Metaspace内存溢出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%8E%9F%E5%9B%A0"><span class="nav-text">（1）原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F"><span class="nav-text">（2）场景模拟</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%A0%88%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="nav-text">2、栈内存溢出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%8E%9F%E5%9B%A0-1"><span class="nav-text">（1）原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F-1"><span class="nav-text">（2）场景模拟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E5%A4%84%E7%90%86%E6%80%9D%E8%B7%AF"><span class="nav-text">（3）处理思路</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%A0%86%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="nav-text">3、堆内存溢出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%8E%9F%E5%9B%A0-2"><span class="nav-text">（1）原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F-2"><span class="nav-text">（2）场景模拟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E5%A4%84%E7%90%86%E6%80%9D%E8%B7%AF-1"><span class="nav-text">（3）处理思路</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81OOM%E6%97%B6%E8%87%AA%E5%8A%A8dump%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7"><span class="nav-text">二、OOM时自动dump内存快照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AF%BC%E8%87%B4OOM%E7%9A%84%E5%AE%9E%E4%BE%8B"><span class="nav-text">三、导致OOM的实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%AF%8F%E7%A7%92%E4%BB%85%E4%B8%8A%E7%99%BE%E8%AF%B7%E6%B1%82%E7%9A%84%E4%BA%8B%E6%95%85%E7%8E%B0%E5%9C%BA"><span class="nav-text">1、每秒仅上百请求的事故现场</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

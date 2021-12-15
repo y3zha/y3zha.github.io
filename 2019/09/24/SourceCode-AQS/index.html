@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            J.U.C AQS 源码解读 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">J.U.C AQS 源码解读</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-09-24 23:15:48</span>
+        <span class="mobile">2019-09-24 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Source-Code/">Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="简介和属性"><a href="#简介和属性" class="headerlink" title="简介和属性"></a>简介和属性</h2><blockquote>
+<p>整理的很垃圾，别看了会被误解的，后续会更新</p>
+</blockquote>
+<p>同步器AbstractQueuedSynchronizer，它是各种锁的底层，比如ReentrantLock、CountDownLatch。肯定要各种队列知识的，之前看过了。找了张很不错的图</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200219194659047.png"></p>
+<p>aqs就两个队列，条件队列、同步队列，也就是sync queue 和condition queue，队列底层又是链表，1、2、3代表看的顺序，四种颜色代表四种不同的场景。aqs就是一套框架，定义了获得锁和释放锁的代码结构，你要新搞个锁，继承aqs就行。</p>
+<ul>
+<li><p>大概</p>
+<ul>
+<li>本身就是个抽象类，要让子类去实现一些东西，它只是定义了如何获得锁、释放锁的抽象方法，aqs继承了aos，为的是知道当前哪个线程拿到了锁，监控它</li>
+<li>aqs首先定义了一个fifo的 sync queue，拿不到锁的线程就去队列中排队吧</li>
+<li>然后同步器有个状态字符，用的是atomic包里的，可以通过状态字段来判断能不能获得锁。aqs的子类是通过给状态赋值（cas操作）来决定能不能拿到锁，比如我定义0就是可以获得锁，1就是不能获得锁。</li>
+<li>aqs提供了排他锁和共享锁的实现，readwritelock实现了两种模式。</li>
+<li>aqs内部的条件队列是通过 new ConditionObject得到的</li>
+</ul>
+</li>
+<li><p>简单属性</p>
+<ul>
+<li> state 属性，int类型，所有继承 aqs 的锁都是通过这个字段来判断能不能获得锁，能不能释放锁。比如当前同步器状态是 0，表示可以获得锁，当前同步器状态是 1，表示锁已经被其他线 程持有，当前线程无法获得锁，<strong>state是锁的状态，，下面还有个事waitStatus，它是队列中节点的状态，别搞混了</strong></li>
+</ul>
+</li>
+<li><p>sync queue 同步队列</p>
+<ul>
+<li>有俩重要属性，同步队列的头和同步队列的尾巴，多个线程竞争一把锁，只有一个线程能拿到，其他都跑到队列尾曲了，有人释放锁，是从同步队列头开始释放一个排队的线程，让线程重新去竞争锁，同步队列的作用很简单的，就是阻塞你们这些获得不到锁的线程，然后在合适的时候释放。同步队列底层是个双向链表</li>
+<li><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200219200241418.png"></li>
+</ul>
+</li>
+<li><p>condition queue 条件队列</p>
+<ul>
+<li>条件队列也是管理那些获取不到锁的线程，但是它只是和锁配合着使用，底层是一个链表，firstwaiter是第一个等待的，lastwaiter是最后一个等待的node，使用时候直接new ConditionObject，它实现了Condition接口，Condition接口相当于各种监控方法，类似于Object的wait、notify</li>
+<li><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200219200717993.png"></li>
+</ul>
+</li>
+<li><p>同步队列和条件队列的节点Node</p>
+<ul>
+<li><p>一般是用Node把线程包装一下就放进队列中了</p>
+</li>
+<li><p>```java<br>static final class Node {</p>
+<pre><code>    static final Node SHARED = new Node();        //共享的
+    static final Node EXCLUSIVE = null;        //排他的
+
+          //状态看这个https://www.jianshu.com/p/3a7e8c028dd8
+          //被取消状态
+    static final int CANCELLED =  1;        
+
+          //cur.next处于等待状态，如果cur释放锁（将cur状态置为-1），然后通知它的下一个
+    static final int SIGNAL    = -1;    
+
+          //节点处于等待队列中，节点线程等待在Condition上，当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；
+    static final int CONDITION = -2;
+
+          //代表后续结点会传播唤醒的操作，共享模式下起作用
+    static final int PROPAGATE = -3;
+
+          //表示当前节点的状态，通过节点的状态来控制节点的行为
+          //普通同步节点，就是 0 ，条件节点是 CONDITION -2
+          //ws大于0，说明被取取消了
+    volatile int waitStatus;
+
+          //当前节点的前驱节点
+          //节点 acquire 成功后就会变成head，head 节点不能被 cancelled
+    volatile Node prev;
+
+    // 当前节点的下一个节点
+    volatile Node next;
+
+    //当前节点的线程
+    volatile Thread thread;
+
+    //等待节点的后继节点。
+          //在同步队列中，Node构建同步队列节点，nextWaiter标识同步锁是独占锁的还是共享锁
+          //在条件队列中，nextWaiter指向单向链表下一个节点
+           //这边特别要注意，看的时候给我带来了很大困扰
+    Node nextWaiter;
+
+    //是否被共享
+    final boolean isShared() {
+        return nextWaiter == SHARED;
+    }
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">  - 特别特别注意，nextWaiter 是条件队列中下一个节 点的指向字段，但在同步队列中，nextWaiter 只是一个标识符，表示当前节点是共享还是排它模式。</span><br><span class="line"></span><br><span class="line">- 条件队列 ConditionObject</span><br><span class="line"></span><br><span class="line">  - ConditionObject它是实现了Condition接口的，所以这个接口很重要，细节如下</span><br><span class="line"></span><br><span class="line">    - 注释中说，当用lock代替synchronized的时候，Condition就能代替Object中相应的监控方法了，比如wait、notify、notifyAll等。Condition的实例它是绑定在锁上的，lock.newCondition就能获得实例了。</span><br><span class="line">    - 为什么需要条件队列，举个例子，我有put和take方法，put的时候，如果满了，就会阻塞，take的时候，如果空了，就会阻塞，这两种情况的线程其实都会去条件队列中阻塞，**如果仅仅依靠一个条件队列，那就只能执行一个操作，那在这种情况下，我可以新建两个条件队列，建几个具体还是看需求吧，这样就可以分别执行操作了。**</span><br><span class="line"></span><br><span class="line">  - condition中的一些方法</span><br><span class="line"></span><br><span class="line">    - ```java</span><br><span class="line">      // 唤醒条件队列中的一个线程，在被唤醒前必须先获得锁</span><br><span class="line">      void signal();</span><br><span class="line">      </span><br><span class="line">      // 唤醒条件队列中的所有线程 </span><br><span class="line">      void signalAll();</span><br><span class="line">      </span><br><span class="line">      //使当前线程一直等待，直到被 signalled 或被打断。</span><br><span class="line">      //被唤醒时，特别注意:线程从条件队列中苏醒时，必须重新获得锁，才能真正被唤醒</span><br><span class="line">      //当然await方法还有待超时时间的 。。啊我懒得贴过来了</span><br><span class="line">      void await() throws InterruptedException;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="获取锁"><a href="#获取锁" class="headerlink" title="获取锁"></a>获取锁</h2><ul>
+<li><p>获取排他锁–acquire</p>
+<ul>
+<li><p>最直观的就是通过<code>Lock.lock()</code>获取，Lock 一般是 aqs 的子类，lock 方法底层也是根据情况来调用acquire或是tryAcquire。acquire这个方法aqs已经实现了，tryAcquire是交给子类去实现的，只要包含try的方法，都是交给子类去实现的，它在aqs中是直接抛了个异常。<strong>acquire方法先尝试用tryAcquire去获取锁，获取不到时，再去同步队列中等待锁。acquire也分为排他锁和共享锁。</strong></p>
+</li>
+<li><p>acquire运行流程是这样的，我先走一遍子类的tryAcquire，看看有米有实现咯，如果实现了，那就直接返回呗，否则线程就尝试进入同步队列，就会先调用addWaiter方法，也就是放进同步队列尾，然后外面包裹一层acquireQueued，其目的是阻塞节点，同时赋予节点被唤醒时，让它能够获得锁。如果上述操作也失败了，打断线程。</p>
+<ul>
+<li>```java<br>public final void acquire(int arg) {<br>  //tryAcquire是交给子类去实现的<br>  if (!tryAcquire(arg) &amp;&amp;<pre><code>  //addWaiter代表是排他模式
+  acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+selfInterrupt();
+</code></pre>
+}<br>//所以这个是排他的情况下去获取锁<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- **总的来说 acquire方法就是三步，我先tryAcquire，哦，失败了，我再把它封装成节点，具体是排他还是共享看传入的mode，然后我把它放到同步队列尾巴去，最后阻塞它，自旋，让同步队列中当的pre节点状态置为signal后，然后阻塞自己。**</span><br><span class="line"></span><br><span class="line">- 先看一下这个**addWaiter*8方法，也就是把它放到同步队列尾。入参mode，代表模式，排他，还是共享，首先就是去给同步队列新增一个节点，让队尾成为pre，前驱节点，这里也是cas。。。我先尝试放一下，成功立马返回，不成功，那就`enq`，通过**自旋**保证你这个node能加到队尾（这里不是马上自旋，大部分操作一次就能成功，自旋成本大）</span><br><span class="line"></span><br><span class="line">  - ```java</span><br><span class="line">    private Node addWaiter(Node mode) {</span><br><span class="line">        Node node = new Node(Thread.currentThread(), mode);</span><br><span class="line">        // Try the fast path of enq; backup to full enq on failure</span><br><span class="line">        Node pred = tail;</span><br><span class="line">        if (pred != null) {</span><br><span class="line">            node.prev = pred;</span><br><span class="line">            if (compareAndSetTail(pred, node)) {</span><br><span class="line">                pred.next = node;</span><br><span class="line">                return node;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        enq(node);</span><br><span class="line">        return node;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>再看一下<strong>acquireQueued</strong>方法，用来阻塞节点（阻塞这个线程的），这个方法主要做了这么几件事，首先是通过不断自旋，尝试让自己的前一个节点的状态变为signal（就是前一个节点如果释放锁，就会通知它的下一个，也就是现在来的这个），然后阻塞自己。其次是它的前一个老兄执行完了，释放锁，会把这个node唤醒，node被唤醒会再次自旋。</p>
+<ul>
+<li>```java<br>//返回false，表示获得锁了，true表示失败  <pre><code>  final boolean acquireQueued(final Node node, int arg) {
+   boolean failed = true;
+   try {
+       boolean interrupted = false;
+       for (;;) {    //尝试自旋
+           final Node p = node.predecessor();
+           if (p == head &amp;&amp; tryAcquire(arg)) {
+               setHead(node);
+               p.next = null; // help GC
+               failed = false;
+               return interrupted;
+           }
+           if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
+               parkAndCheckInterrupt())
+               interrupted = true;
+       }
+   } finally {
+       if (failed)
+           cancelAcquire(node);
+   }
+</code></pre>
+   }<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">    - 这个方法的核心是shouldParkAfterFailedAcquire，主要目的就是把前一个节点的状态置为 SIGNAL，只要前一个节点的状态是 SIGNAL， 当前节点就可以阻塞了。</span><br><span class="line"></span><br><span class="line">- 获取共享锁--acquireShared</span><br><span class="line"></span><br><span class="line">  - 他的整体流程和acquire相同，代码也是相似的，只有一点小的区别，获取锁的时候，共享锁使用的是tryAcquireShared方法</span><br><span class="line"></span><br><span class="line">  - ```java</span><br><span class="line">    public final void acquireShared(int arg) {</span><br><span class="line">            if (tryAcquireShared(arg) &lt; 0)</span><br><span class="line">                doAcquireShared(arg);</span><br><span class="line">        }</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>其次，节点获得排他锁时，是把它自己设置成同步队列头节点，但如果是共享锁的话，还会去唤醒自己后续的节点，一起来获得这把锁</p>
+</li>
+<li><p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200219234812137.png"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="释放锁"><a href="#释放锁" class="headerlink" title="释放锁"></a>释放锁</h2><p>释放锁就是用<code>Lock.unLock ()</code> 方法，释放锁也是分为两类，一类是排他锁的释放，另一类是共享锁的释放。</p>
+<ul>
+<li><p>排他锁的释放–release</p>
+<ul>
+<li><p>从队头开始，找它的下一个节点，如果下一个节点是空的，就会从 尾开始，一直找到状态不是取消的节点，然后释放该节点。</p>
+</li>
+<li><p>release是unlock的基础方法，同样的，也是先tryRelease，先调用子类的，如果锁已经完全释放，返回true，那么就唤醒下一个节点。</p>
+</li>
+<li><p>```java<br>public final boolean release(int arg) {</p>
+<pre><code>   if (tryRelease(arg)) {
+       Node h = head;
+         // 头节点不为空，并且非初始化状态
+       if (h != null &amp;&amp; h.waitStatus != 0)
+             // 从头开始唤醒等待锁的节点
+           unparkSuccessor(h);
+       return true;
+   }
+   return false;
+</code></pre>
+<p>   }<br>//当线程释放锁成功后，从 node 开始唤醒同步队列中的节点<br>//通过唤醒机制,保证线程不会一直在同步队列中阻塞等待<br>private void unparkSuccessor(Node node) {</p>
+<pre><code>          //node节点是当前释放的节点，得到他的ws
+          //ws小于0，说明节点还没被取消，那就cas，重置它的状态
+    int ws = node.waitStatus;
+    if (ws &lt; 0)
+        compareAndSetWaitStatus(node, ws, 0);
+            //取出这个节点的下一个节点，如果是空的，或者ws&gt;0也就是被取消了
+          //遇到这种情况就从队尾开始向前遍历，找到第一个ws&lt;=0的，也就是没被取消的，为啥不是从头呢。。。我也找不到。。。
+    Node s = node.next;
+    if (s == null || s.waitStatus &gt; 0) {
+        s = null;
+        for (Node t = tail; t != null &amp;&amp; t != node; t = t.prev)
+            if (t.waitStatus &lt;= 0)
+                s = t;
+    }
+    if (s != null)
+        LockSupport.unpark(s.thread);
+}
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- 共享锁的释放--releaseShared</span><br><span class="line"></span><br><span class="line">  - 他和排他锁的释放也是很相似的，首先tryReleaseShared尝试释放当前锁，然后唤醒当前节点的后续阻塞节点</span><br><span class="line"></span><br><span class="line">  - ```java</span><br><span class="line">    public final boolean releaseShared(int arg) {</span><br><span class="line">        if (tryReleaseShared(arg)) {</span><br><span class="line">            doReleaseShared();</span><br><span class="line">            return true;</span><br><span class="line">        }</span><br><span class="line">        return false;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="条件队列"><a href="#条件队列" class="headerlink" title="条件队列"></a>条件队列</h2><p>为啥有了同步队列要条件队列，因为不是所有场景都是可以用一个同步队列搞定的呀，如果遇到<strong>锁+队列</strong>的场景，就需要<strong>lock+condition</strong>的配合。先用lock来决定哪些线程能够获得锁，哪些线程要去同步队列中阻塞，但是有可能出现这种情况，同步队列容量&lt;获得锁的线程的个数，那么就有一部分线程获得了锁，但是进不了同步队列，那么可以用Condition来管理这些线程，让这些线程阻塞等待，在合适的时候唤醒他们。</p>
+<p><strong>同步队列 + 条件队列联手使用的场景，最多被使用到锁 + 队列的场景中。</strong></p>
+<ul>
+<li>入队列等待–await<ul>
+<li>获得锁的线程，如果在碰到队列满或空的时候，就会阻塞住，这个阻塞就是用条件队列实现的， 这个动作我们叫做入条件队列，方法名称为 await</li>
+</ul>
+</li>
+</ul>
+<p>先欠着，下次补</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Source-Code/">#Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/11/05/DataWarehouse/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">数据仓库</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/09/20/SourceCode-Collections/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">J.U.C Collections 源码解读</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B%E5%92%8C%E5%B1%9E%E6%80%A7"><span class="nav-text">简介和属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E9%94%81"><span class="nav-text">获取锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8A%E6%94%BE%E9%94%81"><span class="nav-text">释放锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E9%98%9F%E5%88%97"><span class="nav-text">条件队列</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

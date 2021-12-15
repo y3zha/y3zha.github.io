@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            JVM新生代与老年代参数优化 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">JVM新生代与老年代参数优化</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-02-25 23:15:48</span>
+        <span class="mobile">2020-02-25 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/JVM/">JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="JVM-新生代与老年代参数优化"><a href="#JVM-新生代与老年代参数优化" class="headerlink" title="JVM 新生代与老年代参数优化"></a>JVM 新生代与老年代参数优化</h1><h2 id="一、新生代JVM参数优化"><a href="#一、新生代JVM参数优化" class="headerlink" title="一、新生代JVM参数优化"></a>一、新生代JVM参数优化</h2><h3 id="1、背景引入"><a href="#1、背景引入" class="headerlink" title="1、背景引入"></a>1、背景引入</h3><p>&emsp;&emsp;假设我们的背景是每日上亿请求量的一个订单系统，按照每个用户每日访问次数为20次来算，大致有500万个用户（1亿/20），对这五百万个用户，假设付费转化率为10%，也就是有50万人会去下单，我们把这50万订单集中在4个小时的高峰期内，平均每秒钟也就几十个订单，感觉也没什么大的压力，因为几十个订单根本不需要对JVM做太多关注。</p>
+<p>&emsp;&emsp;但是如果到了双十一这种活动，就会出问题了。硬件方面来说，如果我们部署到足够的机器上以及机器内存充裕，也不是问题，但就JVM的参数来说，如果我们不能合理的去设置这个参数，就会导致机器资源浪费，硬件成本的增加。</p>
+<p>&emsp;&emsp;为什么要去调JVM参数？我们的<strong>目的就是对JVM有限的内存资源做好合理分配和优化，当然包括垃圾回收的优化，要让GC次数尽可能的少。</strong></p>
+<p>&emsp;&emsp;假设双十一期间一台机器1秒要处理300个订单（处理订单比较耗时，工作经验上是每秒处理100～300个订单），对于每个订单对象我们按1KB来算，那1秒就是300KB内存开销了，但是这时订单连带对象如库存、促销、优惠券等一系列业务对象，这些对象从经验上来讲好要比订单单个对象的开销再放大10倍，同时还有很多与订单相关操作，比如查询等，往大估算就再扩大十倍，<strong>所以1秒钟，我们要处理60MB（300KB x 20 x 10 = 60000KB）对象。</strong>每1秒过后，这个对象就变成垃圾了。</p>
+<p>&emsp;&emsp;假设我们使用4核8G的机器，JVM分配4G，其中3G给堆内存，1G给方法区和每个线程的虚拟机栈。虚拟机栈一般都是1MB，假设我们有几百个线程，就是几百MB，这里我们给永久代256MB，给虚拟机栈总共768MB。至于堆内存，我们给新生代1.5G，老年代1.5G。得到如下参数。（注意这里不写<code> -XX:HandlePromotionFailure</code>，我们使用JDK 1.8）。每1秒有60MB的垃圾，1.5G的内存大概25秒就满了。此时就要<code>Minor GC</code>，明显老年代能够存放新生代所有对象，可以放心GC，由于最后一秒订单还在处理，假设存活的对象就100MB，这里来问题了，如果<code>-XX:SurvivorRatio</code>参数默认值为8，那么此时新生代里Eden区大概占据了1.2GB内存，每个<code>Survivor</code>区是150MB的内存，如下图。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms3072M -Xmx3072M -Xmn1536M -Xss1M -XX:PermSize=256M -XX:MaxPermSize=256M</span><br></pre></td></tr></table></figure>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305191937863.png"
+                     
+                ><br>&emsp;&emsp;所以启动JVM后，大概20秒左右，<code>Eden</code>区就满了，然后<code>Minor GC</code>，把存活对象放在<code>Survivor1</code>中，再过20s，再次回收<code>Eden</code>和<code>Survivor1</code>中的对象，存活的如果还是100MB就放入<code>Survivor2</code>中。</p>
+<p>&emsp;&emsp;以上就是总体的背景，此时的JVM参数为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms3072M -Xmx3072M -Xmn1536M -Xss1M -XX:PermSize=256M -XX:MaxPermSize=256M  -XX:SurvivorRatio=8</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、参数优化"><a href="#2、参数优化" class="headerlink" title="2、参数优化"></a>2、参数优化</h3><h4 id="（1）Survivor空间的设置"><a href="#（1）Survivor空间的设置" class="headerlink" title="（1）Survivor空间的设置"></a>（1）Survivor空间的设置</h4><p>&emsp;&emsp;JVM优化时，首先就得考虑<code>Survivor</code>空间够不够。就上述案例，一种情况是，<code>Survivor</code>中分配了150MB，如果来的对象大于150MB，就会频繁进入老年代，第二种情况是，即使100MB对象能够放入<code>Survivor</code>区，但是100/150 = 0.67，超过了<code>Survivor</code>区空间的50%，这样同一批年龄对象也进入老年代了，这种1秒就变成垃圾的短生命周期对象根本不需要进入老年代。我们得让它们留在新生代里。</p>
+<p>&emsp;&emsp;<strong>方案：</strong>给<code>Survivor</code>区更大的容量。如果你的<strong>业务都是这种短生命周期的</strong>，老年代可以分配少一点的内存，我们可以考虑把新生代调整为2G，老年代为1G，如果<code>-XX:SurvivorRatio=8</code>那么此时<code>Eden</code>为1.6G，每个<code>Survivor</code>为200MB，如图。这时候上述两个问题就同时解决了。</p>
+<p>&emsp;&emsp;针对任何系统，我们要预估内存并合理分配内存，首要做的就是<strong>尽量让每次Minor GC后的对象都留在Survivor里，不要进入老年代。</strong>此时参数如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms3072M -Xmx3072M -Xmn2048M -Xss1M  -XX:PermSize=256M -XX:MaxPermSize=256M  -XX:SurvivorRatio=8</span><br></pre></td></tr></table></figure>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305191954425.png"
+                     
+                ></p>
+<h4 id="（2）-XX-MaxTenuringThreshold参数的设置"><a href="#（2）-XX-MaxTenuringThreshold参数的设置" class="headerlink" title="（2）-XX:MaxTenuringThreshold参数的设置"></a>（2）-XX:MaxTenuringThreshold参数的设置</h4><p>&emsp;&emsp;有些对象是可能躲过15次垃圾回收进入老年代的，就上述背景，有些对象在新生代躲了几分钟进入老年代很应该，那为了不让这种数据进入老年代要怎么做？我们需要调<code>-XX:MaxTenuringThreshold</code>这个参数。这个参数并不是一昧地去调高，一定要<strong>结合系统的运行模型，看看Minor GC频率</strong>，把这个参数从15调高到20、30，让一个垃圾多在<code>Survivor</code>中停留几分钟，根本没用，对于我们上述业务场景就要把这个参数调低，比如调到5.记住，一定要结合系统运行的模型。此时参数如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms3072M -Xmx3072M -Xmn2048M -Xss1M  -XX:PermSize=256M -XX:MaxPermSize=256M  </span><br><span class="line">-XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=5</span><br></pre></td></tr></table></figure>
+
+<h3 id="（3）-XX-PretenureSizeThreshold参数设置"><a href="#（3）-XX-PretenureSizeThreshold参数设置" class="headerlink" title="（3）-XX:PretenureSizeThreshold参数设置"></a>（3）-XX:PretenureSizeThreshold参数设置</h3><p>&emsp;&emsp;大对象是可以直接进入老年代的，但是多大呢？一般来说很少有超过1MB的对象，如果有，那就是你提前分配了一个大数组、大List之类的来存放缓存数据，一般这种数据是要用一段时间的，所以我们可以放到老年代。我们一般把这个参数设置为1。此时JVM参数如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms3072M -Xmx3072M -Xmn2048M -Xss1M  -XX:PermSize=256M -XX:MaxPermSize=256M  </span><br><span class="line">-XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=5 -XX:PretenureSizeThreshold=1M</span><br></pre></td></tr></table></figure>
+
+<h4 id="（4）指定垃圾回收器"><a href="#（4）指定垃圾回收器" class="headerlink" title="（4）指定垃圾回收器"></a>（4）指定垃圾回收器</h4><p>&emsp;&emsp;针对具体的客户端、服务端来设置垃圾回收器，之前讲过。我们这个系统新生代使用<code>ParNew</code>，老年代使用<code>CMS</code>。设置如下的参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms3072M -Xmx3072M -Xmn2048M -Xss1M  -XX:PermSize=256M -XX:MaxPermSize=256M  </span><br><span class="line">-XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=5 -XX:PretenureSizeThreshold=1M </span><br><span class="line">-XX:+UseParNewGC -XX:+UseConcMarkSweepGC</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、老年代JVM参数优化"><a href="#二、老年代JVM参数优化" class="headerlink" title="二、老年代JVM参数优化"></a>二、老年代JVM参数优化</h2><p>&emsp;&emsp;老年代参数优化主要就是减少Full GC的次数。首先我们得要分析对象进入老年代的几个原因</p>
+<h3 id="1、对象进入老年代的原因"><a href="#1、对象进入老年代的原因" class="headerlink" title="1、对象进入老年代的原因"></a>1、对象进入老年代的原因</h3><p><strong>第一种</strong>：就是<code>-XX:MaxTenuringThreshold</code>这个参数设置的太低了，就是之前新生代的案例，这种对象一般是<code>@Service</code>或<code>Controller</code>等注解标识的业务逻辑组件，这种对象一般全局有一个实例就行，是要一直用的，所以应该让他进。</p>
+<p><strong>第二种</strong>：就是大对象，但是这种再上述案例中一般没有，可以忽略。</p>
+<p><strong>第三种</strong>：就是Minor GC后存活的对象超过了<code>Survivor</code>区的50%，就直接进入了老年代</p>
+<h3 id="2、大促销场景的Full-GC多久出发一次？"><a href="#2、大促销场景的Full-GC多久出发一次？" class="headerlink" title="2、大促销场景的Full GC多久出发一次？"></a>2、大促销场景的Full GC多久出发一次？</h3><p>&emsp;&emsp;对于此案例触发Full GC的几个情况：</p>
+<p><strong>情况一</strong>：没有打开<code> -XX:HandlePromotionFailure</code>选项。<strong>我们知道如果老年代剩余内存大于新生代对象总大小就直接Minor GC的，但是老年代剩余内存总大小小于新生代对象总大小时，就要看这个参数了，如果没有打开这个参数，老年代空间小于新生代所有对象大小就直接Full GC，如果打开了，就看平均。</strong>这个参数就是看老年代剩余内存总大小是否大于之前每一次Minor GC进入老年代的对象的平均大小，按照之前项目案例，要很多次Minor GC之后才可能有一两次碰巧会有200MB对象升入老年代，所以这个“历次Minor GC后升入老年代的平均对象大小”，基本是很小的。（JDK 1.6之后就不看了）</p>
+<p><strong>情况二</strong>：某次升入老年代的对象很大，但是老年代空间不够了。</p>
+<p><strong>情况三</strong>：和<code>-XX:CMSInitiatingOccupancyFaction</code>参数有关，默认值是92%，超过这个值就会GC。</p>
+<p>&emsp;&emsp;针对大促销场景，由于我们之前在新生代优化了参数，所以对象进入老年代较慢，经验上来说，很可能是在系统运行半小时~1小时之后，才会有接近1GB的对象进入老年代。在大促期间，订单系统运行1小时之后，大促下单高峰期几乎都快过了，此时才可能会触发一次Full GC。这个高峰期过后，基本订单系统访问压力就很小了，那么GC的问题几乎就更不算什么了。</p>
+<p>&emsp;&emsp;当然老年代也会触发<code>Concurrent Mode Failure</code>问题。假设系统，运行1小时之后，老年代大概有900MB的对象了，剩余可用空间仅仅只有100MB了，然后CMS进行垃圾回收，垃圾回收期间是和系统程序并发的，如果系统此时还在创建对象，比如说很不巧有200MB对象要进来了，而老年代又放不下，那么此时就会进入<code>Stop the World</code>，然后切换CMS为Serial Old，直接禁止程序运行，然后单线程进行老年代垃圾回收，回收掉900MB对象过后，再让系统继续运行。当然这个概率非常的小，我们没必要特意去优化它。</p>
+<p>此时参数为:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Xms3072M -Xmx3072M -Xmn2048M -Xss1M  -XX:PermSize=256M -XX:MaxPermSize=256M  </span><br><span class="line">-XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=5 -XX:PretenureSizeThreshold=1M </span><br><span class="line">-XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFaction=9</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、CMS后内存碎片整理频率"><a href="#3、CMS后内存碎片整理频率" class="headerlink" title="3、CMS后内存碎片整理频率"></a>3、CMS后内存碎片整理频率</h3><p>&emsp;&emsp;没必要特意去修改这个频率，对于上述大促销场景，在大促高峰期，Full GC可能也就1小时执行一次，然后大促高峰期过去之后，就没那么多的订单了，此时可能几个小时才会有一次Full GC。所以就保持默认的设置，每次Full GC之后都执行一次内存碎片整理就可以。要针对特定的业务场景来设定。<strong>仅仅针对这个参数来说：</strong></p>
+<ul>
+<li>如果Full GC相对频繁，就设置多次Full GC后进行碎片整理</li>
+<li>如果不是很频繁，可以设置每次Full GC后进行碎片整理</li>
+</ul>
+<h2 id="三、面试题"><a href="#三、面试题" class="headerlink" title="三、面试题"></a>三、面试题</h2><h3 id="1、一个面试题：parnew-cms的gc，如何保证只做ygc，jvm参数如何配置？"><a href="#1、一个面试题：parnew-cms的gc，如何保证只做ygc，jvm参数如何配置？" class="headerlink" title="1、一个面试题：parnew+cms的gc，如何保证只做ygc，jvm参数如何配置？"></a>1、一个面试题：parnew+cms的gc，如何保证只做ygc，jvm参数如何配置？</h3><p>首先和垃圾收集器没什么关系，不同的垃圾收集器，只是它们的性能、吞吐量不同，并不影响垃圾回收的时机。只要在新生代根据对象的存活特征，合理的去分配Eden区和s1、s2区域的大小，尽量让垃圾在新生代被回收就好了，注意这边开启内存担保（jdk 1.6），如果eden区超过了老年代大小，不开担保的话每次MGC前都要FGC的。</p>
+<h3 id="2、为什么老年代回收比新生代慢？"><a href="#2、为什么老年代回收比新生代慢？" class="headerlink" title="2、为什么老年代回收比新生代慢？"></a>2、为什么老年代回收比新生代慢？</h3><p>新生代存活对象小，并且采用复制算法，速度很快，复制过去直接就删除，而老年代对象量较大，遍历标记、遍历清除，然后还要整理好腾出空间来，很耗时，耗时的就是步骤二和步骤四。初始标记是从GC Roots查找直接引用的对象，并发标记也是从GC Roots出发，通过每个对象的引用地址来看哪些对象活着的，活着的又很多，就很耗时。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/JVM/">#JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/02/26/JVM7/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">G1垃圾回收器详解与回收性能优化</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/02/23/JVM5/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">JVM老年代回收容器之CMS</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM-%E6%96%B0%E7%94%9F%E4%BB%A3%E4%B8%8E%E8%80%81%E5%B9%B4%E4%BB%A3%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-text">JVM 新生代与老年代参数优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%96%B0%E7%94%9F%E4%BB%A3JVM%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-text">一、新生代JVM参数优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E8%83%8C%E6%99%AF%E5%BC%95%E5%85%A5"><span class="nav-text">1、背景引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-text">2、参数优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89Survivor%E7%A9%BA%E9%97%B4%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="nav-text">（1）Survivor空间的设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89-XX-MaxTenuringThreshold%E5%8F%82%E6%95%B0%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="nav-text">（2）-XX:MaxTenuringThreshold参数的设置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%883%EF%BC%89-XX-PretenureSizeThreshold%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE"><span class="nav-text">（3）-XX:PretenureSizeThreshold参数设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89%E6%8C%87%E5%AE%9A%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-text">（4）指定垃圾回收器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%80%81%E5%B9%B4%E4%BB%A3JVM%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-text">二、老年代JVM参数优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%AF%B9%E8%B1%A1%E8%BF%9B%E5%85%A5%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-text">1、对象进入老年代的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%A4%A7%E4%BF%83%E9%94%80%E5%9C%BA%E6%99%AF%E7%9A%84Full-GC%E5%A4%9A%E4%B9%85%E5%87%BA%E5%8F%91%E4%B8%80%E6%AC%A1%EF%BC%9F"><span class="nav-text">2、大促销场景的Full GC多久出发一次？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81CMS%E5%90%8E%E5%86%85%E5%AD%98%E7%A2%8E%E7%89%87%E6%95%B4%E7%90%86%E9%A2%91%E7%8E%87"><span class="nav-text">3、CMS后内存碎片整理频率</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-text">三、面试题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E4%B8%80%E4%B8%AA%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9Aparnew-cms%E7%9A%84gc%EF%BC%8C%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%8F%AA%E5%81%9Aygc%EF%BC%8Cjvm%E5%8F%82%E6%95%B0%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%EF%BC%9F"><span class="nav-text">1、一个面试题：parnew+cms的gc，如何保证只做ygc，jvm参数如何配置？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%80%81%E5%B9%B4%E4%BB%A3%E5%9B%9E%E6%94%B6%E6%AF%94%E6%96%B0%E7%94%9F%E4%BB%A3%E6%85%A2%EF%BC%9F"><span class="nav-text">2、为什么老年代回收比新生代慢？</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

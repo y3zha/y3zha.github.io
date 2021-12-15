@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            LinkedHashMap 源码解读 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">LinkedHashMap 源码解读</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-09-13 23:15:48</span>
+        <span class="mobile">2019-09-13 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Source-Code/">Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h1><p>HashMap 是无序的，TreeMap 可以按照 key 进行排序，LinkedHashMap是可以维护插入顺序的，它本身继承HashMap，拥有HashMap的所有特性。除了可以维护插入顺序以外，实现了访问最少最先删除功能，其目的是把很久都没有访问的 key 自动删除。</p>
+<h2 id="一、LinkedHashMap的新增属性"><a href="#一、LinkedHashMap的新增属性" class="headerlink" title="一、LinkedHashMap的新增属性"></a>一、LinkedHashMap的新增属性</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//链表头与尾巴</span></span><br><span class="line"><span class="keyword">transient</span> LinkedHashMap.Entry&lt;K,V&gt; head;</span><br><span class="line"><span class="keyword">transient</span> LinkedHashMap.Entry&lt;K,V&gt; tail;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * HashMap.Node subclass for normal LinkedHashMap entries.</span></span><br><span class="line"><span class="comment">     * 继承了Node，为数组的每个元素添加了before与after属性</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">HashMap</span>.<span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        Entry&lt;K,V&gt; before, after;</span><br><span class="line">        Entry(<span class="keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; next) &#123;</span><br><span class="line">            <span class="keyword">super</span>(hash, key, value, next);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//控制两种访问模式的字段</span></span><br><span class="line"><span class="comment">//true是按照访问顺序，会把经常访问的key放到队尾</span></span><br><span class="line"><span class="comment">//false 按照插入顺序提供访问（初始化时是false）</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> accessOrder;</span><br></pre></td></tr></table></figure>
+
+<p>LinkedHashMap 的数据结构很像是把 LinkedList 的每个元素换成了 HashMap 的 Node，像是两者的结合体，也正是因为增加了这些结构，从而能把 Map 的元素都串联起来，形成一个链表，而链表就可以保证顺序了，就可以维护元素插入进来 的顺序。</p>
+<h2 id="二、如何按照顺序新增"><a href="#二、如何按照顺序新增" class="headerlink" title="二、如何按照顺序新增"></a>二、如何按照顺序新增</h2><p>初始化时，默认 accessOrder 为 false，就是会按照插入顺序提供访问，插入方法使用的是父类HashMap 的 put 方法，不过覆盖了 put 方法执行中调用的 newNode/newTreeNode 和 afterNodeAccess 方。</p>
+<p>newNode/newTreeNode 方法，控制新增节点追加到链表的尾部，这样每次新节点都追加到尾部，即可保证插入顺序了，要注意的是节点具有before与after属性，以 newNode 源码为例</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Node&lt;K,V&gt; <span class="title">newNode</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; e)</span> </span>&#123;</span><br><span class="line">    LinkedHashMap.Entry&lt;K,V&gt; p =</span><br><span class="line">      	<span class="comment">//new一个新的节点出来</span></span><br><span class="line">        <span class="keyword">new</span> LinkedHashMap.Entry&lt;K,V&gt;(hash, key, value, e);</span><br><span class="line">  	<span class="comment">//追加到链表的尾部</span></span><br><span class="line">    linkNodeLast(p);</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// link at the end of list p是新增节点</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">linkNodeLast</span><span class="params">(LinkedHashMap.Entry&lt;K,V&gt; p)</span> </span>&#123;</span><br><span class="line">    LinkedHashMap.Entry&lt;K,V&gt; last = tail;</span><br><span class="line">  	<span class="comment">//让新增加点=尾节点</span></span><br><span class="line">    tail = p;</span><br><span class="line">  	<span class="comment">///如果尾节点是空的，说明链表是空的，首尾节点一样，否则就让它变成尾节点</span></span><br><span class="line">    <span class="keyword">if</span> (last == <span class="keyword">null</span>)</span><br><span class="line">        head = p;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        p.before = last;</span><br><span class="line">        last.after = p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、如何按照顺序访问"><a href="#三、如何按照顺序访问" class="headerlink" title="三、如何按照顺序访问"></a>三、如何按照顺序访问</h2><p>LinkedHashMap 只提供了单向访问，即按照插入的顺序从头到尾进行访问，不能像 LinkedList 那样可以双向访问。主要通过迭代器进行访问，迭代器初始化的时候，默认从头节点开始访问，在迭代的过程中，不断访问当前节点的 after 节点即可。</p>
+<p>Map 对 key、value 和 entity(节点) 都提供出了迭代的方法，假设我们需要迭代 entity，就可使 用 LinkedHashMap.entrySet().iterator()</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedHashIterator</span> </span>&#123;</span><br><span class="line">      LinkedHashMap.Entry&lt;K,V&gt; next;</span><br><span class="line">      LinkedHashMap.Entry&lt;K,V&gt; current;</span><br><span class="line">      <span class="keyword">int</span> expectedModCount;</span><br><span class="line">		<span class="comment">//初始化，默认从头节点开始访问</span></span><br><span class="line">      LinkedHashIterator() &#123;</span><br><span class="line">        	<span class="comment">//头节点作为第一个节点</span></span><br><span class="line">          next = head;</span><br><span class="line">          expectedModCount = modCount;</span><br><span class="line">          current = <span class="keyword">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">          <span class="keyword">return</span> next != <span class="keyword">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    	<span class="comment">//nextNode</span></span><br><span class="line">      <span class="keyword">final</span> LinkedHashMap.<span class="function">Entry&lt;K,V&gt; <span class="title">nextNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">          LinkedHashMap.Entry&lt;K,V&gt; e = next;</span><br><span class="line">        	<span class="comment">//校验版本号</span></span><br><span class="line">          <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">              <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">        	<span class="comment">//如果下一个节点为空，抛出异常</span></span><br><span class="line">          <span class="keyword">if</span> (e == <span class="keyword">null</span>)</span><br><span class="line">              <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">        	<span class="comment">//准备下一个节点</span></span><br><span class="line">          current = e;</span><br><span class="line">          next = e.after;</span><br><span class="line">          <span class="keyword">return</span> e;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、LRU算法"><a href="#四、LRU算法" class="headerlink" title="四、LRU算法"></a>四、LRU算法</h2><p>LinkedHashMap实现了访问最少最先删除功能，其目的是把很久都没有访问的 key 自动删除。这种策略叫做LRU（Least recently used，最近最少使用），其实现思路是，把经常访问的元素追到到队尾，这样不经常访问的就靠近了队头，我们可以设置删除的策略，比如map元素大于多少个时，就把头节点删除。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="comment">//这是removeEldestEntry方法</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">removeEldestEntry</span><span class="params">(Map.Entry&lt;K,V&gt; eldest)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以自定义实现</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//构造方法，初始化容量，负载因子，是否按照插入顺序访问，true则是实现lru算法，false则按照插入顺序访问</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        LinkedHashMap&lt;Integer, Integer&gt; map = <span class="keyword">new</span> LinkedHashMap&lt;Integer, Integer&gt;(<span class="number">4</span>, <span class="number">0.75f</span>, <span class="keyword">true</span>) &#123;</span><br><span class="line">            &#123;</span><br><span class="line">                put(<span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line">                put(<span class="number">9</span>, <span class="number">9</span>);</span><br><span class="line">                put(<span class="number">20</span>, <span class="number">20</span>);</span><br><span class="line">                put(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//重写removeEldestEntry</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">removeEldestEntry</span><span class="params">(Map.Entry&lt;Integer, Integer&gt; eldest)</span> </span>&#123;</span><br><span class="line">                <span class="comment">//我们设定当节点个数大于 3 时，就开始删除头节点</span></span><br><span class="line">                <span class="keyword">return</span> size() &gt; <span class="number">3</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        Iterator&lt;Map.Entry&lt;Integer, Integer&gt;&gt; it = map.entrySet().iterator();</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">            Map.Entry&lt;Integer, Integer&gt; next = it.next();</span><br><span class="line">            System.out.println(next.getKey() + <span class="string">&quot;:&quot;</span> + next.getValue());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用map.get(9),9就被放到了链表尾</span></span><br><span class="line">        Integer integer = map.get(<span class="number">9</span>);</span><br><span class="line">        Iterator&lt;Map.Entry&lt;Integer, Integer&gt;&gt; it2 = map.entrySet().iterator();</span><br><span class="line">        <span class="keyword">while</span> (it2.hasNext()) &#123;</span><br><span class="line">            Map.Entry&lt;Integer, Integer&gt; next = it2.next();</span><br><span class="line">            System.out.println(next.getKey() + <span class="string">&quot;:&quot;</span> + next.getValue());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">初始化结果，只有三个了</span><br><span class="line"><span class="number">9</span>:<span class="number">9</span></span><br><span class="line"><span class="number">20</span>:<span class="number">20</span></span><br><span class="line"><span class="number">1</span>:<span class="number">1</span></span><br><span class="line">  </span><br><span class="line">调用map.get(<span class="number">9</span>),<span class="number">9</span>就被放到了链表尾</span><br><span class="line"><span class="number">20</span>:<span class="number">20</span></span><br><span class="line"><span class="number">1</span>:<span class="number">1</span></span><br><span class="line"><span class="number">9</span>:<span class="number">9</span></span><br></pre></td></tr></table></figure>
+
+<p>我们放进去四个元素，但结果只有三个元素，10 不见了，这 个主要是因为我们覆写了 removeEldestEntry 方法，我们实现了如果 map 中元素个数大于 3 时，我们就把队头的元素删除，当 put(1, 1) 执行的时候，正好把队头的 10 删除。</p>
+<p>为什么调用get，元素会被移动到队尾，看下源码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">      Node&lt;K,V&gt; e;</span><br><span class="line">      <span class="keyword">if</span> ((e = getNode(hash(key), key)) == <span class="keyword">null</span>)</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    	<span class="comment">//如果为true，也就是启用LRU策略</span></span><br><span class="line">      <span class="keyword">if</span> (accessOrder)</span><br><span class="line">        	<span class="comment">//就把这个key移动到队尾</span></span><br><span class="line">          afterNodeAccess(e);</span><br><span class="line">      <span class="keyword">return</span> e.value;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">afterNodeAccess</span><span class="params">(Node&lt;K,V&gt; e)</span> </span>&#123; <span class="comment">// move node to last</span></span><br><span class="line">      LinkedHashMap.Entry&lt;K,V&gt; last;</span><br><span class="line">      <span class="keyword">if</span> (accessOrder &amp;&amp; (last = tail) != e) &#123;</span><br><span class="line">          LinkedHashMap.Entry&lt;K,V&gt; p =</span><br><span class="line">              (LinkedHashMap.Entry&lt;K,V&gt;)e, b = p.before, a = p.after;</span><br><span class="line">          p.after = <span class="keyword">null</span>;</span><br><span class="line">          <span class="keyword">if</span> (b == <span class="keyword">null</span>)</span><br><span class="line">              head = a;</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">              b.after = a;</span><br><span class="line">          <span class="keyword">if</span> (a != <span class="keyword">null</span>)</span><br><span class="line">              a.before = b;</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">              last = b;</span><br><span class="line">          <span class="keyword">if</span> (last == <span class="keyword">null</span>)</span><br><span class="line">              head = p;</span><br><span class="line">          <span class="keyword">else</span> &#123;</span><br><span class="line">              p.before = last;</span><br><span class="line">              last.after = p;</span><br><span class="line">          &#125;</span><br><span class="line">          tail = p;</span><br><span class="line">          ++modCount;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、删除策略"><a href="#五、删除策略" class="headerlink" title="五、删除策略"></a>五、删除策略</h2><p>我们选择使用LRU算法，在9.4中去执行put时，发现队头的元素被删除了，由于LinkedHashMap调用的是HashMap的put方法，它自己是没有put的，队头能够删除是因为LinkedHashMap实现了put方法中的 afterNodeInsertion 这个方法，通过自己的afterNodeInsertion来实现删除，源码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 删除很少被访问的元素，被 HashMap 的 put 方法所调用</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">afterNodeInsertion</span><span class="params">(<span class="keyword">boolean</span> evict)</span> </span>&#123; <span class="comment">// possibly remove eldest</span></span><br><span class="line">  			<span class="comment">// 得到元素头节点</span></span><br><span class="line">        LinkedHashMap.Entry&lt;K,V&gt; first;</span><br><span class="line">  			<span class="comment">//如果链表不为空，且用removeEldestEntry来控制删除策略</span></span><br><span class="line">        <span class="keyword">if</span> (evict &amp;&amp; (first = head) != <span class="keyword">null</span> &amp;&amp; removeEldestEntry(first)) &#123;</span><br><span class="line">            K key = first.key;</span><br><span class="line">          	<span class="comment">//删除头节点</span></span><br><span class="line">            removeNode(hash(key), key, <span class="keyword">null</span>, <span class="keyword">false</span>, <span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Source-Code/">#Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/09/18/SourceCode-ConcurrentHashMap/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">ConcurrentHashMap 源码解读</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/09/13/SourceCode-TreeMap/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">TreeMap 源码解读</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LinkedHashMap"><span class="nav-text">LinkedHashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81LinkedHashMap%E7%9A%84%E6%96%B0%E5%A2%9E%E5%B1%9E%E6%80%A7"><span class="nav-text">一、LinkedHashMap的新增属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%A6%82%E4%BD%95%E6%8C%89%E7%85%A7%E9%A1%BA%E5%BA%8F%E6%96%B0%E5%A2%9E"><span class="nav-text">二、如何按照顺序新增</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%A6%82%E4%BD%95%E6%8C%89%E7%85%A7%E9%A1%BA%E5%BA%8F%E8%AE%BF%E9%97%AE"><span class="nav-text">三、如何按照顺序访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81LRU%E7%AE%97%E6%B3%95"><span class="nav-text">四、LRU算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5"><span class="nav-text">五、删除策略</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

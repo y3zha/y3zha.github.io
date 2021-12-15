@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            数据仓库 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">数据仓库</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-11-05 23:15:48</span>
+        <span class="mobile">2019-11-05 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/NJU/">NJU</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/lesson/">lesson</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p><a href="#jump1">第二章 数据仓库</a></p>
+<p><a href="#jump2">第三章 数据预处理</a></p>
+<p><a href="#jump3">第四章 特征化和区分</a></p>
+<p><a href="#jump4">数据挖掘</a></p>
+<p><a href="#jump5">第五章 关联规则挖掘</a></p>
+<p><a href="#jump6">第六章 分类挖掘</a></p>
+<p><a href="#jump7">第七章 聚类挖掘</a></p>
+<h2 id="第二章-数据仓库"><a href="#第二章-数据仓库" class="headerlink" title="第二章 数据仓库"></a><span id="jump1">第二章 数据仓库</span></h2><h3 id="1、B树索引"><a href="#1、B树索引" class="headerlink" title="1、B树索引"></a>1、B树索引</h3><p><strong>考题：为何B树等在数据库中广泛使用的索引技术无法直接被引入数据仓库？</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1、B树要求属性必须具有许多不同的值，比如身份证号这种取值字段，取值范围很广，几乎没有重复。</span><br><span class="line">2、B树要求查询应具有更简单的条件和更少的结果</span><br><span class="line">3、创建B树的空间复杂度和时间复杂度很大</span><br></pre></td></tr></table></figure>
+
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305193620991.png"></p>
+<h3 id="2、位图索引-BitMap-Index"><a href="#2、位图索引-BitMap-Index" class="headerlink" title="2、位图索引 BitMap Index"></a>2、位图索引 BitMap Index</h3><p>位图索引分为两种，简单位图索引和编码位图索引，考试时候会让你画简单位图索引。</p>
+<h4 id="（1）简单位图索引"><a href="#（1）简单位图索引" class="headerlink" title="（1）简单位图索引"></a>（1）简单位图索引</h4><p>对于每个属性，将属性中的不同取值生成不同的位向量！有几个不同的取值就有几个不同的位向量。如果数据表中某一元组的属性 值为 v，则在位图索引的对应行表示该值的位为 1，该行的其它位为 0。 </p>
+<p>例如：<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305193733088.png"></p>
+<p>如果我们要找买了b产品的女性，计算时候首先取出b产品和女性F向量做&amp;操作</p>
+<blockquote>
+<p>b：0 0 1 1 1 0 0 0</p>
+<p>F：1 0 1 1 0 1 0 0</p>
+<hr>
+<pre><code>0 0 1 1 0 0 0 0
+</code></pre>
+<p>发现第3位和第4位为1，表示第三行、第四行数据是我们要的结果</p>
+</blockquote>
+<p>位图索引适合只有几个固定值的列，如性别、婚姻状况、行政区等等，对于性别，可取值的范围只有’男’,’女’，并且男和女可能各站该表的50%的数据，这时添加B树索引还是需要取出一半的数据， 因此完全没有必要。如果某个字段的取值范围很广，几乎没有重复，比如身份证号，就不适合用位图索引，适合B树索引。</p>
+<h3 id="3、连接索引-Join-Index"><a href="#3、连接索引-Join-Index" class="headerlink" title="3、连接索引 Join Index"></a>3、连接索引 Join Index</h3><p>适用于复杂的查询！复杂的查询往往需要<strong>多表连接</strong>，使用连接索引能提高性能。考试时候要求画出连接索引怎么画？</p>
+<p>先说下什么是事实表、维表。事实表就是你要关注的内容，比如各种销售数据，通常包含大量的行。维表就是你观察该事物的角度，你从哪个角度去查看这个内容？比如对于销售数据，可以从某个地区的来看，地区就是维度。</p>
+<p>例如，在一个星型模式中，事实表 Sales 与维表 Customer 和 Item 三者之间的链接关系如图所示。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305193749121.png"></p>
+<p>它们的连接索引表如图所示。 </p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305193803129.png"></p>
+<h3 id="4、数据仓库存储策略"><a href="#4、数据仓库存储策略" class="headerlink" title="4、数据仓库存储策略"></a>4、数据仓库存储策略</h3><p>在逻辑模型设计的基础上确定数据存储结构、索引策略、存储分配和数据存放位置等与物理有关的内容，与数据库设计中大致相似。</p>
+<p>常用技术</p>
+<ul>
+<li>合并表<br>表的连接操作消耗很多时间，将表合并后存放，可以节约连接的时间，这是以空间换时间的策略</li>
+<li>数据序列<br>将连续使用的数据连续存储，原先表示逻辑的部分可以继续存在</li>
+<li>引入冗余<br>此处特指将一个属性从一张表扩散到其它表的过程，这个过程中，冗余就可以节约访问的连接次数</li>
+<li>表的物理分割<br>类似逻辑设计阶段的数据分割，用拆分的表来表达原有逻辑意义上的一张表</li>
+<li>生成导出数据<br>如果某张表的统计数据被频繁访问，这部分聚集数据就可以另行记录</li>
+<li>建立广义索引<br>记录与“最”有关的统计结果。这部分数据非常小，又可以在数据刷新阶段直接建立，进行此类查询时就可以将统计操作转换为简单查找<strong>所以不用B树索引！</strong></li>
+</ul>
+<h3 id="5、数据仓库"><a href="#5、数据仓库" class="headerlink" title="5、数据仓库"></a>5、数据仓库</h3><h4 id="（1）数据仓库的出现？"><a href="#（1）数据仓库的出现？" class="headerlink" title="（1）数据仓库的出现？"></a>（1）数据仓库的出现？</h4><p>建立数据仓库<strong>不是</strong>要替代传统的事务处理系统和数据库，而是在新的领域中更加适应分析型处理的需要。数据仓库正成为信息集成的主要手段之一。</p>
+<p>其出现目的：</p>
+<ul>
+<li>提高两个系统的性能</li>
+<li>提高操作性数据库的事务吞吐量</li>
+<li>两个系统中的数据结构、内容和用法可以不同</li>
+</ul>
+<h4 id="（2）数据仓库的特点-特征"><a href="#（2）数据仓库的特点-特征" class="headerlink" title="（2）数据仓库的特点/特征"></a>（2）数据仓库的特点/特征</h4><ul>
+<li><p>面向主题</p>
+<p>主题就是企业中某一领域涉及到的分析对象，面向主题就是说：数据仓库内的信息是按照主题进行组织的。主题是要经过抽取得出的</p>
+</li>
+<li><p>集成</p>
+<p>全部数据放置在同一个地方，形成完整、一致的数据汇总</p>
+</li>
+<li><p>非易失</p>
+<p>数据仓库的数据与操作型数据环境隔离</p>
+</li>
+<li><p>时变</p>
+<p>数据仓库随时都是一个只读的备份，每隔一段时间完成一次对数据仓库的刷新</p>
+</li>
+</ul>
+<h3 id="6、OLAP"><a href="#6、OLAP" class="headerlink" title="6、OLAP"></a>6、OLAP</h3><p>OLAP即联机分析处理，通过专门的数据综合引擎，辅以更加直观的数据访问界面，在短时间内相应非数据处理专业人员的复杂查询要求。</p>
+<h4 id="（1）OLAP特点"><a href="#（1）OLAP特点" class="headerlink" title="（1）OLAP特点"></a>（1）OLAP特点</h4><ul>
+<li>OLAP是面向特定问题的联机数据访问和分析<br>OLAP是只读的工具，这是与SQL的巨大差异</li>
+<li>通过对信息多种可能的观察形式进行快速、稳定一致和交互性的存取<br>多个“维度”</li>
+<li>允许决策人员对数据进行深入观察<br>以人为主导</li>
+</ul>
+<h4 id="（2）OLAP的基本数据模型"><a href="#（2）OLAP的基本数据模型" class="headerlink" title="（2）OLAP的基本数据模型"></a>（2）OLAP的基本数据模型</h4><ul>
+<li><p>MOLAP<br>多维数据库</p>
+</li>
+<li><p>ROLAP</p>
+<p>用事实表的二维模型存放度量值，定义大量外关键字指向维度</p>
+<ul>
+<li>星形模型</li>
+<li>雪花模型</li>
+</ul>
+</li>
+</ul>
+<p><strong>详细介绍ROLAP</strong></p>
+<ul>
+<li><p>星型模式</p>
+<ul>
+<li>n维的多维表有一个事实表和n个维表增加一个新的维度，就增加一个维表，从而易于扩充</li>
+<li>应对多维查询时，依赖标准SQL将事实表与维表进行<strong>连接</strong>与<strong>聚集</strong></li>
+<li>星型模式的优势在于架构一旦确定下来，影响架构的宏观因素就很少，可以以<strong>基本固定的方式</strong>进行优化</li>
+</ul>
+</li>
+<li><p>雪花模型</p>
+<ul>
+<li>对星型模式的扩展<br>某些维表并不是单一的平面结构，所有维属性的地位并不等同</li>
+<li>优点<ul>
+<li>更加适应人类的理解和观察<br>内在的关联性通过将子维表分列而体现出来</li>
+<li>规范化的设计趋势节约存储空间</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>结构远比星型模式复杂</li>
+<li>额外进行的多次连接造成性能损失</li>
+<li>即使维数相同，表的结构也可能有很大差异<br>难以优化</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>其它扩展模式</p>
+<ul>
+<li>星座模式<br>通过公共维度连接多个星型模式</li>
+<li>雪暴模式<br>通过公共维度连接多个雪花模型</li>
+</ul>
+</li>
+</ul>
+<h3 id="7、数据立方体"><a href="#7、数据立方体" class="headerlink" title="7、数据立方体"></a>7、数据立方体</h3><p>数据立方体是一种多维数据模型，主要有星形模式、雪花模式和事实星座模式。</p>
+<ul>
+<li><p>星形模式<br>它是最常见的模式，它包括一个大的中心表（事实表），包含了大批数据但是不冗余；一组小的附属表（维表），每维一个。如下所示，从item、time、branch、location四个维度去观察数据，中心表是Sales Fact Table，包含了四个维表的标识符（由系统产生）和三个度量。每一维使用一个表表示，表中的属性可能会形成一个层次或格。<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305193842012.png"></p>
+</li>
+<li><p>雪花模式<br>它是星模式的变种，将其中某些表规范化，把数据进一步的分解到附加的表中，形状类似雪花。 <img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305193909415.png"></p>
+</li>
+<li><p>事实星座</p>
+<p>允许多个事实表共享维表，可以看作是星形模式的汇集。如下所示，Sales和Shipping两个事实表共享了time、item、location三个维表。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305193927337.png"></p>
+</li>
+</ul>
+<p>在数据仓库中多用事实星座模式，因为它能对多个相关的主题建模；而在数据集市流行用星形或雪花模式</p>
+<h3 id="8、多维数据分析手段"><a href="#8、多维数据分析手段" class="headerlink" title="8、多维数据分析手段"></a>8、多维数据分析手段</h3><ul>
+<li>切片</li>
+</ul>
+<p>只看与该维成员相关的数据，就是降维</p>
+<ul>
+<li>切块</li>
+</ul>
+<p>可以认为是切片的复合操作，维度可能无法下降，但数据量得以减少</p>
+<ul>
+<li>旋转</li>
+</ul>
+<p>交换维度的排列顺序，获取全新的呈现方式。高维的旋转操作会很有用，交换了某些维度的焦点</p>
+<ul>
+<li>上钻</li>
+</ul>
+<p>将层次较低的数据集提高层次，上钻不会变更观察的主体</p>
+<ul>
+<li>下钻</li>
+</ul>
+<p>上钻的逆操作，降低数据层次，上钻与下钻并不能无限地进行下去，下界为原子层。</p>
+<ul>
+<li>其它操作<ul>
+<li>跨钻<br>同步地对多个多维模型进行上钻或下钻，方便进行多个事实的对比</li>
+</ul>
+</li>
+<li>钻透<ul>
+<li>下钻到数据立方体最低细节后，继续细化到数据仓库/数据库的关系型表格</li>
+<li>可以发现一些错误</li>
+</ul>
+</li>
+</ul>
+<h3 id="9、数据仓库的设计"><a href="#9、数据仓库的设计" class="headerlink" title="9、数据仓库的设计"></a>9、数据仓库的设计</h3><p>见ppt</p>
+<h2 id="第三章-数据预处理"><a href="#第三章-数据预处理" class="headerlink" title="第三章 数据预处理"></a><span id="jump2">第三章 数据预处理</span></h2><h3 id="1、数据预处理过程"><a href="#1、数据预处理过程" class="headerlink" title="1、数据预处理过程"></a>1、数据预处理过程</h3><ul>
+<li><p>数据清洗</p>
+<ul>
+<li>缺失值、噪声、非一致</li>
+</ul>
+</li>
+<li><p>数据集成</p>
+<ul>
+<li>模式集成、发现冗余、数据值冲突检测和处理 </li>
+</ul>
+</li>
+<li><p>数据变换</p>
+<ul>
+<li>光滑、聚集、泛化、规范化、属性构造 </li>
+</ul>
+</li>
+<li><p>数据规约</p>
+<ul>
+<li>数据立方体聚集、属性子集选择、维度规约、数值规约、离散化和概念 分层产生 </li>
+</ul>
+</li>
+<li><p>数据离散化</p>
+<ul>
+<li><p>数值数据</p>
+<ul>
+<li>分箱、直方图、聚类、基于熵的离散化、基于直观划分离散化 </li>
+</ul>
+</li>
+<li><p>分类数据</p>
+<ul>
+<li>用户或专家在模式级显示说明属性偏序，层次高，属性值个数越少 </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、数据清洗"><a href="#2、数据清洗" class="headerlink" title="2、数据清洗"></a>2、数据清洗</h3><p><strong>噪声数据</strong>：测量变量时出现的随机错误或是差异，出现原因可能是属性值不正确（数据收集工具问题、数据的输入或传输问题等）以及数据不完整、不一致、重复记录产生的</p>
+<p><strong>针对噪声数据的处理方法</strong>：分箱/分桶、聚类、人工检查、回归</p>
+<p><strong>简单离散化方法：分箱</strong></p>
+<ul>
+<li>等宽分箱 equip-width<ul>
+<li><pre><code> 将范围分为相等大小的N个间隔  
+</code></pre>
+</li>
+<li><pre><code> 间隔的宽度将为：W =（B-A）/ N  （属性最高值-最低值）/N个间隔
+</code></pre>
+</li>
+</ul>
+</li>
+<li>等深分箱 equip-depth<ul>
+<li>分成N个间隔，每个间隔样本数相同</li>
+</ul>
+</li>
+</ul>
+<p>分箱后需要平滑数据，主要方法有：按箱平均值平滑、按箱中值平滑、按箱边界平滑<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305193950137.png"></p>
+<h3 id="3、数据集成与变换"><a href="#3、数据集成与变换" class="headerlink" title="3、数据集成与变换"></a>3、数据集成与变换</h3><p>数据集成主要讲了去除冗余啥的，这边主要看数据转换的方式</p>
+<h4 id="（1）数据变换"><a href="#（1）数据变换" class="headerlink" title="（1）数据变换"></a>（1）数据变换</h4><ul>
+<li>平滑<ul>
+<li>消除噪声数据</li>
+</ul>
+</li>
+<li>聚合<ul>
+<li>汇总数据</li>
+</ul>
+</li>
+<li>泛化<ul>
+<li>概念层次爬升，就是概念化</li>
+</ul>
+</li>
+<li><strong>归一化</strong><ul>
+<li>缩放数据到指定范围内</li>
+</ul>
+</li>
+<li>属性/特征构造</li>
+</ul>
+<h4 id="（2）归一化的三种方式"><a href="#（2）归一化的三种方式" class="headerlink" title="（2）归一化的三种方式"></a>（2）归一化的三种方式</h4><ul>
+<li><p>min-max normalization</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194007433.png"></p>
+<p>value’ =（value-最小值）/（最大值-最小值）</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194024971.png"></p>
+</li>
+<li><p>Z-score normalization </p>
+<p>Z标准化也叫标准差标准化，这种方法给予原始数据的均值（mean）和标准差（standard deviation）进行数据的标准化。<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194047639.png"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194059338.png"></p>
+</li>
+<li><p>normalization by decimal scaling</p>
+<p>进制缩放归一化。这种方法通过移动数据的小数点位置来进行标准化。小数点移动多少位取决于属性A的取值中的<strong>最大绝对值</strong>。公式中j是满足条件的最小整数。<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194113774.png"><br>例如 假定A的值由-986到917，A的最大绝对值为986，为使用小数定标标准化，我们用每个值除以1000（即，j=3），这样，-986被规范化为-0.986。<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194126917.png"></p>
+</li>
+</ul>
+<h3 id="4、数据规约"><a href="#4、数据规约" class="headerlink" title="4、数据规约"></a>4、数据规约</h3><pre><code> Data Reduction，即数据规约，PPT中提到了4中策略
+</code></pre>
+<ul>
+<li>数据立方体聚合</li>
+<li>降维</li>
+<li>Numerosity reduction</li>
+<li>离散化和概念层次生成</li>
+</ul>
+<p>观察往年试卷，考过<strong>离散化</strong><br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194146684.png"><br>         <strong>maxdiff</strong>：先给数据排序，给定β个桶或是分组，相邻数据的最大差是β-1，超过这个最大差就不能放进一个桶。</p>
+<p>例子：<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194209620.png"><br>有个疑惑，最小方差每组算出来为什么要x2？</p>
+<p><strong>离散化的其他方法</strong></p>
+<ul>
+<li><p>基于熵的离散化      Entropy-based discretization  </p>
+<p>给定一组样本S，如果使用边界T将S划分为两个区间S1和S2，则划分后的熵为<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194227336.png"></p>
+<p>选择在所有可能的边界上使熵函数最小的边界作为二进制离散化。该过程将递归应用于获得的分区，直到满足某些停止条件为止。<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194245041.png"></p>
+</li>
+<li><p>3-4-5规则</p>
+<p>3-4-5规则可用于将数字数据分段为相对均匀的“自然”间隔。</p>
+<p>看这个<a class="link" target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42859280/article/details/93306099">博客<i class="fas fa-external-link-alt"></i></a>！</p>
+<ul>
+<li>如果间隔的最高有效位数涵盖3、6、7或9个不同的值，则将范围划分为3个等宽间隔</li>
+<li>如果它的最高有效位涵盖2、4或8个不同的值，请将范围划分为4个间隔</li>
+<li>如果它的最高有效位涵盖1、5或10个不同的值，请将范围划分为5个间隔</li>
+</ul>
+</li>
+</ul>
+<h2 id="第四章-特征化和区分"><a href="#第四章-特征化和区分" class="headerlink" title="第四章 特征化和区分"></a><span id="jump3">第四章 特征化和区分</span></h2><p>废话</p>
+<h2 id="数据挖掘"><a href="#数据挖掘" class="headerlink" title="数据挖掘"></a><span id="jump4">数据挖掘</span></h2><h3 id="1、数据挖掘"><a href="#1、数据挖掘" class="headerlink" title="1、数据挖掘"></a>1、数据挖掘</h3><h4 id="（1）数据挖掘是什么？"><a href="#（1）数据挖掘是什么？" class="headerlink" title="（1）数据挖掘是什么？"></a>（1）数据挖掘是什么？</h4><p>数据挖掘=数据库里的知识发现，在大量的、完整的数据中进行挖掘，总结规律、得出知识，来指导客观世界。</p>
+<h4 id="（2）数据挖掘基本概念"><a href="#（2）数据挖掘基本概念" class="headerlink" title="（2）数据挖掘基本概念"></a>（2）数据挖掘基本概念</h4><ul>
+<li>模式<ul>
+<li>任何用高级语言表达一定逻辑含义的信息都是模式（信息+判断）</li>
+</ul>
+</li>
+<li>知识<ul>
+<li>满足用户对客观评价标准（支持度/置信度……）和主观评价标准要求的<strong>模式</strong></li>
+</ul>
+</li>
+<li>置信度 condidence<ul>
+<li>某个数据集上，模式成立的程度，例如<strong>在购买面包和黄油的顾客中，大部分的人同时也买了牛奶</strong>，该模式的置信度为：同时购买面包、黄油、牛奶的顾客人数占同时购买面包、黄油的顾客人数的百分比。</li>
+<li>置信度不是固定的</li>
+<li>没有足够的置信度，模式也不能称为知识</li>
+</ul>
+</li>
+<li>支持度 support<ul>
+<li>某一数据集上，模式被用户关注的程度，也叫做<strong>兴趣度</strong></li>
+</ul>
+</li>
+<li>非平凡性<ul>
+<li>平凡的知识不是数据挖掘的目标，因为这样的知识已经成为<strong>常识</strong>，我们要找的是不平凡的知识</li>
+</ul>
+</li>
+</ul>
+<h4 id="（3）数据挖掘和数据仓库啥关系？"><a href="#（3）数据挖掘和数据仓库啥关系？" class="headerlink" title="（3）数据挖掘和数据仓库啥关系？"></a>（3）数据挖掘和数据仓库啥关系？</h4><ul>
+<li>数据挖掘原本建立在数据库的基础之上</li>
+<li>产生数据仓库技术后<br>由于数据仓库中的数据都是经过抽取、整理和预处理后的综合数据，因而数据挖掘工作可以在数据仓库上直接运行，任务相对来说会简单很多，<em>但并不代表数据挖掘可以无缝地架设在数据仓库之上</em></li>
+</ul>
+<h4 id="（4）数据挖掘步骤"><a href="#（4）数据挖掘步骤" class="headerlink" title="（4）数据挖掘步骤"></a>（4）数据挖掘步骤</h4><ul>
+<li><p>数据的集成</p>
+<ul>
+<li><p>没数据怎么行？一般都集成到数据仓库</p>
+</li>
+<li><p>在数据仓库要对数据预处理</p>
+<ul>
+<li>清洗、集成、转换、减少</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>数据规约</p>
+<ul>
+<li><p>用于数据挖掘的数据量非常巨大，数据规约可以减低数据量，提高数据挖掘操作的性能</p>
+</li>
+<li><p>常见的数据规约技术</p>
+<ul>
+<li>数据立方体计算</li>
+<li>挖掘范围的选择<ul>
+<li>在不影响挖掘结果的前提下，尽可能地选取那些与挖掘操作有关的属性集，去除明显无关的因素，或由于法规、风俗等原因，即使有相应的分析结果也无法应用的</li>
+<li>时间范围或备份内容上的选择</li>
+</ul>
+</li>
+<li>数据压缩<br>减低数据的规模，节省存储空间开销和数据通讯开销，如果采用的数据挖掘算法不需要解压就可直接对压缩数据进行挖掘，数据压缩技术将非常有用</li>
+<li>离散化处理<br>将属性值的连续区域划分为若干个区域，用每个区域的标识代替原来的值，以减低该属性上属性值的个数，也可利用这种数据规约技术来自动地建立该属性的概念层次树</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>挖掘</p>
+<ul>
+<li>挖掘方法<ul>
+<li>关联规则挖掘–第五章</li>
+<li>分类挖掘–第六章</li>
+<li>聚类挖掘–第七章</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>表示</p>
+<ul>
+<li>可以包括文字、图形、表格、图标等可视化形式</li>
+</ul>
+</li>
+</ul>
+<h2 id="第五章：关联规则挖掘"><a href="#第五章：关联规则挖掘" class="headerlink" title="第五章：关联规则挖掘"></a><span id="jump5">第五章：关联规则挖掘</span></h2><h3 id="1、关联规则"><a href="#1、关联规则" class="headerlink" title="1、关联规则"></a>1、关联规则</h3><p><a class="link" target="_blank" rel="noopener" href="https://www.jianshu.com/p/7d459ace31ab">资料<i class="fas fa-external-link-alt"></i></a></p>
+<ul>
+<li><p>关联规则用于表示事务数据库中诸多属性之间的关联程度</p>
+</li>
+<li><p>关联规则挖掘则是利用数据库中的大量数据通过<strong>关联算法</strong>寻找<strong>属性</strong>间的相关性</p>
+</li>
+<li><p>属性在这里被称为 <strong>项</strong></p>
+<p>若干个属性所构成的属性集被称为一个 <strong>项集</strong></p>
+<blockquote>
+<h6 id="例：超级市场"><a href="#例：超级市场" class="headerlink" title="例：超级市场"></a>例：超级市场</h6><p>在购买商品A的客户中有90%的人会同时购买商品B，则可用关联规则表示为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">R1：A-&gt;B 表示一条规则</span><br></pre></td></tr></table></figure></blockquote>
+</li>
+<li><p>A-&gt;B与B-&gt;A的支持度是相同的，但置信度通常不同</p>
+</li>
+<li><p>任意组合均能构成关联规则</p>
+<p>为了发现有意义的关联规则，需要给定两个阈值：</p>
+<p><strong>最小支持度</strong> 和 <strong>最小置信度</strong></p>
+<ul>
+<li>满足最小置信度和最小支持度的规则为<strong>强规则</strong>，否则为<strong>弱规则</strong></li>
+<li>关联规则挖掘的实质是<strong>在数据库（数据仓库）中寻找强规则</strong></li>
+</ul>
+</li>
+</ul>
+<p>支持度：<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.781ex" xmlns="http://www.w3.org/2000/svg" width="17.551ex" height="3.15ex" role="img" focusable="false" viewBox="0 -1047.1 7757.5 1392.1"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g><g data-mml-node="mi" transform="translate(645,0)"><path data-c="1D462" d="M21 287Q21 295 30 318T55 370T99 420T158 442Q204 442 227 417T250 358Q250 340 216 246T182 105Q182 62 196 45T238 27T291 44T328 78L339 95Q341 99 377 247Q407 367 413 387T427 416Q444 431 463 431Q480 431 488 421T496 402L420 84Q419 79 419 68Q419 43 426 35T447 26Q469 29 482 57T512 145Q514 153 532 153Q551 153 551 144Q550 139 549 130T540 98T523 55T498 17T462 -8Q454 -10 438 -10Q372 -10 347 46Q345 45 336 36T318 21T296 6T267 -6T233 -11Q189 -11 155 7Q103 38 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1217,0)"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path></g><g data-mml-node="mo" transform="translate(1720,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(2109,0)"><path data-c="1D44B" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path></g><g data-mml-node="mo" transform="translate(2961,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mo" transform="translate(3627.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mfrac" transform="translate(4683.6,0)"><g data-mml-node="mrow" transform="translate(220,516.8) scale(0.707)"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g><g data-mml-node="mi" transform="translate(645,0)"><path data-c="1D462" d="M21 287Q21 295 30 318T55 370T99 420T158 442Q204 442 227 417T250 358Q250 340 216 246T182 105Q182 62 196 45T238 27T291 44T328 78L339 95Q341 99 377 247Q407 367 413 387T427 416Q444 431 463 431Q480 431 488 421T496 402L420 84Q419 79 419 68Q419 43 426 35T447 26Q469 29 482 57T512 145Q514 153 532 153Q551 153 551 144Q550 139 549 130T540 98T523 55T498 17T462 -8Q454 -10 438 -10Q372 -10 347 46Q345 45 336 36T318 21T296 6T267 -6T233 -11Q189 -11 155 7Q103 38 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1217,0)"><path data-c="1D45A" d="M21 287Q22 293 24 303T36 341T56 388T88 425T132 442T175 435T205 417T221 395T229 376L231 369Q231 367 232 367L243 378Q303 442 384 442Q401 442 415 440T441 433T460 423T475 411T485 398T493 385T497 373T500 364T502 357L510 367Q573 442 659 442Q713 442 746 415T780 336Q780 285 742 178T704 50Q705 36 709 31T724 26Q752 26 776 56T815 138Q818 149 821 151T837 153Q857 153 857 145Q857 144 853 130Q845 101 831 73T785 17T716 -10Q669 -10 648 17T627 73Q627 92 663 193T700 345Q700 404 656 404H651Q565 404 506 303L499 291L466 157Q433 26 428 16Q415 -11 385 -11Q372 -11 364 -4T353 8T350 18Q350 29 384 161L420 307Q423 322 423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 181Q151 335 151 342Q154 357 154 369Q154 405 129 405Q107 405 92 377T69 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(2095,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(2484,0)"><path data-c="1D44B" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path></g><g data-mml-node="mo" transform="translate(3336,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><g data-mml-node="mi" transform="translate(1223,-345) scale(0.707)"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path></g><rect width="2834" height="60" x="120" y="220"></rect></g></g></g></svg></mjx-container></p>
+<p>置信度：<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -1.238ex" xmlns="http://www.w3.org/2000/svg" width="26.011ex" height="3.607ex" role="img" focusable="false" viewBox="0 -1047.1 11497.1 1594.2"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D436" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q484 659 454 652T382 628T299 572T226 479Q194 422 175 346T156 222Q156 108 232 58Q280 24 350 24Q441 24 512 92T606 240Q610 253 612 255T628 257Q648 257 648 248Q648 243 647 239Q618 132 523 55T319 -22Q206 -22 128 53T50 252Z"></path></g><g data-mml-node="mi" transform="translate(760,0)"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="mi" transform="translate(1245,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1845,0)"><path data-c="1D453" d="M118 -162Q120 -162 124 -164T135 -167T147 -168Q160 -168 171 -155T187 -126Q197 -99 221 27T267 267T289 382V385H242Q195 385 192 387Q188 390 188 397L195 425Q197 430 203 430T250 431Q298 431 298 432Q298 434 307 482T319 540Q356 705 465 705Q502 703 526 683T550 630Q550 594 529 578T487 561Q443 561 443 603Q443 622 454 636T478 657L487 662Q471 668 457 668Q445 668 434 658T419 630Q412 601 403 552T387 469T380 433Q380 431 435 431Q480 431 487 430T498 424Q499 420 496 407T491 391Q489 386 482 386T428 385H372L349 263Q301 15 282 -47Q255 -132 212 -173Q175 -205 139 -205Q107 -205 81 -186T55 -132Q55 -95 76 -78T118 -61Q162 -61 162 -103Q162 -122 151 -136T127 -157L118 -162Z"></path></g><g data-mml-node="mo" transform="translate(2395,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(2784,0)"><path data-c="1D44B" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path></g><g data-mml-node="mo" transform="translate(3913.8,0)"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z"></path></g><g data-mml-node="mi" transform="translate(5191.6,0)"><path data-c="1D44C" d="M66 637Q54 637 49 637T39 638T32 641T30 647T33 664T42 682Q44 683 56 683Q104 680 165 680Q288 680 306 683H316Q322 677 322 674T320 656Q316 643 310 637H298Q242 637 242 624Q242 619 292 477T343 333L346 336Q350 340 358 349T379 373T411 410T454 461Q546 568 561 587T577 618Q577 634 545 637Q528 637 528 647Q528 649 530 661Q533 676 535 679T549 683Q551 683 578 682T657 680Q684 680 713 681T746 682Q763 682 763 673Q763 669 760 657T755 643Q753 637 734 637Q662 632 617 587Q608 578 477 424L348 273L322 169Q295 62 295 57Q295 46 363 46Q379 46 384 45T390 35Q390 33 388 23Q384 6 382 4T366 1Q361 1 324 1T232 2Q170 2 138 2T102 1Q84 1 84 9Q84 14 87 24Q88 27 89 30T90 35T91 39T93 42T96 44T101 45T107 45T116 46T129 46Q168 47 180 50T198 63Q201 68 227 171L252 274L129 623Q128 624 127 625T125 627T122 629T118 631T113 633T105 634T96 635T83 636T66 637Z"></path></g><g data-mml-node="mo" transform="translate(5954.6,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mo" transform="translate(6621.3,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mfrac" transform="translate(7677.1,0)"><g data-mml-node="mrow" transform="translate(220,516.8) scale(0.707)"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g><g data-mml-node="mi" transform="translate(645,0)"><path data-c="1D462" d="M21 287Q21 295 30 318T55 370T99 420T158 442Q204 442 227 417T250 358Q250 340 216 246T182 105Q182 62 196 45T238 27T291 44T328 78L339 95Q341 99 377 247Q407 367 413 387T427 416Q444 431 463 431Q480 431 488 421T496 402L420 84Q419 79 419 68Q419 43 426 35T447 26Q469 29 482 57T512 145Q514 153 532 153Q551 153 551 144Q550 139 549 130T540 98T523 55T498 17T462 -8Q454 -10 438 -10Q372 -10 347 46Q345 45 336 36T318 21T296 6T267 -6T233 -11Q189 -11 155 7Q103 38 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1217,0)"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path></g><g data-mml-node="mo" transform="translate(1720,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(2109,0)"><path data-c="1D44B" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path></g><g data-mml-node="mo" transform="translate(2961,0)"><path data-c="222A" d="M591 598H592Q604 598 611 583V376Q611 345 611 296Q610 162 606 148Q605 146 605 145Q586 68 507 23T333 -22Q268 -22 209 -1T106 66T56 173Q55 180 55 384L56 585Q66 598 75 598Q85 598 95 585V378L96 172L98 162Q112 95 181 57T332 18Q415 18 487 58T570 175Q571 180 571 383V583Q579 598 591 598Z"></path></g><g data-mml-node="mi" transform="translate(3628,0)"><path data-c="1D44C" d="M66 637Q54 637 49 637T39 638T32 641T30 647T33 664T42 682Q44 683 56 683Q104 680 165 680Q288 680 306 683H316Q322 677 322 674T320 656Q316 643 310 637H298Q242 637 242 624Q242 619 292 477T343 333L346 336Q350 340 358 349T379 373T411 410T454 461Q546 568 561 587T577 618Q577 634 545 637Q528 637 528 647Q528 649 530 661Q533 676 535 679T549 683Q551 683 578 682T657 680Q684 680 713 681T746 682Q763 682 763 673Q763 669 760 657T755 643Q753 637 734 637Q662 632 617 587Q608 578 477 424L348 273L322 169Q295 62 295 57Q295 46 363 46Q379 46 384 45T390 35Q390 33 388 23Q384 6 382 4T366 1Q361 1 324 1T232 2Q170 2 138 2T102 1Q84 1 84 9Q84 14 87 24Q88 27 89 30T90 35T91 39T93 42T96 44T101 45T107 45T116 46T129 46Q168 47 180 50T198 63Q201 68 227 171L252 274L129 623Q128 624 127 625T125 627T122 629T118 631T113 633T105 634T96 635T83 636T66 637Z"></path></g><g data-mml-node="mo" transform="translate(4391,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><g data-mml-node="mrow" transform="translate(725.6,-370.3) scale(0.707)"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g><g data-mml-node="mi" transform="translate(645,0)"><path data-c="1D462" d="M21 287Q21 295 30 318T55 370T99 420T158 442Q204 442 227 417T250 358Q250 340 216 246T182 105Q182 62 196 45T238 27T291 44T328 78L339 95Q341 99 377 247Q407 367 413 387T427 416Q444 431 463 431Q480 431 488 421T496 402L420 84Q419 79 419 68Q419 43 426 35T447 26Q469 29 482 57T512 145Q514 153 532 153Q551 153 551 144Q550 139 549 130T540 98T523 55T498 17T462 -8Q454 -10 438 -10Q372 -10 347 46Q345 45 336 36T318 21T296 6T267 -6T233 -11Q189 -11 155 7Q103 38 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1217,0)"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path></g><g data-mml-node="mo" transform="translate(1720,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(2109,0)"><path data-c="1D44B" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path></g><g data-mml-node="mo" transform="translate(2961,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><rect width="3580" height="60" x="120" y="220"></rect></g></g></g></svg></mjx-container></p>
+<h3 id="2、Apriori算法"><a href="#2、Apriori算法" class="headerlink" title="2、Apriori算法"></a>2、Apriori算法</h3><p>推荐<a class="link" target="_blank" rel="noopener" href="https://www.cnblogs.com/en-heng/p/5719101.html">博客<i class="fas fa-external-link-alt"></i></a></p>
+<h5 id="（1）基本概念"><a href="#（1）基本概念" class="headerlink" title="（1）基本概念"></a>（1）基本概念</h5><ul>
+<li>项<br>在数据库中出现的属性值，每一个属性值构成一个项</li>
+<li>项集<br>在数据库中出现的属性值的集合</li>
+<li>k-项集<br>由k个项构成的项集</li>
+<li>频繁项集<ul>
+<li>该项集在数据库中出现的频度满足用户规定的最小支持度的要求</li>
+<li>即<strong>同时含有该项集中的所有属性值的记录数</strong> 占 <strong>所有记录数的百分比</strong> 大于等于用户规定的最小支持度</li>
+</ul>
+</li>
+<li>关联规则一定是在满足用户的最小支持度要求的频繁项集中产生的<ul>
+<li><strong>关联规则的挖掘过程也就是在数据库中寻找频繁项集的过程</strong></li>
+<li>寻找频繁项集过程中，遵循<strong>每个频繁项集的任一子集也是一个频繁项集</strong></li>
+</ul>
+</li>
+</ul>
+<h5 id="（2）寻找频繁项集的方法"><a href="#（2）寻找频繁项集的方法" class="headerlink" title="（2）寻找频繁项集的方法"></a>（2）寻找频繁项集的方法</h5><blockquote>
+<ul>
+<li>寻找一阶频繁项集C1<br>除去非频繁项集，得到L1</li>
+<li>从L1生成二阶超集，即候选频繁项集C2<br>除去非频繁项集，得到L2</li>
+<li>从L2生成三阶超集C3<br>除去暂时不需要考虑的更高阶超集<br>除去非频繁项集，得到L3</li>
+<li>……</li>
+</ul>
+<p>最后得到的频繁项集是<strong>L1、L2、L3……的并</strong></p>
+</blockquote>
+<p>Apriori算法：执行算法之前，用户需要先给定最小的支持度和最小的置信度。生成关联规则一般被划分为如下两个步骤：</p>
+<ol>
+<li><p>利用最小支持度从数据库中找到频繁项集。</p>
+<p>给定一个数据库 D ，寻找频繁项集流程如下图所示<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194319757.png"></p>
+<pre><code>    首先寻找一阶频繁项集C1，C1中，{1}的支持度为2/4 = 0.5（数据库D中一共四条事物，{1}出现在其中的两条事物中），C1中的其他几个也是这么计算的，假设给定的最小支持度 $SUP_{min} = 0.5$，{4}就被排除了，得到L1。
+
+    接下来从L1生成二阶超集，即候选频繁项集C2，除去非频繁项集（也就是低于SUP_min = 0.5的），得到L2。
+
+    从L2生成三阶超集C3，除去暂时不需要考虑的更高阶超集，除去非频繁项集，得到L3
+
+    我们可以看到 itemset 中所包含的 item 是从 1 增长到 3 的。并且每次增长都是利用上一个 itemset 中满足支持度的 item 来生成的，这个过程称之为**候选集生成**
+</code></pre>
+</li>
+<li><p>利用最小置信度从频繁项集中找到关联规则。（3）中内容</p>
+<p>同样假定最小的置信度为 0.5 ，从频繁项集 {2 3 5} 中我们可以发现规则 {2 3} ⇒ {5} 的置信度为 1 &gt; 0.5 ，所以我们可以说 {2 3} ⇒ {5} 是一个可能感兴趣的规则。（这里看不懂的话看一下上面置信度公式就懂了）</p>
+</li>
+</ol>
+<p><strong>如何发现全部的频繁项集？</strong></p>
+<p>包含N种物品的数据集共有2^N-1种不同的项集，例如包含4种物品的全部项集：<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194340107.png"></p>
+<h5 id="（3）生成关联规则"><a href="#（3）生成关联规则" class="headerlink" title="（3）生成关联规则"></a>（3）生成关联规则</h5><blockquote>
+<ul>
+<li><p>由此确定关联规则的生成算法：（输入参数：数据集和一个频繁项集）</p>
+</li>
+<li><p>针对频繁项集{A,C}可以构造两条规则</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">R1：A-&gt;C</span><br><span class="line">R2：C-&gt;A</span><br></pre></td></tr></table></figure>
+
+<p>一阶频繁项集无法构造关联规则，只能得到平凡知识<br>将每个频繁项集分为左右两部分，穷举即可以得到</p>
+</li>
+<li><p>对这些规则进行测试（依次计算置信度，用到的支持度数据在生成频繁项集的时候都存下来了）</p>
+</li>
+<li><p>通过预先设定的阈值对关联规则进行过滤</p>
+</li>
+<li><p>合并所有第一个列表中的剩余规则，创建第二个规则列表，其中规则右部包含两个元素</p>
+</li>
+<li><p>对第二个列表中的规则进行测试</p>
+</li>
+<li><p>过程重复到N为止（或者无法产生新规则）</p>
+</li>
+<li><p>最后剩余的关联规则上升为知识，用于决策支持</p>
+</li>
+</ul>
+</blockquote>
+<p>比如上面那个例子{2,3,5}，就可以分为 {2}–&gt;{3,5} 与 {2,3}–&gt;{5}，然后计算置信度，也就是</p>
+<p>置信度con(X–&gt;Y) = (X U Y)/X。这里有个窍门</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">假设最小置信度为p，且规则0,1,23并不满足最小置信度要求，即 P(0,1,2,3)/P(0,1,2)&lt;p</span><br><span class="line">那么任何左部为{0,1,2}的子集的规则也不会满足最小置信度要求</span><br></pre></td></tr></table></figure>
+
+<h5 id="（5）Apriori算法的优化方法"><a href="#（5）Apriori算法的优化方法" class="headerlink" title="（5）Apriori算法的优化方法"></a>（5）Apriori算法的优化方法</h5><p>由于算法是时间开销花在数据库的多次扫描上，主要的优化方法有：</p>
+<ul>
+<li><p>数据库的划分（Partitioning）方法</p>
+<p>针对硬件限制进行优化</p>
+<p>虽然置信度和支持度指标可能有变化，但</p>
+<p>所有关联规则一定都会出现在各个划分中</p>
+<p>划分可能导致产生的关联规则数量过大，提高阈值又会损失原有的规则</p>
+<ul>
+<li>每一部分都能全部放在内存中进行扫描</li>
+<li>最后对得到的所有频繁项集进行归并</li>
+</ul>
+</li>
+<li><p>利用Hash方法筛选2阶频繁项集<br>将每个项哈希到哈希表里，从而大量地过滤不需要的候选集</p>
+</li>
+<li><p>利用采样数据集得到可能成立的规则，再利用数据库中的剩余数据验证这些规则的正确性<br>由于无法保证结论的正确性，此方式未必靠谱</p>
+</li>
+<li><p>减少每一遍扫描所处理的记录数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">如果一条记录不含有长度为k的频繁项集，那么这条记录也不可能含有长度为(k+1)的频繁项集</span><br></pre></td></tr></table></figure>
+
+<p>得到所有k阶频繁项集后，以后的每次扫描就不必再访问上述的记录，从而逐步减少被扫描的记录数</p>
+</li>
+</ul>
+<h3 id="3、FP-Growth算法"><a href="#3、FP-Growth算法" class="headerlink" title="3、FP-Growth算法"></a>3、FP-Growth算法</h3><h4 id="（1）介绍"><a href="#（1）介绍" class="headerlink" title="（1）介绍"></a>（1）介绍</h4><p><strong>FP核心</strong>：利用FP树递归地增长频繁模式路径（分治）</p>
+<p><strong>FP优点</strong>：去除了不相关的信息；出去节点连接和计数规模比原数据库小；快速；将发现长频繁模式的问题转换成递归地搜索一些较短的模式。</p>
+<p>关联分析算法，它采取如下分治策略：将提供频繁项集的数据库压缩到一棵频繁模式树（FP-Tree），但仍保留项集关联信息；该算法和Apriori算法最大的不同有两点：第一，<strong>发现频繁项集而不产生候选</strong>  ，第二，只需要两次遍历数据库，大大提高了效率。但是FP-Growth算法只能用来发现频繁项集，不能用来发现关联规则。</p>
+<h4 id="（2）算法伪代码"><a href="#（2）算法伪代码" class="headerlink" title="（2）算法伪代码"></a>（2）算法伪代码</h4><p>详细见<a class="link" target="_blank" rel="noopener" href="http://blog.csdn.net/sealyao/article/details/6460578">博客<i class="fas fa-external-link-alt"></i></a></p>
+<h4 id="（3）PPT例子"><a href="#（3）PPT例子" class="headerlink" title="（3）PPT例子"></a>（3）PPT例子</h4><p><a class="link" target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30347335/article/details/97523472">博客<i class="fas fa-external-link-alt"></i></a></p>
+<p>给定数据库D以及min_sup</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194406301.png"></p>
+<ol>
+<li><p><strong>FP-Tree构建——第一步</strong></p>
+<p>第一步：扫描数据库，得到一阶频繁项集。由于min_sup = 0.5，所以至少出现3次，低于3次的直接不考虑了，得到项集如下</p>
+</li>
+</ol>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194419583.png"></p>
+<ol start="2">
+<li><p><strong>FP-Tree构建——第二步</strong></p>
+<p>第二步：以频率递减的顺序对频繁项进行排序，注意里面的顺序<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194436052.png"></p>
+</li>
+<li><p><strong>FP-Tree构建——第三步</strong></p>
+<p>每个事务中的数据项按降序依次插入到一棵以NULL为根结点的树中，这样所有的ordered frequent items都保存在了树中。，排序靠前的节点是祖先节点，而靠后的是子孙节点。如果有共用的祖先，则对应的公用祖先节点计数加1。插入后，如果有新节点出现，则项头表对应的节点会通过节点链表链接上新节点。直到所有的数据都插入到FP树后，FP树的建立完成。<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194453866.png"></p>
+</li>
+<li><p><strong>FP-Tree挖掘——第一步</strong></p>
+<pre><code> 得到了FP树和项头表以及节点链表，我们首先要从项头表的底部项依次向上挖掘。对于项头表对应于FP树的每一项，我们要找到它的条件模式基。条件模式基是以我们要挖掘的节点作为叶子节点所对应的FP子树。得到这个FP子树，我们将子树中每个节点的的计数设置为叶子节点的计数，并删除计数低于支持度的节点。从这个条件模式基，我们就可以递归挖掘得到频繁项集了。
+</code></pre>
+</li>
+</ol>
+<p>   <img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194532928.png"><br>   意思是item是x的时候，也就是后缀是x，他的前缀有哪些？出现次数是多少个。比如后缀是c，前缀是f，出现了3次；再比如后缀是b的，他的前缀有fca（1次），f（1次），c（1次），就这个意思</p>
+<ol start="5">
+<li><p><strong>FP-Tree挖掘——第二步</strong></p>
+<p>将得到的FP子树的每个节点的计数设置为叶子节点的而计数，并删除计数低于支持度<strong>（这里至少是3）</strong>的节点。我们就可以得到频繁项集。</p>
+</li>
+</ol>
+<p>  一定要看这个<a class="link" target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30347335/article/details/97523472">例子<i class="fas fa-external-link-alt"></i></a><br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194549267.png"></p>
+<p>   <strong>举例叶子结点是一阶的情况</strong></p>
+<p>   从底向上挖掘。先看p，它的频繁项集为{f:2,c:3,a:2,m:2,b:1,p:3}、前面5个代表条件模式基（大白话就是每个出现了几次，比如c出现了2+1次）,f、a、m、b的个数低于3个，低于我们要求的支持度，删除，合并一下，得到p结点的频繁二项集{c:3,p:3}，p对应的最大的频繁项集为频繁二项集。</p>
+<p>   再看m，它的频繁项集为f:3,c:3,a:3,b:1,m:3}，删除b，得到m的频繁四项集{f:3,c:3,a:3m:3}</p>
+<p>   再看b，它的频繁项集为{f:2,c:2,a:1,b:3}，删除fca，他只是个平凡知识，empty</p>
+<p>   再看a，它的频繁项集为{f:3,c:3,a:3}，这就是它的三阶频繁项集</p>
+<p>   再看c，…..</p>
+<p>   <em>老师举的例子</em>（一阶）<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194602041.png"></p>
+<p>   一阶结果，明显和我们刚才做的思路结果一致<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194615620.png"></p>
+<p>   <strong>举例叶子结点是二阶及以上的情况，同样思路</strong><br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194633276.png"></p>
+<h2 id="第六章：分类挖掘"><a href="#第六章：分类挖掘" class="headerlink" title="第六章：分类挖掘"></a><span id="jump6">第六章：分类挖掘</span></h2><h3 id="1、数据分类"><a href="#1、数据分类" class="headerlink" title="1、数据分类"></a>1、数据分类</h3><ul>
+<li>通过分析训练数据样本，产生关于类别的精确描述</li>
+<li>这种类别通常由分类规则组成，可以用来对未来的数据进行分类和预测</li>
+</ul>
+<p>首先为每一个数据（记录）打上一个标记，即按标记对数据（记录）进行分类，而分类分析则是对每类数据（具有相同标记的一组记录）找出其固有的特征与规律。</p>
+<h3 id="2、数据分类的步骤"><a href="#2、数据分类的步骤" class="headerlink" title="2、数据分类的步骤"></a>2、数据分类的步骤</h3><p>建立一个模型，描述给定的数据类集或概念集，通过分析由属性描述的数据库元组来构造模型</p>
+<ul>
+<li>用于建立模型的元组集称为训练数据集，其中每个元组成为训练样本<br>训练样本的性质与待分析样本本质上没有差别，都是在实际环境中累积得到的数据</li>
+<li>每个训练样本属于一个预定义的类，由类标号属性确定</li>
+<li>由于给出了类标号属性，因此该步骤又成为有指导的学习<br>需要知道分类的数量，与对应分类对人来说的意义<br><em>如果训练样本的类标号是未知的，则称为</em>*<strong>无指导的学习（聚类）*</strong></li>
+<li>学习模型可以用分类规则、决策树和数学公式的形式给出</li>
+</ul>
+<p><strong>使用模型对数据进行分类</strong></p>
+<ul>
+<li>评估模型的分类准确性<br>训练数据和测试数据性质应当是一样的，但不能是两份相同的数据<br>评价的标准包括正确性、效率、可理解性</li>
+<li>对类标号未知的元组按模型进行分类</li>
+</ul>
+<h3 id="3、分类分析方法"><a href="#3、分类分析方法" class="headerlink" title="3、分类分析方法"></a>3、分类分析方法</h3><p>是一种特征归纳的方法，将每类数据共有的特性抽取以获得规律性的规则，目前有很多分析方法，<strong>看了下往年试卷就考了决策树和朴素贝叶斯</strong></p>
+<ul>
+<li>决策树——考试考ID3</li>
+<li>朴素贝叶斯<ul>
+<li>通过前验概率和后验概率，决定某一特定样本属于标签中某一分类的概率<br>概率的值根据训练样本提供</li>
+<li>贝叶斯方法得到的结果不唯一，并且能提供相应结果的概率大小</li>
+<li>贝叶斯方法计算复杂<br>在各属性独立时，贝叶斯方法的计算可以简化</li>
+</ul>
+</li>
+</ul>
+<p>以上两种方法基于信息论，具有很好的<strong>可剪枝性</strong></p>
+<p>K邻近算法也考了。。。不难，看一下就好。</p>
+<h3 id="4、决策树——ID3算法"><a href="#4、决策树——ID3算法" class="headerlink" title="4、决策树——ID3算法"></a>4、决策树——ID3算法</h3><h4 id="（1）概念"><a href="#（1）概念" class="headerlink" title="（1）概念"></a>（1）概念</h4><p>又称为判定树，是运用于分类的一种树结构</p>
+<ul>
+<li><p>根据对一个判定进行拆分，连接到下一个判定或结论，构成的关系就是一棵决策树</p>
+</li>
+<li><p>每个内部结点代表对某个属性的一次测试</p>
+</li>
+<li><p>每条边代表一个测试结果</p>
+</li>
+<li><p>叶结点代表某个类或者类的分布</p>
+</li>
+<li><p>最上面的结点是根结点</p>
+</li>
+<li><p>通过对信息量的计算，判断每个属性对分类所作判断的贡献大小<br>将一个集合S拆分为S1和S2，其信息量大小有以下关系：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">I(S)≥I(S1)+I(S2)</span><br><span class="line">（在属性对分类不起任何作用时取等号）</span><br><span class="line">属性的信息增益A=I(S)-[I(S1)+I(S2)]</span><br></pre></td></tr></table></figure>
+
+<p>将贡献最优的属性放在顶层，迭代进行</p>
+<ul>
+<li>中止条件<ul>
+<li>训练数据集为空</li>
+<li>分类已经确定<br>I(S)=0</li>
+<li>属性已经用完，仍然无法确定地分类</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="（2）ID3算法"><a href="#（2）ID3算法" class="headerlink" title="（2）ID3算法"></a>（2）ID3算法</h4><p>推荐<a class="link" target="_blank" rel="noopener" href="https://blog.csdn.net/qq_28697571/article/details/84678889">博客<i class="fas fa-external-link-alt"></i></a></p>
+<p>一种基于决策树的算法，根据信息增益，自顶向下贪心建树，信息增益用于度量某个属性对样本集合分类的好坏程度，我们要选择具有最高信息增益的属性。基于训练对象和已知类标号创建决策树，以信息增益为度量来为属性排序。</p>
+<p>两个类标记：P（假设有p个元素） 和 N（假设有n个元素），用来判断任一元素属于P还是N的信息量为：<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194652192.png"><br>根据属性A将集合S划分为集合{S1，S2，…，Sv}，在每个Si中，属于类P的元素为Pi，属于N的元素为ni，用来区分的信息量（熵）为<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194704301.png"></p>
+<p>计算属性A的信息增益 Gain(A)<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194715517.png"><br><strong>直接看PPT例子</strong></p>
+<p>给了这个一张表，按照哪个属性来分类？</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194737187.png"><br>这个例子中</p>
+<blockquote>
+<ul>
+<li><p>P：buys_computer = “yes” ,N:：buys_computer = “no”,一个14个数据,p:9个，n:5个</p>
+</li>
+<li><p>I(p, n) = I(9, 5) =0.940</p>
+</li>
+<li><p>age属性的熵的计算</p>
+<ul>
+<li>根据age属性，把整个输入集S划分成了三部分：&lt;=30岁，31～40岁，&gt;40岁</li>
+<li>&lt;=30岁的5人中，yes 2人，no 3人，那就是 5/14*I(2,3)</li>
+<li>31~40岁的4人中，yes 4人，no 0人，那就是 4/14*I(4,0)</li>
+<li>大于40岁的5人中，yes 3人，no 2人，那就是5/14*I(3,2)</li>
+<li>求和可得age属性的熵E(age)</li>
+</ul>
+</li>
+<li><p>Gain(age) = I(9,5) - E(age)</p>
+</li>
+<li><p>按照同样的方法求Gain(income)、Gain(student)、Gain(credit_rating)</p>
+</li>
+</ul>
+</blockquote>
+<p>结果<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex" xmlns="http://www.w3.org/2000/svg" width="73.715ex" height="2.262ex" role="img" focusable="false" viewBox="0 -750 32582.1 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D43A" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path></g><g data-mml-node="mi" transform="translate(786,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mi" transform="translate(1315,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1660,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(2260,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(2649,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mi" transform="translate(3178,0)"><path data-c="1D454" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z"></path></g><g data-mml-node="mi" transform="translate(3655,0)"><path data-c="1D452" d="M39 168Q39 225 58 272T107 350T174 402T244 433T307 442H310Q355 442 388 420T421 355Q421 265 310 237Q261 224 176 223Q139 223 138 221Q138 219 132 186T125 128Q125 81 146 54T209 26T302 45T394 111Q403 121 406 121Q410 121 419 112T429 98T420 82T390 55T344 24T281 -1T205 -11Q126 -11 83 42T39 168ZM373 353Q367 405 305 405Q272 405 244 391T199 357T170 316T154 280T149 261Q149 260 169 260Q282 260 327 284T373 353Z"></path></g><g data-mml-node="mo" transform="translate(4121,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mo" transform="translate(4787.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(5843.6,0)"><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path><path data-c="2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z" transform="translate(500,0)"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(778,0)"></path><path data-c="35" d="M164 157Q164 133 148 117T109 101H102Q148 22 224 22Q294 22 326 82Q345 115 345 210Q345 313 318 349Q292 382 260 382H254Q176 382 136 314Q132 307 129 306T114 304Q97 304 95 310Q93 314 93 485V614Q93 664 98 664Q100 666 102 666Q103 666 123 658T178 642T253 634Q324 634 389 662Q397 666 402 666Q410 666 410 648V635Q328 538 205 538Q174 538 149 544L139 546V374Q158 388 169 396T205 412T256 420Q337 420 393 355T449 201Q449 109 385 44T229 -22Q148 -22 99 32T50 154Q50 178 61 192T84 210T107 214Q132 214 148 197T164 157Z" transform="translate(1278,0)"></path></g><g data-mml-node="mo" transform="translate(7899.3,0)"><path data-c="3E" d="M84 520Q84 528 88 533T96 539L99 540Q106 540 253 471T544 334L687 265Q694 260 694 250T687 235Q685 233 395 96L107 -40H101Q83 -38 83 -20Q83 -19 83 -17Q82 -10 98 -1Q117 9 248 71Q326 108 378 132L626 250L378 368Q90 504 86 509Q84 513 84 520Z"></path></g><g data-mml-node="mi" transform="translate(8955.1,0)"><path data-c="1D43A" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path></g><g data-mml-node="mi" transform="translate(9741.1,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mi" transform="translate(10270.1,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(10615.1,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(11215.1,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(11604.1,0)"><path data-c="1D460" d="M131 289Q131 321 147 354T203 415T300 442Q362 442 390 415T419 355Q419 323 402 308T364 292Q351 292 340 300T328 326Q328 342 337 354T354 372T367 378Q368 378 368 379Q368 382 361 388T336 399T297 405Q249 405 227 379T204 326Q204 301 223 291T278 274T330 259Q396 230 396 163Q396 135 385 107T352 51T289 7T195 -10Q118 -10 86 19T53 87Q53 126 74 143T118 160Q133 160 146 151T160 120Q160 94 142 76T111 58Q109 57 108 57T107 55Q108 52 115 47T146 34T201 27Q237 27 263 38T301 66T318 97T323 122Q323 150 302 164T254 181T195 196T148 231Q131 256 131 289Z"></path></g><g data-mml-node="mi" transform="translate(12073.1,0)"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"></path></g><g data-mml-node="mi" transform="translate(12434.1,0)"><path data-c="1D462" d="M21 287Q21 295 30 318T55 370T99 420T158 442Q204 442 227 417T250 358Q250 340 216 246T182 105Q182 62 196 45T238 27T291 44T328 78L339 95Q341 99 377 247Q407 367 413 387T427 416Q444 431 463 431Q480 431 488 421T496 402L420 84Q419 79 419 68Q419 43 426 35T447 26Q469 29 482 57T512 145Q514 153 532 153Q551 153 551 144Q550 139 549 130T540 98T523 55T498 17T462 -8Q454 -10 438 -10Q372 -10 347 46Q345 45 336 36T318 21T296 6T267 -6T233 -11Q189 -11 155 7Q103 38 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(13006.1,0)"><path data-c="1D451" d="M366 683Q367 683 438 688T511 694Q523 694 523 686Q523 679 450 384T375 83T374 68Q374 26 402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487H491Q506 153 506 145Q506 140 503 129Q490 79 473 48T445 8T417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157Q33 205 53 255T101 341Q148 398 195 420T280 442Q336 442 364 400Q369 394 369 396Q370 400 396 505T424 616Q424 629 417 632T378 637H357Q351 643 351 645T353 664Q358 683 366 683ZM352 326Q329 405 277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q233 26 290 98L298 109L352 326Z"></path></g><g data-mml-node="mi" transform="translate(13526.1,0)"><path data-c="1D452" d="M39 168Q39 225 58 272T107 350T174 402T244 433T307 442H310Q355 442 388 420T421 355Q421 265 310 237Q261 224 176 223Q139 223 138 221Q138 219 132 186T125 128Q125 81 146 54T209 26T302 45T394 111Q403 121 406 121Q410 121 419 112T429 98T420 82T390 55T344 24T281 -1T205 -11Q126 -11 83 42T39 168ZM373 353Q367 405 305 405Q272 405 244 391T199 357T170 316T154 280T149 261Q149 260 169 260Q282 260 327 284T373 353Z"></path></g><g data-mml-node="mi" transform="translate(13992.1,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(14592.1,0)"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"></path></g><g data-mml-node="mo" transform="translate(14953.1,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mo" transform="translate(15619.9,0)"><path data-c="3E" d="M84 520Q84 528 88 533T96 539L99 540Q106 540 253 471T544 334L687 265Q694 260 694 250T687 235Q685 233 395 96L107 -40H101Q83 -38 83 -20Q83 -19 83 -17Q82 -10 98 -1Q117 9 248 71Q326 108 378 132L626 250L378 368Q90 504 86 509Q84 513 84 520Z"></path></g><g data-mml-node="mi" transform="translate(16675.7,0)"><path data-c="1D43A" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path></g><g data-mml-node="mi" transform="translate(17461.7,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mi" transform="translate(17990.7,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(18335.7,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(18935.7,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(19324.7,0)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g><g data-mml-node="mi" transform="translate(19757.7,0)"><path data-c="1D45F" d="M21 287Q22 290 23 295T28 317T38 348T53 381T73 411T99 433T132 442Q161 442 183 430T214 408T225 388Q227 382 228 382T236 389Q284 441 347 441H350Q398 441 422 400Q430 381 430 363Q430 333 417 315T391 292T366 288Q346 288 334 299T322 328Q322 376 378 392Q356 405 342 405Q286 405 239 331Q229 315 224 298T190 165Q156 25 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 114 189T154 366Q154 405 128 405Q107 405 92 377T68 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(20208.7,0)"><path data-c="1D452" d="M39 168Q39 225 58 272T107 350T174 402T244 433T307 442H310Q355 442 388 420T421 355Q421 265 310 237Q261 224 176 223Q139 223 138 221Q138 219 132 186T125 128Q125 81 146 54T209 26T302 45T394 111Q403 121 406 121Q410 121 419 112T429 98T420 82T390 55T344 24T281 -1T205 -11Q126 -11 83 42T39 168ZM373 353Q367 405 305 405Q272 405 244 391T199 357T170 316T154 280T149 261Q149 260 169 260Q282 260 327 284T373 353Z"></path></g><g data-mml-node="mi" transform="translate(20674.7,0)"><path data-c="1D451" d="M366 683Q367 683 438 688T511 694Q523 694 523 686Q523 679 450 384T375 83T374 68Q374 26 402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487H491Q506 153 506 145Q506 140 503 129Q490 79 473 48T445 8T417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157Q33 205 53 255T101 341Q148 398 195 420T280 442Q336 442 364 400Q369 394 369 396Q370 400 396 505T424 616Q424 629 417 632T378 637H357Q351 643 351 645T353 664Q358 683 366 683ZM352 326Q329 405 277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q233 26 290 98L298 109L352 326Z"></path></g><g data-mml-node="mi" transform="translate(21194.7,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="msub" transform="translate(21539.7,0)"><g data-mml-node="mi"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"></path></g><g data-mml-node="mi" transform="translate(394,-150) scale(0.707)"><path data-c="1D45F" d="M21 287Q22 290 23 295T28 317T38 348T53 381T73 411T99 433T132 442Q161 442 183 430T214 408T225 388Q227 382 228 382T236 389Q284 441 347 441H350Q398 441 422 400Q430 381 430 363Q430 333 417 315T391 292T366 288Q346 288 334 299T322 328Q322 376 378 392Q356 405 342 405Q286 405 239 331Q229 315 224 298T190 165Q156 25 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 114 189T154 366Q154 405 128 405Q107 405 92 377T68 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g></g><g data-mml-node="mi" transform="translate(22302.6,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mi" transform="translate(22831.6,0)"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"></path></g><g data-mml-node="mi" transform="translate(23192.6,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(23537.6,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(24137.6,0)"><path data-c="1D454" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z"></path></g><g data-mml-node="mo" transform="translate(24614.6,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mo" transform="translate(25281.3,0)"><path data-c="3E" d="M84 520Q84 528 88 533T96 539L99 540Q106 540 253 471T544 334L687 265Q694 260 694 250T687 235Q685 233 395 96L107 -40H101Q83 -38 83 -20Q83 -19 83 -17Q82 -10 98 -1Q117 9 248 71Q326 108 378 132L626 250L378 368Q90 504 86 509Q84 513 84 520Z"></path></g><g data-mml-node="mi" transform="translate(26337.1,0)"><path data-c="1D43A" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path></g><g data-mml-node="mi" transform="translate(27123.1,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mi" transform="translate(27652.1,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(27997.1,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(28597.1,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(28986.1,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(29331.1,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(29931.1,0)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g><g data-mml-node="mi" transform="translate(30364.1,0)"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="mi" transform="translate(30849.1,0)"><path data-c="1D45A" d="M21 287Q22 293 24 303T36 341T56 388T88 425T132 442T175 435T205 417T221 395T229 376L231 369Q231 367 232 367L243 378Q303 442 384 442Q401 442 415 440T441 433T460 423T475 411T485 398T493 385T497 373T500 364T502 357L510 367Q573 442 659 442Q713 442 746 415T780 336Q780 285 742 178T704 50Q705 36 709 31T724 26Q752 26 776 56T815 138Q818 149 821 151T837 153Q857 153 857 145Q857 144 853 130Q845 101 831 73T785 17T716 -10Q669 -10 648 17T627 73Q627 92 663 193T700 345Q700 404 656 404H651Q565 404 506 303L499 291L466 157Q433 26 428 16Q415 -11 385 -11Q372 -11 364 -4T353 8T350 18Q350 29 384 161L420 307Q423 322 423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 181Q151 335 151 342Q154 357 154 369Q154 405 129 405Q107 405 92 377T69 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(31727.1,0)"><path data-c="1D452" d="M39 168Q39 225 58 272T107 350T174 402T244 433T307 442H310Q355 442 388 420T421 355Q421 265 310 237Q261 224 176 223Q139 223 138 221Q138 219 132 186T125 128Q125 81 146 54T209 26T302 45T394 111Q403 121 406 121Q410 121 419 112T429 98T420 82T390 55T344 24T281 -1T205 -11Q126 -11 83 42T39 168ZM373 353Q367 405 305 405Q272 405 244 391T199 357T170 316T154 280T149 261Q149 260 169 260Q282 260 327 284T373 353Z"></path></g><g data-mml-node="mo" transform="translate(32193.1,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg></mjx-container><br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194752584.png"></p>
+<p>这样就知道哪个属性的排序了，然后对age分类下的三种情况</p>
+<ul>
+<li>在&lt;30情况下，计算信息增益，发现student的信息增益最大，则将student设为节点；</li>
+<li>在30-40之间只有yes，所以不需要计算</li>
+<li>在&gt;40情况下，发现credit rating的信息增益最大，则设它为节点。</li>
+</ul>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194819484.png"></p>
+<h3 id="5、朴素贝叶斯"><a href="#5、朴素贝叶斯" class="headerlink" title="5、朴素贝叶斯"></a>5、朴素贝叶斯</h3><p>朴素贝叶斯算法的数学基础都是围绕贝叶斯定理展开的，因此这一类算法都被称为朴素贝叶斯算法。分类原理是通过对象的先验概率，利用贝叶斯公式计算出后验概率，即对象属于某一类的概率，选择具有后验概率最大的类作为该对象所属的类。下面是贝叶斯公式，要使P(C|X)最大（先验概率），则要使得P(X|C)·P(C)最大（后验概率），</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194834849.png"></p>
+<p>朴素贝叶斯就是假设属性是独立的情况，特征（属性）之间互相独立</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194856094.png"></p>
+<p><strong>例1</strong><br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194913954.png"></p>
+<p>网球比赛示例，p代表能进行比赛，n代表不能进行比赛，X = &lt;rain, hot, high, false&gt;</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305194946881.png"></p>
+<p><strong>例2：贝叶斯信念网络/概率网络</strong></p>
+<p>就是将贝叶斯推理与属性之间的因果关系相结合</p>
+<p>PPT上例题直接看这<a class="link" target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36739040/article/details/102652763">博客<i class="fas fa-external-link-alt"></i></a></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195004894.png"></p>
+<p><strong>首先计算患心脏病的先验概率</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195024277.png"></p>
+<blockquote>
+<p>α：E的可能取值，β：D的可能取值</p>
+<p>由于朴素贝叶斯假设属性之间的独立，即E与D独立，则：P(E=α,D=β) = P(E=α) * P(D=β)</p>
+<p>那就是四种情况加起来，PPT顺序错了</p>
+</blockquote>
+<p>用了这些数据</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195045932.png"></p>
+<pre><code>     结论：不得心脏病的概率更大
+</code></pre>
+<p><strong>BP=high的情况下，利用同样方法计算高血压数据，它与HD有关</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195105401.png"></p>
+<p>结论：如果血压高，得心脏病概率更大</p>
+<p><strong>在BP=high,D=healthy,E=yes的情况下HD的概率（血压高，饮食健康，做运动的心脏病的概率）</strong><br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195120967.png"></p>
+<h2 id="第七章：聚类挖掘"><a href="#第七章：聚类挖掘" class="headerlink" title="第七章：聚类挖掘"></a><span id="jump7">第七章：聚类挖掘</span></h2><h3 id="1、聚类分析"><a href="#1、聚类分析" class="headerlink" title="1、聚类分析"></a>1、聚类分析</h3><p>聚类分析是在数据中发现数据对象之间的关系，将数据进行分组，组内的相似性越大，组间的差别越大，则聚类效果越好。</p>
+<ul>
+<li>又称集群分析，它是研究分类问题的一种多元统计方法</li>
+<li>分为<strong>距离聚类</strong>和<strong>相似系数聚类</strong>，即定义相似程度的两种方式，实际上没必要严格地区分</li>
+<li>没有筛选出一小部分数据，经过处理得到模型，再以此模型进行通用处理的两个阶段</li>
+</ul>
+<p><strong>与分类分析的混合使用</strong></p>
+<p>由于聚类分析的时间复杂度与整体样本数量有关，因此可以抽样一部分数据进行聚类分析，得到结果后，对每个聚类进行概念规则挖掘，人为确定一些概念规则，再以此规则对剩余数据进行分类</p>
+<ul>
+<li>聚类分析输入的是没有被标记的记录，系统按照一定的规则合理的划分记录集合<br>相当于给记录打标记，但分类标准不是用户确定的</li>
+<li>然后采用分类方法对数据进行分析，并根据分析结果重新对原来的记录集合进行划分，进而再进行一次分类分析</li>
+<li>如此循环往复，直到获得满意的分析结果</li>
+</ul>
+<h3 id="2、主要的聚类方法"><a href="#2、主要的聚类方法" class="headerlink" title="2、主要的聚类方法"></a>2、主要的聚类方法</h3><ul>
+<li><p>基于划分方法</p>
+<p>一些场景中，划分聚类的数量k是知道的；即使不知道划分聚类的数量，也是可以以穷举的方法进行确定的（1≤k≤N）</p>
+<ul>
+<li>随机地选择k个数据</li>
+<li>将其它所有数据打上距离最近的标记<br>完成一次迭代</li>
+<li>根据当前聚类选择一个实际（或虚拟）的数据点<br>具有代表性的</li>
+<li>第二次迭代，根据选择的点再进行一次划分<br>代表性的数据点继续发生变化</li>
+<li>如此循环往复，直到每个数据的聚类不再发生变化为止</li>
+<li>代表数据点的选择问题<ul>
+<li>如果选择实际的数据点作为代表，选择的标准难以确定</li>
+<li>如果选择虚拟的数据点作为代表，数据点又可能没有意义,需要根据实际任务选择类型</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>基于层次的方法</p>
+<p>将相似程度最大的两个数据合并，以一个虚拟数据点作为其代表，重复进行计算</p>
+<ul>
+<li>k值是可以不必给定的<br>以聚类内的相似程度和聚类间的相异程度作为指标</li>
+<li>没有迭代的过程，结果可能并不精确</li>
+</ul>
+</li>
+</ul>
+<p>ps：往年考了<strong>K-means算法</strong>和 <strong>凝聚式层次式距离算法</strong></p>
+<h3 id="3、K-means聚类算法"><a href="#3、K-means聚类算法" class="headerlink" title="3、K-means聚类算法"></a>3、K-means聚类算法</h3><p>这是一种基于划分的距离技术，它将各个聚类子集内的所有数据样本的均值作为该聚类的代表点，算法的主要思想是通过迭代过程把数据集划分为不同的类别，从而使生成的每个聚类内紧凑，类间独立。</p>
+<p>考试会出现的距离主要是曼哈顿距离<br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195142265.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">k-means算法</span><br><span class="line">输入：簇的数目k和包含n个对象的数据库。</span><br><span class="line">输出：k个簇，使平方误差准则最小。</span><br><span class="line">算法步骤： </span><br><span class="line">  1.为每个聚类确定一个初始聚类中心，这样就有 K 个初始聚类中心。 </span><br><span class="line">  2.将样本集中的样本按照最小距离原则分配到最邻近聚类  </span><br><span class="line">  3.使用每个聚类中的样本均值作为新的聚类中心。</span><br><span class="line">  4.重复步骤2.3直到聚类中心不再变化。</span><br><span class="line">  5.结束，得到K个聚类</span><br></pre></td></tr></table></figure>
+
+<p><strong>面向考题学习【2012期末】</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195201935.png"></p>
+<p><strong>第一个问题：要求给出相异矩阵</strong>，相异度矩阵（存储n个对象两两之间的近似性）。同时，也提出了一个表示n个对象的矩阵，即数据矩阵（用p个变量来表示n个对象），如下图。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195216105.png"></p>
+<p>我们只需要把每一元组的x、y值带进曼哈顿距离算一下就是答案了-_-</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195230698.png"></p>
+<p><strong>第二个问题：对数据集进行聚类</strong>，给定了簇的数量为k = 3，给定了三个起始中心点（3，5）、（2，6）、（3，8），一共12个点（对象），那么对于剩余的9个点（对象），根据其与各个簇中心的距离，将它赋给最近的簇。大白话就是对剩下的点，用曼哈顿距离算一下它和哪个中心点近，就把它归类过去。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195245702.png"></p>
+<p>就看前三列，取最小的放入对应聚类</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(1,4,6,7,11,12)</span><br><span class="line">(2,9)</span><br><span class="line">(3,5,8,10)</span><br></pre></td></tr></table></figure>
+
+<p>重新调整三个聚类的中心点</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(1,4,6,7,11,12)	--&gt; x = (3+3+4+9+5+4)/6 = 4.6;y = (5+4+5+1+2+2)/6 = 3.17	(4.6,3.17)</span><br><span class="line">(2,9) --&gt; x = (2+1)/2 = 1.5;y = (6+6)/2 = 6 (1.5,6)</span><br><span class="line">(3,5,8,10) x = (3+7+4+6)/4 = 5;y=(8+7+10+8)/4 = 8.25 (5,8.25)</span><br></pre></td></tr></table></figure>
+
+<p>然后再每个点算到三个中心点的距离，得到三个聚簇</p>
+<p>一直这么算直到聚簇内不变化</p>
+<h3 id="4、凝聚式层次式距离算法"><a href="#4、凝聚式层次式距离算法" class="headerlink" title="4、凝聚式层次式距离算法"></a>4、凝聚式层次式距离算法</h3><p>【2014期末】b问</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195313654.png"><br><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195330066.png"></p>
+<p>把每个点与其他点的距离都算出来，选距离最小的作为初始的那两个点，聚到一起之后算它们的中心点，然后这个中心点和其他n-2个点再算距离，再挑出两个最小的聚到一起，再算中心点…..一直到所有的都聚进来。最后我们想要聚成几类就在倒数第几步砍一刀。比如要求聚成两类，在step3砍一刀，一类是cde，另一类是ab。</p>
+<p>初始a问曼哈顿距离</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195346521.png"></p>
+<p>聚1和3，再计算其他点到新点距离</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195405686.png"></p>
+<p>聚135，再计算其他点到新点距离</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200305195423558.png"></p>
+<p>聚1352，最后聚成12345</p>
+<p>Ps：凝聚式层次式距离算法倒数第二步应该是聚45，写错了</p>
+<p>完结撒花，希望有帮助到你。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/lesson/">#lesson</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/12/01/dp-coordinate/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">坐标型动态规划</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/09/24/SourceCode-AQS/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">J.U.C AQS 源码解读</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="nav-text">第二章 数据仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81B%E6%A0%91%E7%B4%A2%E5%BC%95"><span class="nav-text">1、B树索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BD%8D%E5%9B%BE%E7%B4%A2%E5%BC%95-BitMap-Index"><span class="nav-text">2、位图索引 BitMap Index</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E7%AE%80%E5%8D%95%E4%BD%8D%E5%9B%BE%E7%B4%A2%E5%BC%95"><span class="nav-text">（1）简单位图索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E8%BF%9E%E6%8E%A5%E7%B4%A2%E5%BC%95-Join-Index"><span class="nav-text">3、连接索引 Join Index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5"><span class="nav-text">4、数据仓库存储策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="nav-text">5、数据仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9A%84%E5%87%BA%E7%8E%B0%EF%BC%9F"><span class="nav-text">（1）数据仓库的出现？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9A%84%E7%89%B9%E7%82%B9-%E7%89%B9%E5%BE%81"><span class="nav-text">（2）数据仓库的特点&#x2F;特征</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81OLAP"><span class="nav-text">6、OLAP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89OLAP%E7%89%B9%E7%82%B9"><span class="nav-text">（1）OLAP特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89OLAP%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-text">（2）OLAP的基本数据模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7%E3%80%81%E6%95%B0%E6%8D%AE%E7%AB%8B%E6%96%B9%E4%BD%93"><span class="nav-text">7、数据立方体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8%E3%80%81%E5%A4%9A%E7%BB%B4%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%89%8B%E6%AE%B5"><span class="nav-text">8、多维数据分析手段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9%E3%80%81%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">9、数据仓库的设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-text">第三章 数据预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B"><span class="nav-text">1、数据预处理过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97"><span class="nav-text">2、数据清洗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E6%95%B0%E6%8D%AE%E9%9B%86%E6%88%90%E4%B8%8E%E5%8F%98%E6%8D%A2"><span class="nav-text">3、数据集成与变换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2"><span class="nav-text">（1）数据变换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%BD%92%E4%B8%80%E5%8C%96%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-text">（2）归一化的三种方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E6%95%B0%E6%8D%AE%E8%A7%84%E7%BA%A6"><span class="nav-text">4、数据规约</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E7%89%B9%E5%BE%81%E5%8C%96%E5%92%8C%E5%8C%BA%E5%88%86"><span class="nav-text">第四章 特征化和区分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98"><span class="nav-text">数据挖掘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98"><span class="nav-text">1、数据挖掘</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">（1）数据挖掘是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">（2）数据挖掘基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E5%92%8C%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%95%A5%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="nav-text">（3）数据挖掘和数据仓库啥关系？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E6%AD%A5%E9%AA%A4"><span class="nav-text">（4）数据挖掘步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0%EF%BC%9A%E5%85%B3%E8%81%94%E8%A7%84%E5%88%99%E6%8C%96%E6%8E%98"><span class="nav-text">第五章：关联规则挖掘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%85%B3%E8%81%94%E8%A7%84%E5%88%99"><span class="nav-text">1、关联规则</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BE%8B%EF%BC%9A%E8%B6%85%E7%BA%A7%E5%B8%82%E5%9C%BA"><span class="nav-text">例：超级市场</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81Apriori%E7%AE%97%E6%B3%95"><span class="nav-text">2、Apriori算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">（1）基本概念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%AF%BB%E6%89%BE%E9%A2%91%E7%B9%81%E9%A1%B9%E9%9B%86%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-text">（2）寻找频繁项集的方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E7%94%9F%E6%88%90%E5%85%B3%E8%81%94%E8%A7%84%E5%88%99"><span class="nav-text">（3）生成关联规则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%885%EF%BC%89Apriori%E7%AE%97%E6%B3%95%E7%9A%84%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95"><span class="nav-text">（5）Apriori算法的优化方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81FP-Growth%E7%AE%97%E6%B3%95"><span class="nav-text">3、FP-Growth算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E4%BB%8B%E7%BB%8D"><span class="nav-text">（1）介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E7%AE%97%E6%B3%95%E4%BC%AA%E4%BB%A3%E7%A0%81"><span class="nav-text">（2）算法伪代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89PPT%E4%BE%8B%E5%AD%90"><span class="nav-text">（3）PPT例子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0%EF%BC%9A%E5%88%86%E7%B1%BB%E6%8C%96%E6%8E%98"><span class="nav-text">第六章：分类挖掘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%95%B0%E6%8D%AE%E5%88%86%E7%B1%BB"><span class="nav-text">1、数据分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%95%B0%E6%8D%AE%E5%88%86%E7%B1%BB%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-text">2、数据分类的步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%88%86%E7%B1%BB%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="nav-text">3、分类分析方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E5%86%B3%E7%AD%96%E6%A0%91%E2%80%94%E2%80%94ID3%E7%AE%97%E6%B3%95"><span class="nav-text">4、决策树——ID3算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E6%A6%82%E5%BF%B5"><span class="nav-text">（1）概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89ID3%E7%AE%97%E6%B3%95"><span class="nav-text">（2）ID3算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF"><span class="nav-text">5、朴素贝叶斯</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0%EF%BC%9A%E8%81%9A%E7%B1%BB%E6%8C%96%E6%8E%98"><span class="nav-text">第七章：聚类挖掘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90"><span class="nav-text">1、聚类分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%B8%BB%E8%A6%81%E7%9A%84%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95"><span class="nav-text">2、主要的聚类方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81K-means%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95"><span class="nav-text">3、K-means聚类算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E5%87%9D%E8%81%9A%E5%BC%8F%E5%B1%82%E6%AC%A1%E5%BC%8F%E8%B7%9D%E7%A6%BB%E7%AE%97%E6%B3%95"><span class="nav-text">4、凝聚式层次式距离算法</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

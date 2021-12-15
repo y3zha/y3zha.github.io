@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            HashSet&amp;TreeSet 源码解读 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">HashSet&amp;TreeSet 源码解读</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-09-20 23:15:48</span>
+        <span class="mobile">2019-09-20 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Source-Code/">Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="HashSet与TreeSet"><a href="#HashSet与TreeSet" class="headerlink" title="HashSet与TreeSet"></a>HashSet与TreeSet</h1><p>HashSet、TreeSet 两个类是在 Map 的基础上组装起来的类，学习的侧重点，主要在于 Set 是如何利用 Map 现有的功能，来达成自己的目标的。</p>
+<h2 id="一、HashSet"><a href="#一、HashSet" class="headerlink" title="一、HashSet"></a>一、HashSet</h2><h3 id="1、类注释"><a href="#1、类注释" class="headerlink" title="1、类注释"></a>1、类注释</h3><p>看源码先看类注释上，我们可以得到的信息有:</p>
+<ul>
+<li>底层实现基于 HashMap，所以迭代时不能保证按照插入顺序，或者其它顺序进行迭代</li>
+<li>add、remove、contanins、size 等方法的耗时性能，是不会随着数据量的增加而增加的，这是和HashMap的底层数据结构有关，不管数据量有多大，不考虑hash冲突情况，时间复杂度都是O(1)</li>
+<li>线程不安全的</li>
+<li>迭代过程中，如果数据结构被改变，会快速失败的，会抛出ConcurrentModificationException 异常。</li>
+</ul>
+<p>后面3点是List、Map、Set的共同点。</p>
+<h3 id="2、HashSet如何利用HashMap"><a href="#2、HashSet如何利用HashMap" class="headerlink" title="2、HashSet如何利用HashMap"></a>2、HashSet如何利用HashMap</h3><p>HashSet 的实现是基于 HashMap 的，在 Java 中，要基于基础类进行创新实现，有两种办法</p>
+<ul>
+<li>继承基础类，覆写基础类的方法</li>
+<li>组合基础类，通过调用基础类的方法，来复用基础类的能力。</li>
+</ul>
+<p>HashSet是把HashMap组合进来的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 把 HashMap 组合进来，key 是 Hashset 的 key，value 是下面的 PRESENT</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> HashMap&lt;E,Object&gt; map;</span><br><span class="line"><span class="comment">// HashMap 中的 value</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object PRESENT = <span class="keyword">new</span> Object();</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么要用组合呢？</strong>（从继承和组合两个角度回答）</p>
+<ul>
+<li>继承表示父子类是同一个事物，而 Set 和 Map 本来就是想表达两种事物，所以继承不妥，并且java只能单继承，后续很难扩展</li>
+<li>组合更加灵活，可以任意的组合现有的基础类，并且可以在基础类方法的基础上进行扩展</li>
+<li>工作中也是多用组合，少用继承</li>
+</ul>
+<p><strong>从代码中可以得到的信息是</strong></p>
+<ul>
+<li>使用 HashSet 时，比如 add 方法，只有一个入参，但组合的 Map 的 add 方法却有 key，value 两个入参，相对应上 Map 的 key 就是我们 add 的入参，value 就是第二行代码，中的 PRESENT，此处设计非常巧妙，用一个默认值 PRESENT 来代替 Map 的 Value；<strong>看下面代码，set的add方法实际上就是添加key的过程，而value使用的是自定义的默认值。</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、初始化"><a href="#3、初始化" class="headerlink" title="3、初始化"></a>3、初始化</h3><p>HashSet 的初始化就是直接 new HashMap ，比较有意思的是，当有原始集合数据进行初始化的情况下，会对 HashMap 的初始容量进行计算，源码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashSet</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">      map = <span class="keyword">new</span> HashMap&lt;&gt;(Math.max((<span class="keyword">int</span>) (c.size()/<span class="number">.75f</span>) + <span class="number">1</span>, <span class="number">16</span>));</span><br><span class="line">      addAll(c);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Math.max ((int) (c.size ()/.75f) + 1, 16)</code>，就是对 HashMap 的容量进行了计 算，翻译成中文就是取括号中两个数的最大值(期望的值 / 0.75+1，默认值 16)</p>
+<ul>
+<li>如果给定 HashMap 初始容量小于 16 ，就按照 HashMap 默 认的 16 初始化好了，如果大于 16，就按照给定值初始化。</li>
+<li>HashMap 扩容的伐值的计算公式是:Map 的容量 * 0.75f，一旦达到阀值就会扩容</li>
+</ul>
+<p>同时这种写法，也提供了一种思路给我们，如果有人问你，往 HashMap 拷贝大集合时，如何给 HashMap 初始化大小时，完全可以借鉴这种写法:取最大值(期望的值 / 0.75 + 1，默认 值 16)。</p>
+<h2 id="二、TreeSet"><a href="#二、TreeSet" class="headerlink" title="二、TreeSet"></a>二、TreeSet</h2><p>TreeSet 底层组合的是 TreeMap，所以有 TreeMap key 能够排序的功能，迭代的时候，也可以按照 key 的排序顺序进行迭代</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">TreeSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(<span class="keyword">new</span> TreeMap&lt;E,Object&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>复用 TreeMap 时，复用有两种思路：</p>
+<p>思路一：TreeSet 的 add 方法，底层直接使用的是 HashMap 的 put 的能力</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> m.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>思路二：需要迭代 TreeSet 中的元素，那应该也是像 add 那样，直接使用 HashMap 已有的迭 代能力，比如像下面这样:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 模仿思路一的方式实现</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">descendingIterator</span><span class="params">()</span> </span>&#123; </span><br><span class="line">  <span class="comment">// 直接使用 HashMap.keySet 的迭代能力 </span></span><br><span class="line">  <span class="keyword">return</span> m.keySet().iterator();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种是思路一的实现方式，TreeSet 组合 TreeMap，直接选择 TreeMap 的底层能力进行包 装，但 TreeSet 实际执行的思路却完全相反，TreeSet 本身已经定义了迭代的规范，源码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// NavigableSet 接口，定义了迭代的一些规范，和一些取值的特殊方法 </span></span><br><span class="line"><span class="comment">// TreeSet 实现了该方法，也就是说 TreeSet 本身已经定义了迭代的规范 </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">NavigableSet</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">SortedSet</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">		<span class="function">Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function">E <span class="title">lower</span><span class="params">(E e)</span></span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// m.navigableKeySet() 是 TreeMap 写了一个子类实现了 NavigableSet接口，实现了 TreeSet 定义的迭代规范</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  	<span class="comment">//，让 TreeMap 去实现自己定义的规范</span></span><br><span class="line">		<span class="keyword">return</span> m.navigableKeySet().iterator(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20191214165855896-3423843.png"
+                     
+                ></p>
+<p>总结下 TreeSet 组合 TreeMap 实现的两种思路：</p>
+<ul>
+<li> TreeSet 直接使用 TreeMap 的某些功能，自己包装成新的 api，<strong>自己实现</strong></li>
+<li> TreeSet 定义自己想要的 api，自己定义接口规范，<strong>让 TreeMap 去实现</strong>。</li>
+</ul>
+<p>这两个方式都是TreeSet调用TreeMap，第一种是功能的定义和实现都在 TreeMap，TreeSet 只是简单的调用而已，第二种是TreeSet把规范结构定义出来了，让让 TreeMap 去实现，TreeSet只要往外吐出结果就可以，都不用包装。</p>
+<p><strong>为什么要有这两种复用思路？</strong></p>
+<ul>
+<li>像 add 这些简单的方法，没有复杂逻辑，直接调用TreeMap的自己实现</li>
+<li>另一种是复杂场景下，TreeSet不太清楚TreeMap的底层逻辑是什么，这时候不如让TreeSet定义接口规范，让TreeMap来负责实现，因为TreeMap对底层比较清楚。</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Source-Code/">#Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/09/20/SourceCode-Collections/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">J.U.C Collections 源码解读</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/09/19/SourceCode-CopyOnWriteArrayList/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">CopyOnWriteArrayList 源码解读</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HashSet%E4%B8%8ETreeSet"><span class="nav-text">HashSet与TreeSet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81HashSet"><span class="nav-text">一、HashSet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%B1%BB%E6%B3%A8%E9%87%8A"><span class="nav-text">1、类注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81HashSet%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8HashMap"><span class="nav-text">2、HashSet如何利用HashMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">3、初始化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81TreeSet"><span class="nav-text">二、TreeSet</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

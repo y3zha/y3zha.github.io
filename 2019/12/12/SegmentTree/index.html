@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            线段树 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">线段树</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-12-12 23:15:48</span>
+        <span class="mobile">2019-12-12 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Algorithm/">Algorithm</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Segment-Tree/">Segment Tree</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="线段树"><a href="#线段树" class="headerlink" title="线段树"></a>线段树</h1><p>概念：线段树就是一棵二叉树，每个节点代表一个区间，主要用于解决区间类问题。每个节点的属性根据需要可以去自定义，比如节点的属性可以是区间和、区间最大/最小值。。</p>
+<h2 id="一、线段树节点定义"><a href="#一、线段树节点定义" class="headerlink" title="一、线段树节点定义"></a>一、线段树节点定义</h2><p>每个node有区间的左右端点，以及左右孩子</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SegmentTreeNode</span></span>{</span><br><span class="line">  	<span class="keyword">int</span> start,end,val;	<span class="comment">//val根据需要定义，比如我定义为区间最大值就是max</span></span><br><span class="line">  	SegmentTreeNode left,right;</span><br><span class="line">  	<span class="function"><span class="keyword">public</span> <span class="title">SegmentTreeNode</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end, <span class="keyword">int</span> val)</span></span>{</span><br><span class="line">      	<span class="keyword">this</span>.start = start;</span><br><span class="line">      	<span class="keyword">this</span>.end = end;</span><br><span class="line">      	<span class="keyword">this</span>.val = val;</span><br><span class="line">      	<span class="keyword">this</span>.left = <span class="keyword">this</span>.right = <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、线段树的构建、修改、查询"><a href="#二、线段树的构建、修改、查询" class="headerlink" title="二、线段树的构建、修改、查询"></a>二、线段树的构建、修改、查询</h2><h3 id="1、构建"><a href="#1、构建" class="headerlink" title="1、构建"></a>1、构建</h3><p>自上而下，分治法，递归调用。</p>
+<p>对于区间[m1,m2]，mid = (m1+m2)/2，其左儿子区间是[m1,mid]，右儿子区间是(mid+1,m2)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//线段树的构建,以求区间最大值为例,返回根节点</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> SegmentTreeNode <span class="title">build</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end, <span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (start &gt; end) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span> (start == end) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SegmentTreeNode(start, end, A[start]);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">//先new根区间,根区间最大值暂时为A[start],不能为其他乱七八糟的值比如-1这种...</span></span><br><span class="line">    SegmentTreeNode root = <span class="keyword">new</span> SegmentTreeNode(start, end, A[start]);</span><br><span class="line">    <span class="keyword">if</span> (start != end) {</span><br><span class="line">        <span class="keyword">int</span> mid = (start + end) / <span class="number">2</span>;</span><br><span class="line">        root.left = build(start, mid, A);</span><br><span class="line">        root.right = build(mid + <span class="number">1</span>, end, A);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">//改root的val</span></span><br><span class="line">    <span class="keyword">if</span> (root.left != <span class="keyword">null</span> &amp;&amp; root.left.max &gt; root.max) {</span><br><span class="line">        root.max = root.left.max;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span> (root.right != <span class="keyword">null</span> &amp;&amp; root.right.max &gt; root.max) {</span><br><span class="line">        root.max = root.right.max;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、修改"><a href="#2、修改" class="headerlink" title="2、修改"></a>2、修改</h3><p>递归调用，一路向下找到最小区间，触底反弹的时候才去修改node。比如数组[6,3,5,1,9]，我要修改1位置上的3，那就是一路向下先找到3，然后返回途中修改 ，时间复杂度logN</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://img-blog.csdnimg.cn/2020010823242568.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDQyNDY2OA==,size_16,color_FFFFFF,t_70"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//线段树的修改,</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">(SegmentTreeNode root, <span class="keyword">int</span> index, <span class="keyword">int</span> value)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (root.start == index &amp;&amp; root.end == index) {</span><br><span class="line">        root.max = value;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> mid = (root.start + root.end) / <span class="number">2</span>;</span><br><span class="line">    <span class="comment">//看index在左区间还是右区间</span></span><br><span class="line">    <span class="keyword">if</span> (root.start &lt;= index &amp;&amp; index &lt;= mid) {</span><br><span class="line">        modify(root.left, index, value);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span> (mid &lt; index &amp;&amp; index &lt;= root.end) {</span><br><span class="line">        modify(root.right, index, value);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">//最后改下根</span></span><br><span class="line">    root.max = Math.max(root.left.max, root.right.max);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、查询"><a href="#3、查询" class="headerlink" title="3、查询"></a>3、查询</h3><p>比如上面例子，找[0,3]，先找[0,2]，再找[3,3]。找[0,2]，直接返回，找[3-3]，就需要走到底</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//线段树的查询</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">query</span><span class="params">(SegmentTreeNode root, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (start == root.start &amp;&amp; end == root.end) {</span><br><span class="line">        <span class="keyword">return</span> root.max;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> mid = (root.start + root.end) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> left_max = Integer.MIN_VALUE;</span><br><span class="line">    <span class="keyword">int</span> right_max = Integer.MIN_VALUE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//求左边最大值</span></span><br><span class="line">    <span class="comment">//如果给定查询范围起点在左子树</span></span><br><span class="line">    <span class="keyword">if</span> (start &lt;= mid) {</span><br><span class="line">        <span class="comment">//但是终点在右子树（横跨左子树和右子树）,那么左边最大值就在start到mid之间查询</span></span><br><span class="line">        <span class="keyword">if</span> (mid &lt; end) {</span><br><span class="line">            left_max = query(root.left, start, mid);</span><br><span class="line">        } <span class="keyword">else</span> {    <span class="comment">//如果只在左子树</span></span><br><span class="line">            left_max = query(root.left, start, end);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">//求右边最大值</span></span><br><span class="line">    <span class="keyword">if</span> (mid &lt; end) {</span><br><span class="line">        <span class="comment">//横跨左右子树的情况，起点为mid+1</span></span><br><span class="line">        <span class="keyword">if</span> (start &lt;= mid) {</span><br><span class="line">            right_max = query(root.right, mid + <span class="number">1</span>, end);</span><br><span class="line">        } <span class="keyword">else</span> {    <span class="comment">//如果只在右子树</span></span><br><span class="line">            right_max = query(root.right, start, end);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> Math.max(left_max, right_max);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、线段树性质"><a href="#三、线段树性质" class="headerlink" title="三、线段树性质"></a>三、线段树性质</h2><p>对于区间[m1,m2]，mid = (m1+m2)/2，其左儿子区间是[m1,mid]，右儿子区间是(mid+1,m2)</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly90dmExLnNpbmFpbWcuY24vbGFyZ2UvMDA2dE5iUndneTFnYXBrZWYwc2tvajMxbWUwbXEweWguanBn?x-oss-process=image/format,png"></p>
+<h2 id="四、题目练习"><a href="#四、题目练习" class="headerlink" title="四、题目练习"></a>四、题目练习</h2><h3 id="1、LintCode-206-Interval-Sum"><a href="#1、LintCode-206-Interval-Sum" class="headerlink" title="1、LintCode 206. Interval Sum"></a>1、LintCode 206. Interval Sum</h3><p>区间求和</p>
+<blockquote>
+<p>给定一个整数数组（下标由 0 到 n-1，其中 n 表示数组的规模），以及一个查询列表。每一个查询列表有两个整数 <code>[start, end]</code> 。 对于每个查询，计算出数组中从下标 start 到 end 之间的数的总和</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: 数组 ：[1,2,7,8,5], 查询：[(0,4),(1,2),(2,4)]</span><br><span class="line">输出: [23,9,20]</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>思路</p>
+<ul>
+<li>暴力，枚举O(nm)，n为数组长度，m为查询次数</li>
+<li>线段树/树状数组，O(mlogn)</li>
+<li>前缀和数组O(n+m)，这个题没有涉及到修改，可以用</li>
+</ul>
+<p>首先定义Node和树</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//线段树Node</span></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">SegmentTreeNode</span></span>{</span><br><span class="line">      <span class="keyword">int</span> start;</span><br><span class="line">      <span class="keyword">int</span> end;</span><br><span class="line">      <span class="keyword">long</span> sum;</span><br><span class="line">      SegmentTreeNode left, right;</span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">SegmentTreeNode</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">          <span class="keyword">this</span>.start = start;</span><br><span class="line">          <span class="keyword">this</span>.end = end;</span><br><span class="line">          sum = <span class="number">0</span>;</span><br><span class="line">          left = right = <span class="keyword">null</span>;</span><br><span class="line">      }</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">class</span>  <span class="title">SegmentTree</span></span>{</span><br><span class="line">      <span class="keyword">private</span> <span class="keyword">int</span> size;   <span class="comment">//区间</span></span><br><span class="line">      <span class="keyword">private</span> SegmentTreeNode root;</span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">SegmentTree</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">          size = A.length;</span><br><span class="line">          root = buildTree(A,<span class="number">0</span>, size - <span class="number">1</span>);</span><br><span class="line">      }</span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">private</span> SegmentTreeNode <span class="title">buildTree</span><span class="params">(<span class="keyword">int</span>[] A, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">          SegmentTreeNode node = <span class="keyword">new</span> SegmentTreeNode(start, end);</span><br><span class="line">          <span class="comment">//递归出口，叶子节点</span></span><br><span class="line">          <span class="keyword">if</span> (start == end) {</span><br><span class="line">              node.sum = A[start];</span><br><span class="line">              <span class="keyword">return</span> node;</span><br><span class="line">          }</span><br><span class="line">          <span class="comment">//不是出口，递归建立左子树和右子树</span></span><br><span class="line">          <span class="keyword">int</span> mid = (start + end) / <span class="number">2</span>;</span><br><span class="line">          node.left = buildTree(A, start, mid);</span><br><span class="line">          node.right = buildTree(A, mid + <span class="number">1</span>, end);</span><br><span class="line">          <span class="comment">//别忘记维护当前节点的sum</span></span><br><span class="line">          node.sum = node.left.sum + node.right.sum;</span><br><span class="line">          <span class="keyword">return</span> node;</span><br><span class="line">      }</span><br><span class="line"></span><br><span class="line">      <span class="comment">//查询对外界接口</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">querySum</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">          <span class="keyword">return</span> querySum(root, start, end);</span><br><span class="line">      }</span><br><span class="line"></span><br><span class="line">      <span class="comment">//重载方法.在node节点下查询原数组start到end区间内的和</span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">querySum</span><span class="params">(SegmentTreeNode node, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">          <span class="comment">//递归出口</span></span><br><span class="line">          <span class="keyword">if</span> (node.start == start &amp;&amp; node.end == end) {</span><br><span class="line">              <span class="keyword">return</span> node.sum;</span><br><span class="line">          }</span><br><span class="line">          <span class="keyword">int</span> mid = (node.start + node.end) / <span class="number">2</span>;</span><br><span class="line">          <span class="keyword">long</span> leftSum = <span class="number">0</span>, rightSum = <span class="number">0</span>;</span><br><span class="line">          <span class="comment">//左边区间</span></span><br><span class="line">          <span class="keyword">if</span> (start &lt;= mid) {</span><br><span class="line">              <span class="comment">//如果不是跨区间</span></span><br><span class="line">              <span class="keyword">if</span> (end &lt;= mid) {</span><br><span class="line">                  leftSum = querySum(node.left, start, end);</span><br><span class="line">              } <span class="keyword">else</span> {</span><br><span class="line">                  leftSum = querySum(node.left, start, mid);</span><br><span class="line">              }</span><br><span class="line">              <span class="comment">//可以合并为一行 !!!!</span></span><br><span class="line">              <span class="comment">// leftSum = querySum(node.left, start, Math.min(mid, end));</span></span><br><span class="line">          }</span><br><span class="line">          <span class="comment">//要考虑右半区间，也就是start-end与右半区间有交集</span></span><br><span class="line">          <span class="keyword">if</span> (end &gt;= mid + <span class="number">1</span>) {</span><br><span class="line">              <span class="comment">//如果不是跨区间</span></span><br><span class="line">              <span class="keyword">if</span> (start &gt;= mid + <span class="number">1</span>) {</span><br><span class="line">                  rightSum = querySum(node.right, start, end);</span><br><span class="line">              } <span class="keyword">else</span> {</span><br><span class="line">                  rightSum = querySum(node.right, mid + <span class="number">1</span>, end);</span><br><span class="line">              }</span><br><span class="line">              <span class="comment">// 可以合并为一句</span></span><br><span class="line">              <span class="comment">// rightSum = querySum(node.right, Math.max(mid + 1, start), end);</span></span><br><span class="line">          }</span><br><span class="line">          <span class="keyword">return</span> leftSum + rightSum;</span><br><span class="line">      }</span><br><span class="line">  }</span><br></pre></td></tr></table></figure>
+
+<p>实现方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Interval</span> </span>{</span><br><span class="line">      <span class="keyword">int</span> start, end;</span><br><span class="line"></span><br><span class="line">      Interval(<span class="keyword">int</span> start, <span class="keyword">int</span> end) {</span><br><span class="line">          <span class="keyword">this</span>.start = start;</span><br><span class="line">          <span class="keyword">this</span>.end = end;</span><br><span class="line">      }</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> List&lt;Long&gt; <span class="title">intervalSum</span><span class="params">(<span class="keyword">int</span>[] A, List&lt;Interval&gt; queries)</span> </span>{</span><br><span class="line">      List&lt;Long&gt; res = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">      SegmentTree segmentTree = <span class="keyword">new</span> SegmentTree(A);</span><br><span class="line">      <span class="keyword">for</span> (Interval query : queries) {</span><br><span class="line">          <span class="keyword">long</span> sum = segmentTree.querySum(query.start, query.end);</span><br><span class="line">          res.add(sum);</span><br><span class="line">      }</span><br><span class="line">      <span class="keyword">return</span> res;</span><br><span class="line">  }</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、LintCode-207-Interval-Sum"><a href="#2、LintCode-207-Interval-Sum" class="headerlink" title="2、LintCode 207.  Interval Sum"></a>2、LintCode 207.  Interval Sum</h3><blockquote>
+<p>在类的构造函数中给一个整数数组, 实现两个方法 <code>query(start, end)</code> 和 <code>modify(index, value)</code>:</p>
+<ul>
+<li>对于 query(<em>start</em>, <em>end</em>), 返回数组中下标 <em>start</em> 到 <em>end</em> 的 <strong>和</strong>。</li>
+<li>对于 modify(<em>index</em>, <em>value</em>), 修改数组中下标为 <em>index</em> 上的数为 <em>value</em>.</li>
+</ul>
+</blockquote>
+<p>比206多了modify，无法使用前缀和数组，暴力O(nm)，线段树/树状数组O(mlogn)，n为数组长度，m为操作次数。</p>
+<p>线段树类中提供三个方法</p>
+<ul>
+<li>构造器传入int[] A</li>
+<li>querySum(int start, int end)</li>
+<li>modify(int index, int val)</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>{</span><br><span class="line">        <span class="keyword">private</span> SegmentTree segmentTree;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">            <span class="keyword">if</span> (A == <span class="keyword">null</span> || A.length == <span class="number">0</span>) {</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            }</span><br><span class="line">            segmentTree = <span class="keyword">new</span> SegmentTree(A);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">query</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> segmentTree.querySum(start, end);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> value)</span> </span>{</span><br><span class="line">            segmentTree.modify(index, value);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">SegmentTreeNode</span></span>{</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> start, end;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">long</span> sum;</span><br><span class="line">        <span class="keyword">public</span> SegmentTreeNode left, right;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SegmentTreeNode</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            <span class="keyword">this</span>.start = start;</span><br><span class="line">            <span class="keyword">this</span>.end = end;</span><br><span class="line">            sum = <span class="number">0</span>;</span><br><span class="line">            left = right = <span class="keyword">null</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">SegmentTree</span></span>{</span><br><span class="line">        <span class="keyword">public</span> SegmentTreeNode root;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SegmentTree</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">            size = A.length;</span><br><span class="line">            root = buildTree(A, <span class="number">0</span>, size - <span class="number">1</span>);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> SegmentTreeNode <span class="title">buildTree</span><span class="params">(<span class="keyword">int</span>[] A, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            SegmentTreeNode node = <span class="keyword">new</span> SegmentTreeNode(start, end);</span><br><span class="line">            <span class="comment">//递归出口</span></span><br><span class="line">            <span class="keyword">if</span> (start == end) {</span><br><span class="line">                node.sum = A[start];</span><br><span class="line">                <span class="keyword">return</span> node;</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//不是出口则递归建所有子树</span></span><br><span class="line">            <span class="keyword">int</span> mid = (start + end) / <span class="number">2</span>;</span><br><span class="line">            node.left = buildTree(A, start, mid);</span><br><span class="line">            node.right = buildTree(A, mid + <span class="number">1</span>, end);</span><br><span class="line">            node.sum = node.left.sum + node.right.sum;</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//公开接口</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">querySum</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> querySum(root, start, end);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//公开接口</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>{</span><br><span class="line">            modify(root, index, val);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">querySum</span><span class="params">(SegmentTreeNode node, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            <span class="keyword">if</span> (node.start == start &amp;&amp; node.end == end) {</span><br><span class="line">                <span class="keyword">return</span> node.sum;</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">int</span> mid = (node.start + node.end) / <span class="number">2</span>;  <span class="comment">//这边不是start和end 是node的区间</span></span><br><span class="line">            <span class="keyword">long</span> leftSum = <span class="number">0</span>, rightSum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (start &lt;= mid) {</span><br><span class="line">                leftSum = querySum(node.left, start, Math.min(end, mid));</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (end &gt;= mid + <span class="number">1</span>) {</span><br><span class="line">                rightSum = querySum(node.right, Math.max(start, mid + <span class="number">1</span>), end);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">return</span> leftSum + rightSum;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">(SegmentTreeNode node, <span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>{</span><br><span class="line">            <span class="comment">//递归出口：到达这个叶子节点，并修改它的值</span></span><br><span class="line">            <span class="keyword">if</span> (node.start == node.end &amp;&amp; node.end == index) {</span><br><span class="line">                node.sum = val;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//递归：分为在左子树和右子树两种情况,不用求mid</span></span><br><span class="line">            <span class="keyword">if</span> (node.left.end &gt;= index) {</span><br><span class="line">                modify(node.left, index, val);</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                modify(node.right, index, val);</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//最后改下根</span></span><br><span class="line">            node.sum = node.left.sum + node.right.sum;</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、LintCode-248-Count-of-Smaller-Number"><a href="#3、LintCode-248-Count-of-Smaller-Number" class="headerlink" title="3、LintCode 248. Count of Smaller Number"></a>3、LintCode 248. Count of Smaller Number</h3><p>统计比给定整数小的数的个数</p>
+<blockquote>
+<p>给定一个整数数组 （下标由 0 到 n-1，其中 n 表示数组的规模，数值范围由 0 到 10000），以及一个查询列表。对于每一个查询，将会给你一个整数，请你返回该数组中小于给定整数的元素的数量。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: array =[1,2,7,8,5] queries =[1,8,5]</span><br><span class="line">输出:[0,4,2]</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>时间复杂度：</p>
+<ul>
+<li>暴力求O(nm)，n为数组长度，m为查询次数</li>
+<li>线段树/树状数组O(mlogk)，m为查询次数，k为数组最大值</li>
+<li>二分,先排序，nlogn，然后查询比某个数小，只要得到它的位置即可，O(nlogn+mlogn)</li>
+<li>前缀和数组，线性，O(k+n+m)，本题较好的方式，但是扩展较为困难</li>
+</ul>
+<p>线段树思路：</p>
+<ul>
+<li>数组内元素范围在0～10000，用数组B[i]代表i这个值出现了多少次，那么查询比x小的元素只要计算B的前缀和B[0]+B[1]+…+B[x-1]，那就是查询B数组的某一个区间和，查询时间复杂度为logk（k为数组最大值）。这个题用前缀和也是非常的方便，但是遇到follow up就不行了。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>{</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">countOfSmallerNumber</span><span class="params">(<span class="keyword">int</span>[] A, <span class="keyword">int</span>[] queries)</span> </span>{</span><br><span class="line">            <span class="keyword">int</span>[] B = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10001</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i : A) {</span><br><span class="line">                B[i]++;</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//建立线段树，大小为10001</span></span><br><span class="line">            SegmentTree tree = <span class="keyword">new</span> SegmentTree(<span class="number">10001</span>);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10001</span>; i++) {</span><br><span class="line">                tree.modify(i, B[i]);   <span class="comment">//i位置修改为B[i]，表示这个数出现了多少次</span></span><br><span class="line">            }</span><br><span class="line">            List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i : queries) {</span><br><span class="line">                <span class="keyword">if</span> (i == <span class="number">0</span>) {</span><br><span class="line">                    res.add(<span class="number">0</span>); <span class="comment">//没有数比0小，都是正数</span></span><br><span class="line">                } <span class="keyword">else</span> {</span><br><span class="line">                    res.add(tree.querySum(<span class="number">0</span>, i - <span class="number">1</span>));</span><br><span class="line">                } </span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">SegmentTreeNode</span></span>{</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> sum;</span><br><span class="line">        <span class="keyword">public</span>  <span class="keyword">int</span> start, end;</span><br><span class="line">        <span class="keyword">public</span>  SegmentTreeNode left, right;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SegmentTreeNode</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            <span class="keyword">this</span>.start = start;</span><br><span class="line">            <span class="keyword">this</span>.end = end;</span><br><span class="line">            sum = <span class="number">0</span>;</span><br><span class="line">            left = right = <span class="keyword">null</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">SegmentTree</span></span>{</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line">        <span class="keyword">private</span> SegmentTreeNode root;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SegmentTree</span><span class="params">(<span class="keyword">int</span> size)</span> </span>{</span><br><span class="line">            <span class="keyword">this</span>.size = size;</span><br><span class="line">            root = buildTree(<span class="number">0</span>, size - <span class="number">1</span>);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//初始化得到的是全0的树</span></span><br><span class="line">        <span class="function"><span class="keyword">private</span> SegmentTreeNode <span class="title">buildTree</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            SegmentTreeNode node = <span class="keyword">new</span> SegmentTreeNode(start, end);</span><br><span class="line">            <span class="keyword">if</span> (start == end) {</span><br><span class="line">                <span class="keyword">return</span> node;</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">int</span> mid = (start + end) / <span class="number">2</span>;</span><br><span class="line">            node.left = buildTree(start, mid);</span><br><span class="line">            node.right = buildTree(mid + <span class="number">1</span>, end);</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">querySum</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> querySum(root, start, end);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//在node节点的子树下，查询[start,end]区间内维护的和</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">querySum</span><span class="params">(SegmentTreeNode node, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">            <span class="keyword">if</span> (node.start == start &amp;&amp; node.end == end) {</span><br><span class="line">                <span class="keyword">return</span> node.sum;</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">int</span> leftSum = <span class="number">0</span>, rightSum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">int</span> mid = (node.start + node.end) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span> (start &lt;= mid) {</span><br><span class="line">                leftSum = querySum(node.left, start, Math.min(end, mid));</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (end &gt;= mid + <span class="number">1</span>) {</span><br><span class="line">                rightSum = querySum(node.right, Math.max(start, mid + <span class="number">1</span>), end);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">return</span> leftSum + rightSum;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>{</span><br><span class="line">            modify(root, index, val);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">(SegmentTreeNode node, <span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>{</span><br><span class="line">            <span class="keyword">if</span> (node.start == node.end &amp;&amp; node.end == index) {   <span class="comment">//可以省略node.end == index</span></span><br><span class="line">                node.sum = val;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (node.left.end &gt;= index) {</span><br><span class="line">                modify(node.left, index, val);</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                modify(node.right, index, val);</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//维护当前节点sum</span></span><br><span class="line">            node.sum = node.left.sum + node.right.sum;</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4、LintCode-249-Count-of-Smaller-Number-before-itself"><a href="#4、LintCode-249-Count-of-Smaller-Number-before-itself" class="headerlink" title="4、LintCode 249. Count of Smaller Number before itself"></a>4、LintCode 249. Count of Smaller Number before itself</h3><p>统计前面比自己小的数的个数</p>
+<blockquote>
+<p>给定一个整数数组（下标由 0 到 n-1， n 表示数组的规模，取值范围由 0 到10000）。对于数组中的每个 <code>ai</code> 元素，请计算 <code>ai</code> 前的数中比它小的元素的数量。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入:</span><br><span class="line">[1,2,7,8,5]</span><br><span class="line">输出:</span><br><span class="line">[0,1,2,3,2]</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>时间复杂度：</p>
+<ul>
+<li>暴力，O(n^2^)</li>
+<li>树状数组/线段树，O(nlogk)，n为数组长度，k为数组最大值</li>
+</ul>
+<p>思路：</p>
+<ul>
+<li>数组内范围为0～10000，假设数组B，B[i]表示数组A当前元素之前有多少个i（或者说B[i]表示A中有多少个i，只不过它是实时变化的）。查询比x小的数的个数相当于求B的x-1前缀和，B[0]+B[1]+…+B[x-1]</li>
+</ul>
+<blockquote>
+<p>A=[1,2,7,8,5] </p>
+<p>B=[0,0,0,0,0,0,0,0,0]    初始，这里B得开9，因为0～8一共9位</p>
+<p>B=[0,1,0,0,0,0,0,0,0]     B[1]++，统计比A中第二个元素(2)小的个数，B[0]+B[1]</p>
+<p>B=[0,1,1,0,0,0,0,0,0]     B[2]++，A中第三个元素为7，计算B[0]+…+B[6]</p>
+<p>B=[0,1,1,0,0,0,0,1,1]     B[7]++，A中第四个元素为8，计算B[0]+…+B[7]</p>
+<p>B=[0,1,1,0,0,1,0,1,1]     B[8]++，A中第五个元素为5，计算B[0]+…+B[4]</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>{</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">countOfSmallerNumberII</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        SegmentTree tree = <span class="keyword">new</span> SegmentTree(<span class="number">10001</span>);</span><br><span class="line">        <span class="keyword">int</span>[] B = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10001</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : A) {</span><br><span class="line">            <span class="keyword">if</span> (i == <span class="number">0</span>) {</span><br><span class="line">                res.add(<span class="number">0</span>);</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                res.add(tree.querySum(<span class="number">0</span>, i - <span class="number">1</span>));</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//更新B</span></span><br><span class="line">            B[i]++;</span><br><span class="line">            tree.modify(i, B[i]);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SegmentTreeNode</span></span>{</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> sum;</span><br><span class="line">    <span class="keyword">public</span>  <span class="keyword">int</span> start, end;</span><br><span class="line">    <span class="keyword">public</span> SegmentTreeNode left, right;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SegmentTreeNode</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.start = start;</span><br><span class="line">        <span class="keyword">this</span>.end = end;</span><br><span class="line">        sum = <span class="number">0</span>;</span><br><span class="line">        left = right = <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SegmentTree</span></span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line">    <span class="keyword">private</span> SegmentTreeNode root;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SegmentTree</span><span class="params">(<span class="keyword">int</span> size)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.size = size;</span><br><span class="line">        root = buildTree(<span class="number">0</span>, size - <span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化得到的是全0的树</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> SegmentTreeNode <span class="title">buildTree</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">        SegmentTreeNode node = <span class="keyword">new</span> SegmentTreeNode(start, end);</span><br><span class="line">        <span class="keyword">if</span> (start == end) {</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> mid = (start + end) / <span class="number">2</span>;</span><br><span class="line">        node.left = buildTree(start, mid);</span><br><span class="line">        node.right = buildTree(mid + <span class="number">1</span>, end);</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">querySum</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> querySum(root, start, end);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">//在node节点的子树下，查询[start,end]区间内维护的和</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">querySum</span><span class="params">(SegmentTreeNode node, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (node.start == start &amp;&amp; node.end == end) {</span><br><span class="line">            <span class="keyword">return</span> node.sum;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> leftSum = <span class="number">0</span>, rightSum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> mid = (node.start + node.end) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (start &lt;= mid) {</span><br><span class="line">            leftSum = querySum(node.left, start, Math.min(end, mid));</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (end &gt;= mid + <span class="number">1</span>) {</span><br><span class="line">            rightSum = querySum(node.right, Math.max(start, mid + <span class="number">1</span>), end);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> leftSum + rightSum;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>{</span><br><span class="line">        modify(root, index, val);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">(SegmentTreeNode node, <span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (node.start == node.end &amp;&amp; node.end == index) {   <span class="comment">//可以省略node.end == index</span></span><br><span class="line">            node.sum = val;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (node.left.end &gt;= index) {</span><br><span class="line">            modify(node.left, index, val);</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            modify(node.right, index, val);</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//维护当前节点sum</span></span><br><span class="line">        node.sum = node.left.sum + node.right.sum;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Segment-Tree/">#Segment Tree</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/02/19/JVM1/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">初识JVM</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/12/11/dp-double-sequence/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">双序列型动态规划</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E6%AE%B5%E6%A0%91"><span class="nav-text">线段树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%BA%BF%E6%AE%B5%E6%A0%91%E8%8A%82%E7%82%B9%E5%AE%9A%E4%B9%89"><span class="nav-text">一、线段树节点定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%BA%BF%E6%AE%B5%E6%A0%91%E7%9A%84%E6%9E%84%E5%BB%BA%E3%80%81%E4%BF%AE%E6%94%B9%E3%80%81%E6%9F%A5%E8%AF%A2"><span class="nav-text">二、线段树的构建、修改、查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%9E%84%E5%BB%BA"><span class="nav-text">1、构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BF%AE%E6%94%B9"><span class="nav-text">2、修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E6%9F%A5%E8%AF%A2"><span class="nav-text">3、查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%BA%BF%E6%AE%B5%E6%A0%91%E6%80%A7%E8%B4%A8"><span class="nav-text">三、线段树性质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%A2%98%E7%9B%AE%E7%BB%83%E4%B9%A0"><span class="nav-text">四、题目练习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81LintCode-206-Interval-Sum"><span class="nav-text">1、LintCode 206. Interval Sum</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81LintCode-207-Interval-Sum"><span class="nav-text">2、LintCode 207.  Interval Sum</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81LintCode-248-Count-of-Smaller-Number"><span class="nav-text">3、LintCode 248. Count of Smaller Number</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81LintCode-249-Count-of-Smaller-Number-before-itself"><span class="nav-text">4、LintCode 249. Count of Smaller Number before itself</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

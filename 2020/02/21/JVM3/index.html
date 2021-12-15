@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            JVM垃圾回收机制详解 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">JVM垃圾回收机制详解</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-02-21 23:15:48</span>
+        <span class="mobile">2020-02-21 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/JVM/">JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="JVM-垃圾回收机制详解"><a href="#JVM-垃圾回收机制详解" class="headerlink" title="JVM 垃圾回收机制详解"></a>JVM 垃圾回收机制详解</h1><h2 id="一、GC-Roots的类型"><a href="#一、GC-Roots的类型" class="headerlink" title="一、GC Roots的类型"></a>一、GC Roots的类型</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JVM使用了<code>可达性分析算法</code>，该算法会分析每个对象，看有谁在引用他，一层层判断有没有一个<code>GC Roots</code>，在JVM规范中，<strong>局部变量</strong>是可以作为<code>GC Roots</code>的，只要一个类的对象被局部变量引用了，那就说明有一个<code>GC Roots</code>，就不能被回收了。当然，<strong>静态变量</strong>也可以看作是一种<code>GC Roots</code>。<strong>总结下来就是，只要你的对象被方法的局部变量或是类的静态变量引用了，就不能回收它。</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;至此我们知道回收和引 用有关，Java中有四种引用类型，它们分别是：<code>强引用</code>、<code>软引用</code>、<code>弱引用</code>和<code>虚引用</code>，针对不同的引用类型又有不同的回收策略：</p>
+<ul>
+<li><p><code>强引用</code>：一个变量引用一个对象。<strong>只要是强引用，垃圾回收时绝对不会去回收这个对象。</strong></p>
+</li>
+<li><p>```java<br>public class Kafka {</p>
+<pre><code>private static ReplicaManager replicaManager = new ReplicaManager();
+</code></pre>
+<p>}</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- `软引用`：通过`SoftReference`软引用类型把`ReplicaManager`类的对象直接包裹起来，这时候`replicaManager`对`ReplicaManager`类的对象就是软引用。**正常垃圾回收不会回收软引用对象，只有当垃圾回收之后，发现内存还是不够存放新对象时，内存要溢出时，才会去回收软引用的对象。**</span><br><span class="line"></span><br><span class="line">- ```java</span><br><span class="line">  public class Kafka &#123;</span><br><span class="line">      private static SoftReference&lt;ReplicaManager&gt; replicaManager = </span><br><span class="line">              new SoftReference&lt;&gt;(new ReplicaManager());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>弱引用</code>：通过<code>WeakReference</code>软引用类型把<code>ReplicaManager</code>类的对象直接包裹起来，这样静态变量持有的<code>ReplicaManager</code>类对象就是弱引用的了。<strong>弱引用就跟没有一样，垃圾回收直接回收掉。</strong></p>
+</li>
+<li><p>```java<br>public class Kafka {</p>
+<pre><code>private static WeakReference&lt;ReplicaManager&gt; replicaManager =
+        new WeakReference&lt;&gt;(new ReplicaManager());
+</code></pre>
+<p>}</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- `虚引用`：很少使用</span><br><span class="line"></span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;**总结**：有`GC Roots`引用的对象不能回收，没有引用的可以回收，强引用不能回收，对于软引用，如果回收后内存依旧不够放入新的对象，就回收软引用的对象了。</span><br><span class="line"></span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;当然，如果我们不想没有GC Roots的对象立即被回收，我们可与使用重写Object的`finalize()`方法来拯救一下，这东西很少用，知道一下即可。</span><br><span class="line"></span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;有下面这么一段代码，ReplicaFetcher的对象会被回收掉嘛？</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">public class Kafka &#123;</span><br><span class="line">    private static ReplicaManager replicaManager = new ReplicaManager();</span><br><span class="line">&#125;</span><br><span class="line">public class ReplicaManager &#123;</span><br><span class="line">    private ReplicaFetcher replicaFetcher = new ReplicaFetcher();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;肯定是不会的，<code>ReplicaFetcher</code>类的对象被<code>ReplicaManager</code>类的<code>replicaFetcher</code>强引用着，而<code>ReplicaManager</code>类的对象被可作为GC Root的静态变量<code>replicaManager</code>强引用着，所以<code>ReplicaFetcher</code>对象可以向上找到GC Root，因此不会被回收。</p>
+<h2 id="二、针对新生代的垃圾回收算法——复制算法"><a href="#二、针对新生代的垃圾回收算法——复制算法" class="headerlink" title="二、针对新生代的垃圾回收算法——复制算法"></a>二、针对新生代的垃圾回收算法——复制算法</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;背景：对于新生代，一种不太好的垃圾回收思路是直接对新生代里的垃圾对象进行标记，然后直接对垃圾进行回收，这样的缺陷是引入了许多内存碎片，内存碎片导致了内存的浪费，我们没有了完整的连续的内存空间是很难受的一件事。在这改进一下，我们可以将新生代内存空间划分为两部分，对<strong>不回收</strong>的对象进行标记，转移到另一块区域中顺便整理下，然后把另一块区域里的垃圾干掉，这就是所谓的复制算法。如下图</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304171904248.png"
+                     
+                ><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为什么标记不回收的呢？因为新生代里存放的对象大都是存活时间很短的，所以不回收的只是很少一部分，标记速度更快，如果标记回收的，就不合适了。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;但是复制算法有缺点，因为我们永远只有一半内存可以使用，另一半放垃圾，这样转移，使得内存使用效率太低了。所以对复制算法进行了优化。因为新生代放的都是存活时期非常短的对象，极端情况比如99%的垃圾1%有用的。实际上新生代内存区被划分为三部分：1块<code>Eden</code>区，2块<code>Survivor</code>区。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;初始对象都是优先被分配在<code>Eden</code>区的，如果<code>Eden</code>区快满了就触发<code>Minor GC</code>，把<code>Eden</code>中存活的对象全部转移到空的<code>Survivor</code>区，接着清空<code>Eden</code>中的垃圾，再次配分对象到<code>Eden</code>。由于存活的对象较少，所以给Survivor区域分配的内存就较少，当然看实际场景来分配。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304171914949.png"
+                     
+                ></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>如果<code>Survivor</code>一个区域中都放满了，并且<code>Eden</code>区域中也占满了，但是垃圾回收后可能就只有10M对象活着，只要把那10MB对象转移到另一块<code>Survivor</code>区域中即可，之后把第一块<code>Survivor</code>区域和<code>Eden</code>区域中垃圾全部回收，这样始终保证着有一块<code>Survivor</code>区域是空的。</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304171932766.png"
+                     
+                ></p>
+<h2 id="三、针对老年代的垃圾回收算法——标记整理算法"><a href="#三、针对老年代的垃圾回收算法——标记整理算法" class="headerlink" title="三、针对老年代的垃圾回收算法——标记整理算法"></a>三、针对老年代的垃圾回收算法——标记整理算法</h2><h3 id="1、进入老年代的几种情况"><a href="#1、进入老年代的几种情况" class="headerlink" title="1、进入老年代的几种情况"></a>1、进入老年代的几种情况</h3><h4 id="（1）躲过15次GC（当然我们可以自己设置次数）"><a href="#（1）躲过15次GC（当然我们可以自己设置次数）" class="headerlink" title="（1）躲过15次GC（当然我们可以自己设置次数）"></a>（1）躲过15次GC（当然我们可以自己设置次数）</h4><h4 id="（2）大对象直接进入老年代"><a href="#（2）大对象直接进入老年代" class="headerlink" title="（2）大对象直接进入老年代"></a>（2）大对象直接进入老年代</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;通过<code>-XX:PretenureSizeThreshold</code>把值设置成字节数，创建的对象大于这个值就直接进入老年代，之所以这么做是避免新生代里的大对象屡次躲过GC还要在三个区域来回复制，耗费时间。</p>
+<h4 id="（3）动态对象年龄判断"><a href="#（3）动态对象年龄判断" class="headerlink" title="（3）动态对象年龄判断"></a>（3）动态对象年龄判断</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;比如当前放对象的Survivor区域里，一批对象的总大小，大于这块Survivor区域的内存大小的50%，那么此时大于等于这批对象年龄的对象就直接进入老年代</p>
+<ul>
+<li>假设100MB的Survivor中有俩对象，年龄都是2岁，但是俩对象加起来超过了50MB，也就是超过了一半了，这个时候，Survivor中大于等于2岁的对象都要进入老年代里去。</li>
+<li>避免动态年龄判断的方式：如果新生代内存有限，可以调整<code>-XX:SurvivorRatio=8</code>这个参数，默认是说Eden区比例为80%，也可以降低Eden区的比例，给两块Survivor区更多的内存空间，然后让每次Minor GC后的对象进入Survivor区中，还可以避免动态年龄判定规则直接把他们升入老年代。</li>
+</ul>
+<h4 id="（4）空间分配担保规则"><a href="#（4）空间分配担保规则" class="headerlink" title="（4）空间分配担保规则"></a>（4）空间分配担保规则</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Minor GC后发现对象太多，放不进Survivor区，就必须直接转移到老年代区的情况。<strong>在执行任何一次<code>Micro GC</code>前，JVM都会检查老年代的可用空间是否大于新生代所有对象的总大小</strong>，记住，是<strong>新生代所有对象总大小</strong>，因为极端情况下新生代可能所有对象都活下来了。下面就有两种情况了。</p>
+<ul>
+<li><strong>第一种情况</strong>：老年代剩余内存大小大于新生代所有对象总大小，放心<code>Minor GC</code>吧！即使你的Survivor区域放不下也可以放老年代去；</li>
+<li><strong>第二种情况：</strong>老年代剩余内存大小小于新生代所有对象总大小，此时就会看<code>-XX:HandlePromotionFailure</code>参数是否设置了，若设置了，则会看老年代可用内存大小是否大于<strong>之前每一次Minor GC后进入老年代的对象的平均大小</strong>，如果不是，只能<code>Full GC</code>,即对老年代里的对象进行回收，才能让剩余存活对象进入老年代。如果是，则可以冒险尝试下<code>Minor GC</code>，但这个尝试也是有三种可能：<br>&emsp;<strong>可能一：</strong><code>Minor GC</code>后，剩余存活对象比<code>Survivor</code>区还小，就直接放进<code>Survivor</code>中<br>&emsp;<strong>可能二：</strong><code>Minor GC</code>后，剩余存活对象大于<code>Survivor</code>区，小于老年代可用区，即直接进入老年代<br>&emsp;<strong>可能三：</strong><code>Minor GC</code>后，剩余存活对象大于老年代可用区，放不下了，这时候就会触发<code>Full GC</code>，要是<code>Full GC</code>后还是放不下，直接导致<code>OOM内存溢出</code>。</li>
+</ul>
+<p>&emsp;&emsp;<strong>简介：空间担保机制是看老年代可用空间是否大于新生代所有对象总大小的，如果成立了，那么Minor GC就是安全的，如果不成立，则看<code>HandlerPromotionFailure</code>是否设置为true，true则允许担保失败，如果允许，则检查老年代可用连续空间是否大于历次晋升到老年代对象的平均大小，如果大于，则尝试Minor GC，如果小于，则Full GC。<br>&emsp;&emsp;实际上<code>-XX:HandlePromotionFailure</code>参数在JDK 1.6以后就被废弃了，所以现在一般都不会在生产环境里设置这个参数了。JDK 1.6之前是把空间担保机制和<code>HandlerPromotionFailure</code>参数拆开了，JDK 1.6之后的空间担保机制只要满足”老年代可用连续空间 &gt; 新生代对象总大小或历次晋升到老年代对象的平均大小”其中一个就可，不满足就Full GC。</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304171950708.png"
+                     
+                ></p>
+<h3 id="2、老年代Full-GC算法——标记整理算法"><a href="#2、老年代Full-GC算法——标记整理算法" class="headerlink" title="2、老年代Full GC算法——标记整理算法"></a>2、老年代Full GC算法——标记整理算法</h3><p>&emsp;&emsp;顾名思义，标记整理就是把老年代里活着的对象整理，紧凑在一起，避免垃圾回收后出现内存碎片。注意<code>Full GC</code>的速度比<code>Minor GC</code>慢10多倍，如果频繁出现<code>Full GC</code>就影响了系统性能，出现卡顿，但是你多两次<code>Minor GC</code>无关紧要，反正速度很快。</p>
+<p>&emsp;&emsp;所以，所谓JVM优化，就是尽量能让对象在新生代里进行分配和回收，别让太多对象进入老年代，避免对老年代的频繁<code>Full GC</code>，同时要给系统足够的内存大小来避免新生代频繁的<code>Minor GC</code>。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304172009272.png"
+                     
+                ></p>
+<p>未回收前</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304172023156.png"
+                     
+                ></p>
+<p>回收后</p>
+<p><strong>为什么老年代不用复制算法？</strong></p>
+<p>&emsp;&emsp;因为老年代存活的对象太多了，如果用复制算法，每次挪动90%的对象很不方便，所以采用标记回收，把有用的挪到一边，然后回收垃圾，是很好的一个方式。</p>
+<h3 id="3、针对第三节面试会问的问题"><a href="#3、针对第三节面试会问的问题" class="headerlink" title="3、针对第三节面试会问的问题"></a>3、针对第三节面试会问的问题</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(1)、什么时候会尝试触发Minor GC？ </span><br><span class="line">答：当新生代的Eden区和其中一个Survivor区空间不足时。</span><br><span class="line"></span><br><span class="line">(2)、什么时候会尝试触发Full GC？</span><br><span class="line">答：</span><br><span class="line">第一是老年代可用内存小于新生代全部对象的大小，如果没开启空间担保参数，会直接触发Full GC，所以一般空间担保参数都会打开；</span><br><span class="line">第二是老年代可用内存小于历次新生代GC后进入老年代的平均对象大小，此时会提前Full GC；</span><br><span class="line">第三是新生代Minor GC后的存活对象大于Survivor，那么就会进入老年代，此时老年代内存不足，就要Full GC；</span><br><span class="line">第四是是“-XX:CMSInitiatingOccupancyFaction”参数的设置，当老年代中的对象到达这个比例时就会GC；</span><br><span class="line">（老年代可用内存大于历次新生代GC后进入老年代的对象平均大小，但是老年代已经使用的内存空间超过了这个参数指定的比例，也会自动触发Full GC）</span><br><span class="line"></span><br><span class="line">(3)、触发Minor GC之前会如何检查老年代大小，涉及哪几个步骤和条件？ </span><br><span class="line">答：</span><br><span class="line">1、先判断新生代中所有对象的大小是否 小于 老年代的可用区域 true 则 触发Minor GC，false则继续进行下面2中的判断 </span><br><span class="line">2、如果设置了-XX:HandlePromotionFailure这个参数，那么进入第3步 如果没有设置-XX:HandlePromotionFailure参数，那么触发Full GC </span><br><span class="line"></span><br><span class="line">(4)、什么时候在Minor GC之前就会提前触发一次Full GC？ </span><br><span class="line">答：当判断 新生代历次进入老年代对象的平均大小 大于 老年代的可用区域就会触发一次Full GC，让老年代腾出一些空间，腾出空间后再进行Minor GC。 </span><br><span class="line"></span><br><span class="line">(5)、Minor GC过后可能对应哪几种情况？ </span><br><span class="line">答： </span><br><span class="line">情况1：Minor GC前先判断：存活的对象所占的内存空间 &lt; Survivor区域内存空间的大小，那么存活的对象进入Survivor区。 </span><br><span class="line">情况2：Minor GC前先判断：Survivor区域内存空间的大小 &lt; 存活的对象所占的内存空间 &lt; 老年代的可用空间大小。那么存活的对象，直接进入老年代。 </span><br><span class="line">情况3：Minor GC前先判断： (存活的对象所占的内存空间 &gt; Survivor区域内存空间的大小) &amp;&amp; (存活的对象所占的内存空间 &gt; 老年代的可用空间大小)。那么会触发Full GC，老年代腾出空间后，再进行Minor GC。如果腾出空间后还不能存放存活的对象，那么会导致OOM即堆内存空间不足、堆内存溢出。 </span><br></pre></td></tr></table></figure>
+
+<h2 id="四、垃圾回收容器简介"><a href="#四、垃圾回收容器简介" class="headerlink" title="四、垃圾回收容器简介"></a>四、垃圾回收容器简介</h2><h3 id="1、抛出问题：垃圾回收的同时能创建对象吗？"><a href="#1、抛出问题：垃圾回收的同时能创建对象吗？" class="headerlink" title="1、抛出问题：垃圾回收的同时能创建对象吗？"></a>1、抛出问题：垃圾回收的同时能创建对象吗？</h3><p>&emsp;&emsp;<strong>不能</strong>！垃圾回收的时候，尽可能要让垃圾收集器专心工作，此时JVM在后台直接进入<code>Stop the World</code>状态，停止我们写的Java系统的所有线程，让我们代码不再运行。一旦回收完毕，就可以恢复线程运行了。这里要注意的就是避免频繁GC，无论是新生代还是老年代，我们都不希望系统隔一段时间卡死一下，这是JVM最需要优化的地方。当然我们可以使用适当的垃圾回收容器来缩短回收的时间。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304172050467.png"
+                     
+                ></p>
+<h3 id="2、垃圾回收容器"><a href="#2、垃圾回收容器" class="headerlink" title="2、垃圾回收容器"></a>2、垃圾回收容器</h3><p>&emsp;&emsp;不同的内存区域使用不同的垃圾回收容器，简单介绍下垃圾回收容器</p>
+<ul>
+<li><p><code>Serial和Serial Old</code>：分别用来回收新生代和老年代对象。工作原理就是单线程运行，回收的时候会停止系统中其他工作线程，现在几乎不用。</p>
+</li>
+<li><p><code>ParNew和CMS</code>：<code>ParNew</code>是用在新生代的回收容器，<code>CMS</code>是用在老年代的回收容器，他们都是多线程并发机制，性能较好，一般是线上系统标配组合。</p>
+</li>
+<li><p><code>G1</code>：统一收集新生代和老年代，采用了更优秀的算法和设计机制</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200304172109733.png"
+                     
+                ><br>多线程回收</p>
+<h2 id="五、捋清概念"><a href="#五、捋清概念" class="headerlink" title="五、捋清概念"></a>五、捋清概念</h2><p>&emsp;&emsp;有很多GC名词需要捋一下：Minor GC、Young GC、Full GC、Old GC、Major GC、Mixed GC。</p>
+<h3 id="1、Minor-GC-与Young-GC"><a href="#1、Minor-GC-与Young-GC" class="headerlink" title="1、Minor GC 与Young GC"></a>1、Minor GC 与Young GC</h3><p>&emsp;&emsp;年轻代 = 新生代，新生代的回收就叫Minor GC或是Young GC</p>
+<h3 id="2、Full-GC与Old-GC"><a href="#2、Full-GC与Old-GC" class="headerlink" title="2、Full GC与Old GC"></a>2、Full GC与Old GC</h3><p>&emsp;&emsp;Full GC就是整体的意思，指的是针对新生代、老年代、永久代的全体内存空间的垃圾回收，所以称之为Full GC，但是说实话，平时习惯就是把Full GC等价为Old GC，也就是仅仅针对老年代的垃圾回收。</p>
+<h3 id="3、Major-GC"><a href="#3、Major-GC" class="headerlink" title="3、Major GC"></a>3、Major GC</h3><p>&emsp;&emsp;有些人把Major GC跟Old GC等价起来，认为他就是针对老年代的GC，也有人把Major GC和Full GC等价起来，认为他是针对JVM全体内存区域的GC。这个概念少提，如果提了，就要问清楚你到底针对整体还是针对老年代。</p>
+<h3 id="4、Mixed-GC"><a href="#4、Mixed-GC" class="headerlink" title="4、Mixed GC"></a>4、Mixed GC</h3><p>&emsp;&emsp;G1中的一个垃圾回收机制，一旦老年代占据堆内存的45%了，就要触发Mixed GC，此时对年轻代和老年代都会进行回收。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/JVM/">#JVM</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/02/22/JVM4/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">JVM新生代回收器之ParNew</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/02/20/JVM2/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">JVM分代模型与内存参数设置</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3"><span class="nav-text">JVM 垃圾回收机制详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81GC-Roots%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">一、GC Roots的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%92%88%E5%AF%B9%E6%96%B0%E7%94%9F%E4%BB%A3%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95"><span class="nav-text">二、针对新生代的垃圾回收算法——复制算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%92%88%E5%AF%B9%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%87%E8%AE%B0%E6%95%B4%E7%90%86%E7%AE%97%E6%B3%95"><span class="nav-text">三、针对老年代的垃圾回收算法——标记整理算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E8%BF%9B%E5%85%A5%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%87%A0%E7%A7%8D%E6%83%85%E5%86%B5"><span class="nav-text">1、进入老年代的几种情况</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E8%BA%B2%E8%BF%8715%E6%AC%A1GC%EF%BC%88%E5%BD%93%E7%84%B6%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E8%87%AA%E5%B7%B1%E8%AE%BE%E7%BD%AE%E6%AC%A1%E6%95%B0%EF%BC%89"><span class="nav-text">（1）躲过15次GC（当然我们可以自己设置次数）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%A4%A7%E5%AF%B9%E8%B1%A1%E7%9B%B4%E6%8E%A5%E8%BF%9B%E5%85%A5%E8%80%81%E5%B9%B4%E4%BB%A3"><span class="nav-text">（2）大对象直接进入老年代</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E5%8A%A8%E6%80%81%E5%AF%B9%E8%B1%A1%E5%B9%B4%E9%BE%84%E5%88%A4%E6%96%AD"><span class="nav-text">（3）动态对象年龄判断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89%E7%A9%BA%E9%97%B4%E5%88%86%E9%85%8D%E6%8B%85%E4%BF%9D%E8%A7%84%E5%88%99"><span class="nav-text">（4）空间分配担保规则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E8%80%81%E5%B9%B4%E4%BB%A3Full-GC%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%87%E8%AE%B0%E6%95%B4%E7%90%86%E7%AE%97%E6%B3%95"><span class="nav-text">2、老年代Full GC算法——标记整理算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E9%92%88%E5%AF%B9%E7%AC%AC%E4%B8%89%E8%8A%82%E9%9D%A2%E8%AF%95%E4%BC%9A%E9%97%AE%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">3、针对第三节面试会问的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%AE%B9%E5%99%A8%E7%AE%80%E4%BB%8B"><span class="nav-text">四、垃圾回收容器简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%8A%9B%E5%87%BA%E9%97%AE%E9%A2%98%EF%BC%9A%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9A%84%E5%90%8C%E6%97%B6%E8%83%BD%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E5%90%97%EF%BC%9F"><span class="nav-text">1、抛出问题：垃圾回收的同时能创建对象吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%AE%B9%E5%99%A8"><span class="nav-text">2、垃圾回收容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%8D%8B%E6%B8%85%E6%A6%82%E5%BF%B5"><span class="nav-text">五、捋清概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81Minor-GC-%E4%B8%8EYoung-GC"><span class="nav-text">1、Minor GC 与Young GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81Full-GC%E4%B8%8EOld-GC"><span class="nav-text">2、Full GC与Old GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81Major-GC"><span class="nav-text">3、Major GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81Mixed-GC"><span class="nav-text">4、Mixed GC</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

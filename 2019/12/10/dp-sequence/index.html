@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            序列型动态规划 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">序列型动态规划</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-12-10 23:15:48</span>
+        <span class="mobile">2019-12-10 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Algorithm/">Algorithm</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Dynamic-programming/">Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p>序列型dp就是序列+状态，直接看几个例子。</p>
+<h3 id="1、LintCode-515-Paint-House"><a href="#1、LintCode-515-Paint-House" class="headerlink" title="1、LintCode 515 Paint House"></a>1、<a target="_blank" rel="noopener" href="https://www.lintcode.com/problem/paint-house/description"><strong>LintCode 515 Paint House</strong></a></h3><p>【问题】这里有<code>n</code>个房子在一列直线上，现在我们需要给房屋染色，分别有红色蓝色和绿色。每个房屋染不同的颜色费用也不同，你需要设计一种染色方案使得<strong>相邻的房屋颜色不同</strong>，并且费用最小，返回最小的费用。费用通过一个<code>nx3</code> 的矩阵给出，比如<code>cost[0][0]</code>表示房屋<code>0</code>染红色的费用，<code>cost[1][2]</code>表示房屋<code>1</code>染绿色的费用。</p>
+<p>【分析】典型的序列型动态规划，序列型动态规划 = 序列+状态。确定状态，一共三种</p>
+<ul>
+<li>如果最优策略中，最后一栋是红色，那么倒数第二栋只能是蓝色或绿色</li>
+<li>如果最优策略中，最后一栋是蓝色，那么倒数第二栋只能是红色或绿色</li>
+<li>如果最优策略中，最后一栋是绿色，那么倒数第二栋只能是蓝色或红色</li>
+</ul>
+<p>那么需要分别记录倒数第二栋房子是红色、蓝色、绿色的最小花费即可，只要最后一栋和倒数第二栋颜色不一样。</p>
+<p>初始条件：序列型dp需要开<code>n+1</code>行，每列表示一种状态，<code>dp[0][0] = dp[0][1] = dp[0][2] = 0</code>，第0栋房子花费是0。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minCost</span><span class="params">(<span class="keyword">int</span>[][] costs)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (costs.length == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> rows = costs.length;</span><br><span class="line">        <span class="comment">//序列型动态规划，一共三种颜色，一共要rows栋房子，另外加一个第0栋存放初始值</span></span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[rows + <span class="number">1</span>][<span class="number">3</span>];</span><br><span class="line">        <span class="comment">//初始化第0栋</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = dp[<span class="number">0</span>][<span class="number">1</span>] = dp[<span class="number">0</span>][<span class="number">2</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//i是第i栋房子</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; dp.length; i++) {</span><br><span class="line">            <span class="comment">//第i栋房子要染成3种颜色种的哪一种</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++) {</span><br><span class="line">                dp[i][j] = Integer.MAX_VALUE;</span><br><span class="line">                <span class="comment">//前i-1栋房子的颜色</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">3</span>; k++) {</span><br><span class="line">                    <span class="keyword">if</span> (j != k) {</span><br><span class="line">                        dp[i][j] = Math.min(dp[i][j], dp[i - <span class="number">1</span>][k] + costs[i-<span class="number">1</span>][j]);</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> Math.min(dp[rows][<span class="number">0</span>], Math.min(dp[rows][<span class="number">1</span>], dp[rows][<span class="number">2</span>]));</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、LintCode-516-Paint-House-II"><a href="#2、LintCode-516-Paint-House-II" class="headerlink" title="2、LintCode 516 Paint House II"></a>2、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/paint-house-ii/">LintCode 516 Paint House II<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】这里有<code>n</code>个房子在一列直线上，现在我们需要给房屋染色，共有<code>k</code>种颜色。每个房屋染不同的颜色费用也不同，你需要设计一种染色方案使得相邻的房屋颜色不同，并且费用最小。费用通过一个<code>nxk</code> 的矩阵给出，比如<code>cost[0][0]</code>表示房屋<code>0</code>染颜色<code>0</code>的费用，<code>cost[1][2]</code>表示房屋<code>1</code>染颜色<code>2</code>的费用。</p>
+<p>【分析】原来是三种颜色，现在变成k种颜色</p>
+<p>第一种写法，直接把刚才的3改成现在的k，时间复杂度O(NK^2^)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">minCostII</span><span class="params">(<span class="keyword">int</span>[][] costs)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (costs == <span class="keyword">null</span> || costs.length == <span class="number">0</span> || costs[<span class="number">0</span>].length == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> n = costs.length;</span><br><span class="line">        <span class="keyword">int</span> m = costs[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][m];     <span class="comment">//序列型</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span>;   <span class="comment">//第0栋耗费为0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//从第一栋房子开始</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="comment">//第一栋房子的三种颜色</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++) {</span><br><span class="line">                dp[i][j] = Integer.MAX_VALUE;</span><br><span class="line">                <span class="comment">//前一栋房子</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; m; k++) {</span><br><span class="line">                    <span class="keyword">if</span> (j != k) {</span><br><span class="line">                        dp[i][j] = Math.min(dp[i][j], dp[i - <span class="number">1</span>][k] + costs[i - <span class="number">1</span>][j]);</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> min = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; dp[<span class="number">0</span>].length; i++) {</span><br><span class="line">            <span class="keyword">if</span> (dp[n][i] &lt; min) {</span><br><span class="line">                min = dp[n][i];</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> min;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>优化：上面的思路每次需要求<code>f[i-1][1], ..., f[i-1][K]</code>中除了一个元素之外，其他元素的最小值。这里解决思路是保存最小值和次小值，首先把<code>f[i-1][1], ..., f[i-1][K]</code>中的最小值和次小值先记录下来。</p>
+<ul>
+<li>如果除掉的元素不是最小值，那剩下的最小值就是最小值它本身</li>
+<li>如果除掉的元素是最小值，那剩下的元素中，最小值就是次小值</li>
+</ul>
+<p>假设i-1栋房子，最小值是<code>f[i-1][a]</code>，次小值是<code>f[i-1][b]</code>，如果第i栋染颜色a，那么最小花费就是加上次小值，否则就是加上最小值。</p>
+<p>时间复杂度O(NK)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">minCostII</span><span class="params">(<span class="keyword">int</span>[][] costs)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (costs == <span class="keyword">null</span> || costs.length == <span class="number">0</span> || costs[<span class="number">0</span>].length == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> n = costs.length;       <span class="comment">//房屋数</span></span><br><span class="line">        <span class="keyword">int</span> m = costs[<span class="number">0</span>].length;    <span class="comment">//颜色个数</span></span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][m];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; dp[<span class="number">0</span>].length; i++) {    <span class="comment">//初始化第一行，第0栋</span></span><br><span class="line">            dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> min1, min2; <span class="comment">//min1存放最小值，min2存放次小值</span></span><br><span class="line">        <span class="keyword">int</span> id1 = <span class="number">0</span>;   <span class="comment">//id1存放最小值的颜色下标，id2存放次小值的颜色下标</span></span><br><span class="line">        <span class="keyword">int</span> id2 = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            min1 = min2 = Integer.MAX_VALUE;</span><br><span class="line">            <span class="comment">//第i-1栋房子的最小花费和次小花费</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++) {</span><br><span class="line">                <span class="comment">//如果当前值比最小值还小，就把最小值先传递给次小值，再更新最小值,其次还要更新id</span></span><br><span class="line">                <span class="keyword">if</span> (dp[i - <span class="number">1</span>][j] &lt; min1) {</span><br><span class="line">                    min2 = min1;</span><br><span class="line">                    id2 = id1;</span><br><span class="line">                    min1 = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                    id1 = j;</span><br><span class="line">                }</span><br><span class="line">                <span class="comment">//如果当前值比次小值小，但比最小值大，只需要更新次小值</span></span><br><span class="line">                <span class="keyword">else</span> {</span><br><span class="line">                    <span class="keyword">if</span> (dp[i - <span class="number">1</span>][j] &lt; min2) {</span><br><span class="line">                        min2 = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                        id2 = j;</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++) {</span><br><span class="line">                <span class="comment">//如果和i-1栋颜色不一样,那就直接加最小值，否则加次小值</span></span><br><span class="line">                <span class="keyword">if</span> (j != id1) {</span><br><span class="line">                    dp[i][j] += min1 + costs[i - <span class="number">1</span>][j];</span><br><span class="line">                } <span class="keyword">else</span> {</span><br><span class="line">                    dp[i][j] += min2 + costs[i - <span class="number">1</span>][j];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> res = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; dp[<span class="number">0</span>].length; j++) {</span><br><span class="line">            <span class="keyword">if</span> (res &gt; dp[n][j]) {</span><br><span class="line">                res = dp[n][j];</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、LintCode-392-House-Robber"><a href="#3、LintCode-392-House-Robber" class="headerlink" title="3、LintCode 392 House Robber"></a>3、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/house-robber/">LintCode 392 House Robber<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】假设你是一个专业的窃贼，准备沿着一条街打劫房屋。每个房子都存放着特定金额的钱。你面临的唯一约束条件是：相邻的房子装着相互联系的防盗系统，且 <strong>当相邻的两个房子同一天被打劫时，该系统会自动报警</strong>。给定一个非负整数列表，表示每个房子中存放的钱， 算一算，如果今晚去打劫，<strong>在不触动报警装置的情况下</strong>, 你最多可以得到多少钱 。</p>
+<p>简而言之，不能偷相邻两家，求最多能偷多少金币。</p>
+<p>【分析】从最后一步出发，最后一栋房子i是偷还是不偷</p>
+<ul>
+<li>偷i，结果 = 第i栋的金币数 + 前i-2（包括i-2）栋偷得的总额</li>
+<li>不偷i，结果 = 前 i-1（包括i-1） 栋房子的最优策略</li>
+</ul>
+<p><strong>两个状态，用0表示不偷，用1表示偷</strong></p>
+<ul>
+<li>第i栋不偷，i-1可偷可不偷，<code>dp[i][0] = max{dp[i-1][0], dp[i-1][1]}</code></li>
+<li>第i栋选择偷，i-1不能偷，<code>dp[i][1] = dp[i-1][0] + A[i-1]</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//一般写法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">houseRobber</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">long</span>[][] dp = <span class="keyword">new</span> <span class="keyword">long</span>[n + <span class="number">1</span>][<span class="number">2</span>];</span><br><span class="line">        <span class="comment">//初始化第0栋房屋</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = dp[<span class="number">0</span>][<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="comment">//不偷</span></span><br><span class="line">            dp[i][<span class="number">0</span>] = Math.max(dp[i - <span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>]);</span><br><span class="line">            <span class="comment">//偷</span></span><br><span class="line">            dp[i][<span class="number">1</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>] + A[i - <span class="number">1</span>];</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> Math.max(dp[n][<span class="number">0</span>], dp[n][<span class="number">1</span>]);</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>简化：偷i栋房子时，i-1肯定不能偷，直接去问前i-2栋一功能偷多少，不偷i栋时，问前i-1栋能偷多少</p>
+<ul>
+<li><code>dp[i] = max{dp[i-1], dp[i-2] + A[i-1]}</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">houseRobber</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">return</span> A[<span class="number">0</span>];</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">long</span>[] dp = <span class="keyword">new</span> <span class="keyword">long</span>[n + <span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;  <span class="comment">//前0栋房子，0</span></span><br><span class="line">        dp[<span class="number">1</span>] = A[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++) {</span><br><span class="line">            dp[i] = Math.max(dp[i - <span class="number">2</span>] + A[i - <span class="number">1</span>], dp[i - <span class="number">1</span>]);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>使用滚动数组优化</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">houseRobber2</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">return</span> A[<span class="number">0</span>];</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">long</span> old = <span class="number">0</span>;   <span class="comment">//dp[0]</span></span><br><span class="line">        <span class="keyword">long</span> now = A[<span class="number">0</span>];    <span class="comment">//dp[1]</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">long</span> t = Math.max(old + A[i - <span class="number">1</span>], now);</span><br><span class="line">            old = now;</span><br><span class="line">            now = t;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> now;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、LintCode-534-House-Robber-II"><a href="#4、LintCode-534-House-Robber-II" class="headerlink" title="4、LintCode 534 House Robber II"></a>4、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/house-robber-ii/">LintCode 534 House Robber II<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】上一题是一排房子，现在是一圈房子，然后不能偷任何挨着的两家，求最多能偷多少金币。</p>
+<p>【分析】现在第一栋房子和最后一栋房子成了邻居，首尾不能同时偷，就有两种情况：①偷第一栋，最后一栋不能偷，②偷最后一栋，第一栋不能偷。所以只要分别计算去头和去尾两种情况，取一个最大值即可。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">houseRobber2</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = nums.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">return</span> nums[<span class="number">0</span>];</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] A = <span class="keyword">new</span> <span class="keyword">int</span>[n - <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">long</span> res = Integer.MIN_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) {</span><br><span class="line">            A[i] = nums[i];     <span class="comment">//去尾的情况</span></span><br><span class="line">        }</span><br><span class="line">        res = Math.max(res, calc(A));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) {</span><br><span class="line">            A[i] = nums[i+<span class="number">1</span>];       <span class="comment">//去头的情况</span></span><br><span class="line">        }</span><br><span class="line">        res = Math.max(res, calc(A));</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>) res;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">calc</span><span class="params">(<span class="keyword">int</span>[] A)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">return</span> A[<span class="number">0</span>];</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">long</span> old = <span class="number">0</span>;   <span class="comment">//dp[0]</span></span><br><span class="line">        <span class="keyword">long</span> now = A[<span class="number">0</span>];    <span class="comment">//dp[1]</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="comment">//now = dp[i-1],old = dp[i-2]</span></span><br><span class="line">            <span class="keyword">long</span> t = Math.max(old + A[i - <span class="number">1</span>], now);</span><br><span class="line">            old = now;</span><br><span class="line">            now = t;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> now;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、LintCode-149-买卖股票的最佳时机I"><a href="#5、LintCode-149-买卖股票的最佳时机I" class="headerlink" title="5、LintCode 149 买卖股票的最佳时机I"></a>5、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/en/problem/best-time-to-buy-and-sell-stock/">LintCode 149 买卖股票的最佳时机I<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】假设有一个数组，它的第i个元素是一支给定的股票在第i天的价格。如果你最多只允许完成一次交易(例如,一次买卖股票),设计一个算法来找出最大利润。</p>
+<p>【分析】维护到当前位置i的最小值，<code>利润 = 当天卖出价格 - 最小值价格</code>，更新res数组</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span>[] prices)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = prices.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span> || n &lt; <span class="number">2</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> minVal = prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            minVal = Math.min(minVal, prices[i]);</span><br><span class="line">            res = Math.max(res, prices[i] - minVal);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+<h3 id="6、LintCode-149-买卖股票的最佳时机II"><a href="#6、LintCode-149-买卖股票的最佳时机II" class="headerlink" title="6、LintCode 149 买卖股票的最佳时机II"></a>6、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/en/problem/best-time-to-buy-and-sell-stock-ii/">LintCode 149 买卖股票的最佳时机II<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】给定一个数组 <code>prices</code> 表示一支股票每天的价格.你可以完成任意次数的交易, 不过你不能同时参与多个交易 (也就是说, 如果你已经持有这支股票, 在再次购买之前, 你必须先卖掉它).设计一个算法求出最大的利润。</p>
+<p>简而言之：I中只能买卖一次，<strong>现在可以买卖任意多次</strong>，任何时刻最多持有一股，求获得的最大利润。</p>
+<p>【分析】贪心，只要今天价格比昨天价格高，就卖掉，这里贪心就是最优的，因为抓住了每一个上升段<br><img lazyload="" src="/images/loading.svg" data-src="https://img-blog.csdnimg.cn/20191208000849515.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDQyNDY2OA==,size_16,color_FFFFFF,t_70"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span>[] prices)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = prices.length;</span><br><span class="line">        <span class="keyword">if</span> (n &lt; <span class="number">2</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="keyword">if</span> (prices[i] - prices[i - <span class="number">1</span>] &gt; <span class="number">0</span>) {		<span class="comment">//只要比昨天价格高，就卖掉</span></span><br><span class="line">                res += prices[i] - prices[i - <span class="number">1</span>];</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="7、LintCode-151-买卖股票的最佳时机III——序列型"><a href="#7、LintCode-151-买卖股票的最佳时机III——序列型" class="headerlink" title="7、LintCode 151 买卖股票的最佳时机III——序列型"></a>7、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/best-time-to-buy-and-sell-stock-iii/">LintCode 151 买卖股票的最佳时机III<i class="fas fa-external-link-alt"></i></a>——序列型</h3><p>【问题】假设你有一个数组，它的第i个元素是一支给定的股票在第i天的价格。设计一个算法来找到最大的利润。<strong>你最多可以完成两笔交易</strong>。你不可以同时参与多笔交易(你必须在再次购买前出售掉之前的股票)</p>
+<p><strong>限定交易次数为2次，不能手里同时有两支股票，可以同一天卖完后买入</strong></p>
+<p>【分析】需要记录已经买卖多少次。最后一步就是最后一次卖掉，发生在第j天，需要枚举最后一次买是在第几天，但不知道之前有没有买卖过，所以<strong>需要记录状态</strong>，一共五种状态如下所示<br><img lazyload="" src="/images/loading.svg" data-src="https://img-blog.csdnimg.cn/20191208000901298.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDQyNDY2OA==,size_16,color_FFFFFF,t_70"></p>
+<ul>
+<li>阶段1、3、5手里虽然没股票，但是境界不一样，分别是买卖过0次、1次、2次</li>
+<li>阶段2、4是持有股票阶段，可以选择持有股票或卖出</li>
+<li>最优策略必定处于阶段1、3、5，不可能处于2、4，买了不卖，那就亏了。所以需要求在阶段1、阶段3、阶段5时三种清仓状态下的最大获利分别是多少。</li>
+</ul>
+<p>【状态转移方程】</p>
+<ul>
+<li><code>dp[i][j]</code>表示前i天（第i-1）天结束后，在阶段j的最大获利</li>
+<li>阶段1、3、5，无股票状态，两种可能：昨天无股票并保持无股票状态 或 昨天有股票今天卖出<ul>
+<li><code>dp[i][j] = max{dp[i-1][j],dp[i-1][j-1] + prices[i-1] - prices[i-2]}</code></li>
+</ul>
+</li>
+<li>阶段2、4，手里持有股票，两种可能：昨天有股票并保持有股票状态（获利和亏损都有可能，要加上） 或 昨天没股票今天买入<ul>
+<li><code>dp[i][j] = max{dp[i-1][j] + prices[i-1] - prices[i-2],dp[i-1][j-1]}</code></li>
+</ul>
+</li>
+</ul>
+<p>【初始化与边界】</p>
+<ul>
+<li><code>dp[0][1] = 0;dp[0][2] = ... = dp[0][5] = Integer.MIN_VAULE</code></li>
+<li>注意几个边界</li>
+<li>最多买卖两次，必定在清仓状态下获利最多</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span>[] prices)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = prices.length;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][<span class="number">5</span> + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= <span class="number">5</span>; i++) {</span><br><span class="line">            dp[<span class="number">0</span>][i] = Integer.MIN_VALUE;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//遍历n天的价格</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line"></span><br><span class="line">            <span class="comment">//阶段1、3、5，手里不持有股票</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= <span class="number">5</span>; j += <span class="number">2</span>) {</span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                <span class="comment">//肯定是第一个阶段以后的，所以j&gt;1,且上一个阶段dp[i - 1][j - 1]不能为无穷小</span></span><br><span class="line">                <span class="keyword">if</span> (i - <span class="number">2</span> &gt;= <span class="number">0</span> &amp;&amp; j &gt; <span class="number">1</span> &amp;&amp; dp[i - <span class="number">1</span>][j - <span class="number">1</span>] != Integer.MIN_VALUE) {</span><br><span class="line">                    <span class="comment">//继续不持有，或者昨天持有，今天卖掉变为不持有</span></span><br><span class="line">                    dp[i][j] = Math.max(dp[i - <span class="number">1</span>][j], dp[i - <span class="number">1</span>][j - <span class="number">1</span>] + prices[i - <span class="number">1</span>] - prices[i - <span class="number">2</span>]);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">            <span class="comment">//阶段2、4，手里持有股票</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">2</span>; j &lt;= <span class="number">4</span>; j += <span class="number">2</span>) {</span><br><span class="line">                <span class="comment">//从上一个不持有的阶段变为持有</span></span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                <span class="comment">//不用判断j，从阶段2开始，且昨天持有时dp[i - 1][j]不能为无穷小</span></span><br><span class="line">                <span class="keyword">if</span> (i - <span class="number">2</span> &gt;= <span class="number">0</span> &amp;&amp; dp[i - <span class="number">1</span>][j] != Integer.MIN_VALUE) {</span><br><span class="line">                    <span class="comment">//继续持有，继续获利，或是今天才买入</span></span><br><span class="line">                    dp[i][j] = Math.max(dp[i - <span class="number">1</span>][j] + prices[i - <span class="number">1</span>] - prices[i - <span class="number">2</span>], dp[i - <span class="number">1</span>][j - <span class="number">1</span>]);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> Math.max(dp[n][<span class="number">1</span>], Math.max(dp[n][<span class="number">3</span>], dp[n][<span class="number">5</span>]));</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="8、LintCode-393-买卖股票的最佳时机IV"><a href="#8、LintCode-393-买卖股票的最佳时机IV" class="headerlink" title="8、LintCode 393 买卖股票的最佳时机IV"></a>8、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/best-time-to-buy-and-sell-stock-iv/description">LintCode 393 买卖股票的最佳时机IV<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】在买卖股票的最佳时机III的中，买卖次数为2次，在这里变为K次买卖。</p>
+<p>【分析】原来2次买卖股票，分为5个阶段，现在K次买卖，就分成了2K+1次</p>
+<ul>
+<li>阶段<code>1、3、5...2K+1</code>都是没有持有股票的阶段</li>
+<li>阶段<code>2、4、6...2K</code>都是持有股票的阶段</li>
+</ul>
+<p>这样就能直接套买卖股票III中的模版了，但是解题时发现超时，因为当<code>K &gt; N/2</code>时，直接退化为任意次买卖股票了，需要特殊考虑，解题代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span> K, <span class="keyword">int</span>[] prices)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = prices.length;</span><br><span class="line">        <span class="keyword">if</span> (K &gt; n / <span class="number">2</span>) {</span><br><span class="line">            <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) {</span><br><span class="line">                <span class="keyword">if</span> (prices[i] - prices[i - <span class="number">1</span>] &gt; <span class="number">0</span>) {</span><br><span class="line">                    res += prices[i] - prices[i - <span class="number">1</span>];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][<span class="number">2</span> * K + <span class="number">1</span> + <span class="number">1</span>];</span><br><span class="line">            <span class="comment">//初始化</span></span><br><span class="line">            dp[<span class="number">0</span>][<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= <span class="number">2</span> * K + <span class="number">1</span>; i++) {</span><br><span class="line">                dp[<span class="number">0</span>][i] = Integer.MIN_VALUE;</span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">                </span><br><span class="line">                <span class="comment">//阶段1、3、5...2K+1，不持有股票</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= <span class="number">2</span> * K + <span class="number">1</span>; j += <span class="number">2</span>) {</span><br><span class="line">                    <span class="comment">//初始是继续保持不持有的状态</span></span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                    <span class="keyword">if</span> (i &gt;= <span class="number">2</span> &amp;&amp; j &gt; <span class="number">1</span> &amp;&amp; dp[i - <span class="number">1</span>][j - <span class="number">1</span>] != Integer.MIN_VALUE) {</span><br><span class="line">                        <span class="comment">//保持不持有的状态或是昨天有股票，今天卖出</span></span><br><span class="line">                        dp[i][j] = Math.max(dp[i - <span class="number">1</span>][j], dp[i - <span class="number">1</span>][j - <span class="number">1</span>] + prices[i - <span class="number">1</span>] - prices[i - <span class="number">2</span>]);</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">                <span class="comment">//阶段2、4、6...2K，持有股票的阶段</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">2</span>; j &lt;= <span class="number">2</span> * K; j += <span class="number">2</span>) {</span><br><span class="line">                    <span class="comment">//初始是从不持有的阶段过来</span></span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                    <span class="keyword">if</span> (i &gt;= <span class="number">2</span> &amp;&amp; dp[i - <span class="number">1</span>][j] != Integer.MIN_VALUE) {</span><br><span class="line">                        <span class="comment">//继续保持持有阶段并获利，或是昨天没有，今天买入</span></span><br><span class="line">                        dp[i][j] = Math.max(dp[i - <span class="number">1</span>][j] + prices[i - <span class="number">1</span>] - prices[i - <span class="number">2</span>], dp[i - <span class="number">1</span>][j - <span class="number">1</span>]);</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">int</span> res = Integer.MIN_VALUE;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">2</span> * K + <span class="number">1</span>; i += <span class="number">2</span>) {</span><br><span class="line">                res = Math.max(res, dp[n][i]);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="9、LintCode-76-最长上升子序列"><a href="#9、LintCode-76-最长上升子序列" class="headerlink" title="9、LintCode 76 最长上升子序列"></a>9、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/longest-increasing-subsequence/">LintCode 76 最长上升子序列<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】给定一个整数序列，找到最长上升子序列（LIS），返回LIS的长度。<strong>这里可以不连续，因为是子序列，不是子串。</strong></p>
+<p>【分析】假设最长上升子序列是以a[j]结尾的，那么子序列中倒数第二个元素必定比a[j]小</p>
+<ul>
+<li>很容易得出<code>f[j] = max{1, f[i] + 1 | i &lt; j &amp;&amp; a[i] &lt; a[j]}</code>，答案是其中的最大值</li>
+</ul>
+<p>写出如下代码，这里我试着打印子序列的路径，时间复杂度为O(N^2^)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">longestIncreasingSubsequence</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = nums.length;</span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        <span class="keyword">int</span>[] path = <span class="keyword">new</span> <span class="keyword">int</span>[n];    <span class="comment">//记录路径</span></span><br><span class="line">        <span class="keyword">int</span> end = -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> res = Integer.MIN_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            dp[i] = <span class="number">1</span>;</span><br><span class="line">            path[i] = -<span class="number">1</span>;   <span class="comment">//初始路径为-1</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) {</span><br><span class="line">                <span class="keyword">if</span> (nums[j] &lt; nums[i]) {</span><br><span class="line">                    dp[i] = Math.max(dp[i], dp[j] + <span class="number">1</span>);</span><br><span class="line">                    <span class="comment">//如果第i个个来自j处，那就更新</span></span><br><span class="line">                    <span class="keyword">if</span> (dp[i] == dp[j] + <span class="number">1</span>) {</span><br><span class="line">                        path[i] = j;</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            res = Math.max(res, dp[i]);</span><br><span class="line">            <span class="comment">//记下来是在哪结束的</span></span><br><span class="line">            <span class="keyword">if</span> (res == dp[i]) {</span><br><span class="line">                end = i;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] temp = <span class="keyword">new</span> <span class="keyword">int</span>[res];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; temp.length; i++) {</span><br><span class="line">            temp[i] = nums[end];</span><br><span class="line">            end = path[end];</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = temp.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) {</span><br><span class="line">            System.out.print(temp[i] + <span class="string">" "</span>);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>优化：时间复杂度为O(nlogn)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 优化成O(N logN),看到这个就只有二分法了</span></span><br><span class="line"><span class="comment">     * 优化:一旦前面有两个dp值一样了，比如dp[i] = dp[j],并缺nums[i] &gt; nums[j] ，那就只要考虑第j个就可以了</span></span><br><span class="line"><span class="comment">     * 也就是 同样的dp值，存一个坐标，这个坐标对应的nums[index]值最小。那么对于每个dp值，保存一下对应的nums[i]的值</span></span><br><span class="line"><span class="comment">     * 序列是单调上升的，在单调上升中找最后一个比自己小的数用二分法</span></span><br><span class="line"><span class="comment">     * 我们开个数组，数组的下表为dp值，对应存的是该dp值下最小的nums[idx]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//1、使用 binarySearch()</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">longestIncreasingSubsequence</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="keyword">null</span> || nums.length == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> n = nums.length;</span><br><span class="line">        <span class="keyword">int</span>[] a = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {</span><br><span class="line">            <span class="comment">//在a数组的这个区间内找有没有nums[i]，如果key在数组中，则返回搜索值的索引；否则返回-1或“-”（插入点）。插入点是索引键将要插入数组的那一点</span></span><br><span class="line">            <span class="keyword">int</span> index = Arrays.binarySearch(a, <span class="number">0</span>, res, nums[i]);</span><br><span class="line">            <span class="comment">//如果如果这个数比之前的数大，就找不到插入位置，它就会在新位置插入，如果这个数比之前的数小，就会直接覆盖之前的数</span></span><br><span class="line">            <span class="keyword">if</span> (index &lt; <span class="number">0</span>) {</span><br><span class="line">                index = -index - <span class="number">1</span>;</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//把这个数放在插入点上</span></span><br><span class="line">            a[index] = nums[i];</span><br><span class="line">            <span class="keyword">if</span> (index == res) {</span><br><span class="line">                res++;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 使用TreeSet</span></span><br><span class="line"><span class="comment">     * TreeSet基本操作全是log(n)复杂度（欢迎纠正），时间复杂度也一致。</span></span><br><span class="line"><span class="comment">     * TreeSet.ceiling(x)方法可以直接找出set中大于x的最小数字，如果不存在则返回null。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 1. 如果这个数字存在，则删除这个数字，然后把x插入set中，相当于代替该数字。</span></span><br><span class="line"><span class="comment">     * 2. 如果这个数字不存在，说明x大于set中任何数字，直接把x插入set中。</span></span><br><span class="line"><span class="comment">     * 最后返回set的大小即可。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">longestIncreasingSubsequence</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>{</span><br><span class="line">        TreeSet&lt;Integer&gt; set = <span class="keyword">new</span> TreeSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) {</span><br><span class="line">            Integer ceiling = set.ceiling(num);</span><br><span class="line">            <span class="comment">//如果set中大于num的最小数字存在，删除这个数字，放入num</span></span><br><span class="line">            <span class="keyword">if</span> (ceiling != <span class="keyword">null</span>) {</span><br><span class="line">                set.remove(ceiling);</span><br><span class="line">            }</span><br><span class="line">            set.add(num);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> set.size();</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="10、LintCode-602-俄罗斯套娃信封"><a href="#10、LintCode-602-俄罗斯套娃信封" class="headerlink" title="10、LintCode 602 俄罗斯套娃信封"></a>10、<a class="link" target="_blank" rel="noopener" href="https://www.lintcode.com/problem/russian-doll-envelopes/description">LintCode 602 俄罗斯套娃信封<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】给一定数量的信封，带有整数对 <code>(w, h)</code> 分别代表信封宽度和高度。一个信封的宽高均大于另一个信封时可以放下另一个信封。求最多嵌套多少个信封。</p>
+<p>【分析】这个属于最长序列型dp，dp都是从最后一步出发，先考虑最后一步，也就是最后一个信封E<del>i</del>，然后考虑次外层信封，一定是某个E<del>j</del>，并且E<del>j</del>里面嵌套的信封也是最多的。得出</p>
+<ul>
+<li><code>dp[i] = max{1,dp[j] + 1}</code>（①只能这一个信封，②E<del>j</del>能放进E<del>i</del>中）dp[i]表示以信封E<del>i</del>为最外层信封时，最多嵌套层数。</li>
+</ul>
+<p>由于有宽和高两个维度，我们选择一个维度，比如选择宽度，先按照以宽度升序排序</p>
+<p><strong>下面算法是正常思路，但时间复杂度为O(N^2^)，在Lintcode上通过不了，必须要O(nlogn)，但在Leetcode上能通过。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxEnvelopes</span><span class="params">(<span class="keyword">int</span>[][] envelopes)</span> </span>{</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (envelopes == <span class="keyword">null</span> || envelopes.length == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//首先对信封按长度进行升序排序，如果长度一样则按照宽度进行升序排序</span></span><br><span class="line"><span class="comment">/*        Arrays.sort(envelopes, new Comparator&lt;int[]&gt;() {</span></span><br><span class="line"><span class="comment">            @Override</span></span><br><span class="line"><span class="comment">            public int compare(int[] o1, int[] o2) {</span></span><br><span class="line"><span class="comment">                int res = o1[0] - o2[0];    </span></span><br><span class="line"><span class="comment">                if (res == 0) {</span></span><br><span class="line"><span class="comment">                    return o1[1] - o2[1];</span></span><br><span class="line"><span class="comment">                } else {</span></span><br><span class="line"><span class="comment">                    return res;</span></span><br><span class="line"><span class="comment">                }</span></span><br><span class="line"><span class="comment">            }</span></span><br><span class="line"><span class="comment">        });*/</span></span><br><span class="line">  		<span class="comment">//直接用lamda表达式</span></span><br><span class="line">        Arrays.sort(envelopes, Comparator.comparing((<span class="keyword">int</span>[] a) -&gt; a[<span class="number">0</span>]).thenComparing((<span class="keyword">int</span>[] a) -&gt; a[<span class="number">1</span>]));</span><br><span class="line">        <span class="keyword">int</span> n = envelopes.length;</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">        <span class="keyword">int</span> res = Integer.MIN_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="comment">//初始化,别忘记</span></span><br><span class="line">            dp[i] = <span class="number">1</span>;</span><br><span class="line">            <span class="comment">//i前面所有的信封</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) {</span><br><span class="line">                <span class="keyword">if</span> (envelopes[i][<span class="number">0</span>] &gt; envelopes[j][<span class="number">0</span>] &amp;&amp; envelopes[i][<span class="number">1</span>] &gt; envelopes[j][<span class="number">1</span>]) {</span><br><span class="line">                    dp[i] = Math.max(dp[i], dp[j]+<span class="number">1</span>);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            res = Math.max(res, dp[i]);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>使用二分优化，原理和最长上升序列一样</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//使用二分</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxEnvelopes2</span><span class="params">(<span class="keyword">int</span>[][] envelopes)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (envelopes == <span class="keyword">null</span> || envelopes.length == <span class="number">0</span> || envelopes[<span class="number">0</span>] == <span class="keyword">null</span> || envelopes[<span class="number">0</span>].length != <span class="number">2</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 先按 w 升序排序，再按 h 降序 排序！！</span></span><br><span class="line">        <span class="comment">// 然后只需考虑h即可，因为w已经升序排列好，因为h大的在前，所以相同的w下的不同h，只会选择最大的那个h，来看以这个h结尾的最长上升子序列</span></span><br><span class="line">        <span class="comment">// 当w相同的情况下，h高的在前面，也就是说同样w中是不可能满足increasing subsequence的序列存在，所以任何的increasing subsequence的w一定都是升序的</span></span><br><span class="line">        <span class="comment">// 就可以将问题转换为 h 的 Longest Increasing subSequence</span></span><br><span class="line">        Arrays.sort(envelopes, Comparator.comparing((<span class="keyword">int</span>[] a) -&gt; a[<span class="number">0</span>]).thenComparing((<span class="keyword">int</span>[] a) -&gt; a[<span class="number">1</span>], Comparator.reverseOrder()));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> dp[] = <span class="keyword">new</span> <span class="keyword">int</span>[envelopes.length];</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span>[] a : envelopes) {</span><br><span class="line">            <span class="keyword">int</span> index = Arrays.binarySearch(dp, <span class="number">0</span>, len, a[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">if</span> (index &lt; <span class="number">0</span>) {</span><br><span class="line">                index = -index - <span class="number">1</span>;</span><br><span class="line">            }</span><br><span class="line">            dp[index] = a[<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">if</span> (index == len) {</span><br><span class="line">                len++;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> len;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Dynamic-programming/">#Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/12/10/shortest-path-algorithm/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">最短路算法</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/12/02/BinaryIndexTree/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">树状数组</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81LintCode-515-Paint-House"><span class="nav-text">1、LintCode 515 Paint House</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81LintCode-516-Paint-House-II"><span class="nav-text">2、LintCode 516 Paint House II</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81LintCode-392-House-Robber"><span class="nav-text">3、LintCode 392 House Robber</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81LintCode-534-House-Robber-II"><span class="nav-text">4、LintCode 534 House Robber II</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81LintCode-149-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BAI"><span class="nav-text">5、LintCode 149 买卖股票的最佳时机I</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81LintCode-149-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BAII"><span class="nav-text">6、LintCode 149 买卖股票的最佳时机II</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7%E3%80%81LintCode-151-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BAIII%E2%80%94%E2%80%94%E5%BA%8F%E5%88%97%E5%9E%8B"><span class="nav-text">7、LintCode 151 买卖股票的最佳时机III——序列型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8%E3%80%81LintCode-393-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BAIV"><span class="nav-text">8、LintCode 393 买卖股票的最佳时机IV</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9%E3%80%81LintCode-76-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97"><span class="nav-text">9、LintCode 76 最长上升子序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10%E3%80%81LintCode-602-%E4%BF%84%E7%BD%97%E6%96%AF%E5%A5%97%E5%A8%83%E4%BF%A1%E5%B0%81"><span class="nav-text">10、LintCode 602 俄罗斯套娃信封</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

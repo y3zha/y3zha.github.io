@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            LinkedList 源码解读 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">LinkedList 源码解读</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-09-11 23:15:48</span>
+        <span class="mobile">2019-09-11 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JAVA/">JAVA</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Source-Code/">Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h2><p>&emsp;&emsp;底层数据结构是<strong>双向链表</strong>，如图。链表中没数据时，first和last是同一个结点，前后指向null。因为是个双向链表，只要机器内存足够大，没有大小限制。</p>
+<p>内部有一个Node类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">        E item;		<span class="comment">//节点值</span></span><br><span class="line">        Node&lt;E&gt; next;		<span class="comment">//指向后继</span></span><br><span class="line">        Node&lt;E&gt; prev;		<span class="comment">//指向前驱</span></span><br><span class="line"></span><br><span class="line">        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">            <span class="keyword">this</span>.item = element;</span><br><span class="line">            <span class="keyword">this</span>.next = next;</span><br><span class="line">            <span class="keyword">this</span>.prev = prev;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1、-新增"><a href="#1、-新增" class="headerlink" title="1、 新增"></a>1、 新增</h4><p>&emsp;&emsp;追加节点时，我们可以选择追加到链表头部，还是追加到链表尾部，add 方法<strong>默认是从尾部开始追加</strong>，通过移动尾节点的 next 指向，addFirst 方法是从头部开始追加，通过移动头节点的 prev 指向。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">  <span class="comment">//从尾部增加</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">      linkLast(e);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">linkLast</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">//把尾节点数据暂存</span></span><br><span class="line">      <span class="keyword">final</span> Node&lt;E&gt; l = last;</span><br><span class="line">    	<span class="comment">//新建节点，l是新节点的前驱，e为要新增的节点，新增节点的后一个节点为null</span></span><br><span class="line">      <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(l, e, <span class="keyword">null</span>); <span class="comment">//（前驱、本身、后继）</span></span><br><span class="line">    	<span class="comment">//把newNode追加到尾部</span></span><br><span class="line">      last = newNode;</span><br><span class="line">    	<span class="comment">//链表空与不空两种情况</span></span><br><span class="line">      <span class="keyword">if</span> (l == <span class="keyword">null</span>)</span><br><span class="line">          first = newNode;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">          l.next = newNode;</span><br><span class="line">    	<span class="comment">//大小与版本的修改</span></span><br><span class="line">      size++;</span><br><span class="line">      modCount++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//从头部增加</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">      linkFirst(e);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">linkFirst</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">//头节点赋给临时变量</span></span><br><span class="line">      <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    	<span class="comment">//新建节点，新节点前驱为null，e是新建节点，f为后继</span></span><br><span class="line">      <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(<span class="keyword">null</span>, e, f); <span class="comment">//（前驱、本身、后继）</span></span><br><span class="line">      first = newNode;</span><br><span class="line">    	<span class="comment">//判断链表空不空</span></span><br><span class="line">      <span class="keyword">if</span> (f == <span class="keyword">null</span>)</span><br><span class="line">          last = newNode;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">          f.prev = newNode;</span><br><span class="line">    	<span class="comment">//修改大小与版本</span></span><br><span class="line">      size++;</span><br><span class="line">      modCount++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2、-删除"><a href="#2、-删除" class="headerlink" title="2、 删除"></a>2、 删除</h4><p>&emsp;&emsp;节点删除的方式和追加类似，我们可以选择从头部删除，也可以选择从尾部删除，删除操作会把节点的值，前后指向节点都置为 null，帮助 GC 进行回收。贴一个从头部删除</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> removeFirst();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">removeFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="keyword">if</span> (f == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    <span class="keyword">return</span> unlinkFirst(f);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> E <span class="title">unlinkFirst</span><span class="params">(Node&lt;E&gt; f)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//拿出头节点的值作为方法的返回值</span></span><br><span class="line">    <span class="keyword">final</span> E element = f.item;</span><br><span class="line">  	<span class="comment">//拿出头节点的下一个节点</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; next = f.next;</span><br><span class="line">  	<span class="comment">//帮助GC回收</span></span><br><span class="line">    f.item = <span class="keyword">null</span>;</span><br><span class="line">    f.next = <span class="keyword">null</span>; <span class="comment">// help GC</span></span><br><span class="line">  	<span class="comment">//头节点的下一个节点成为头节点</span></span><br><span class="line">    first = next;</span><br><span class="line">  	<span class="comment">//如果 next 为空，表明链表为空</span></span><br><span class="line">    <span class="keyword">if</span> (next == <span class="keyword">null</span>)</span><br><span class="line">        last = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      	<span class="comment">//链表不为空，头节点的前一个节点指向 null</span></span><br><span class="line">        next.prev = <span class="keyword">null</span>;</span><br><span class="line">  	<span class="comment">//修改大小与版本</span></span><br><span class="line">    size--;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、-查询"><a href="#3、-查询" class="headerlink" title="3、 查询"></a>3、 查询</h4><p>&emsp;&emsp;链表查询某一个节点是比较慢的，需要挨个循环查找才行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Node&lt;E&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line"><span class="comment">//如果 index 处于队列的前半部分，从头开始找，否则从后面开始找</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; (size &gt;&gt; <span class="number">1</span>)) &#123;</span><br><span class="line">        Node&lt;E&gt; x = first;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++)</span><br><span class="line">            x = x.next;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Node&lt;E&gt; x = last;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = size - <span class="number">1</span>; i &gt; index; i--)</span><br><span class="line">            x = x.prev;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;LinkedList 并没有采用从头循环到尾的做法，而是采取了简单二分 法，首先看看 index 是在链表的前半部分，还是后半部分。如果是前半部分，就从头开始寻 找，反之亦然。通过这种方式，使循环的次数至少降低了一半，提高了查找的性能。</p>
+<h4 id="4、-方法对比"><a href="#4、-方法对比" class="headerlink" title="4、 方法对比"></a>4、 方法对比</h4><table>
+<thead>
+<tr>
+<th>方法含义</th>
+<th>返回异常</th>
+<th>返回特殊值</th>
+<th>底层实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>新增节点</td>
+<td>add(e)</td>
+<td>offer(e)</td>
+<td>底层实现相同</td>
+</tr>
+<tr>
+<td>删除节点</td>
+<td>remove(e)</td>
+<td>poll(e)</td>
+<td>链表为空时，remove 会抛出异常，poll 返回 null。</td>
+</tr>
+<tr>
+<td>查找节点</td>
+<td>element(e)</td>
+<td>peek()</td>
+<td>链表为空时，element 会抛出异常，peek 返回 null。</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedList</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractSequentialList</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">   <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt;, <span class="title">Deque</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;LinkedList 也实现了 Deque 接口，对新增、删除和查找都提供从头开始，还是从尾开始两种方向的方法，比如 remove 方法，Deque 提供了 removeFirst 和 removeLast 两种方向的使用方式，但当链表为空时的表现都和 remove 方法一样，都会抛出异常。</p>
+<h4 id="5、-迭代器"><a href="#5、-迭代器" class="headerlink" title="5、 迭代器"></a>5、 迭代器</h4><p>&emsp;&emsp;因为 LinkedList 要实现双向的迭代访问，所以我们使用 Iterator 接口肯定不行了，因为 Iterator 只支持从头到尾的访问。Java 新增了一个迭代接口，叫做ListIterator，这个接口提供了向前和向后的迭代方法。</p>
+<table>
+<thead>
+<tr>
+<th align="left">迭代顺序</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">从头到尾迭代方法</td>
+<td>hasNext、next、nextIndex</td>
+</tr>
+<tr>
+<td align="left">从尾到头迭代方法</td>
+<td>hasPrevious、previous、previousIndex</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ListItr</span> <span class="keyword">implements</span> <span class="title">ListIterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;E&gt; lastReturned;	<span class="comment">//上一次执行 next() 或者 previos() 方法时的节点位置</span></span><br><span class="line">    <span class="keyword">private</span> Node&lt;E&gt; next;	<span class="comment">//下一个节点</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> nextIndex;	<span class="comment">//下一个节点的位置</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> expectedModCount = modCount;	<span class="comment">//期望版本号与目标版本号</span></span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> nextIndex &lt; size;	<span class="comment">// 下一个节点的索引小于链表的大小，就有</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      	<span class="comment">//检查期望版本号有无发生变化</span></span><br><span class="line">        checkForComodificaction();</span><br><span class="line">      	<span class="comment">//再次检查</span></span><br><span class="line">        <span class="keyword">if</span> (!hasNext())</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">		<span class="comment">//把上一个节点位置改为当前节点</span></span><br><span class="line">        lastReturned = next;</span><br><span class="line">      	<span class="comment">// next 是下一个节点了，为下次迭代做准备</span></span><br><span class="line">        next = next.next;</span><br><span class="line">        nextIndex++;</span><br><span class="line">      	<span class="comment">//返回节点值</span></span><br><span class="line">        <span class="keyword">return</span> lastReturned.item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//从尾到头迭代	</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasPrevious</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> nextIndex &gt; <span class="number">0</span>;	<span class="comment">// 如果上次节点索引位置大于 0，就还有节点可以迭代</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">// 取前一个节点</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> E <span class="title">previous</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line">        <span class="keyword">if</span> (!hasPrevious())</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">		<span class="comment">// next 为空场景:1:说明是第一次迭代，取尾节点(last);2:上一次操作把尾节点删除掉了</span></span><br><span class="line">      	<span class="comment">// next 不为空场景:说明已经发生过迭代了，直接取前一个节点即可(next.prev)</span></span><br><span class="line">        lastReturned = next = (next == <span class="keyword">null</span>) ? last : next.prev;</span><br><span class="line">      	<span class="comment">// 索引位置变化</span></span><br><span class="line">        nextIndex--;</span><br><span class="line">        <span class="keyword">return</span> lastReturned.item;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  	<span class="comment">//迭代器删除</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line">      	<span class="comment">// lastReturned 是本次迭代需要删除的值，分以下空和非空两种情况:</span></span><br><span class="line">		<span class="comment">// lastReturned 为空，说明调用者没有主动执行过 next() 或者 previos()，直接报错</span></span><br><span class="line">      	<span class="comment">// lastReturned 不为空，是在上次执行 next() 或者 previos()方法时赋的值</span></span><br><span class="line">        <span class="keyword">if</span> (lastReturned == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line"></span><br><span class="line">        Node&lt;E&gt; lastNext = lastReturned.next;</span><br><span class="line">      	<span class="comment">//删除当前节点</span></span><br><span class="line">        unlink(lastReturned);</span><br><span class="line">        <span class="keyword">if</span> (next == lastReturned)</span><br><span class="line">            next = lastNext;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            nextIndex--;</span><br><span class="line">        lastReturned = <span class="keyword">null</span>;</span><br><span class="line">        expectedModCount++;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6、-面试问题"><a href="#6、-面试问题" class="headerlink" title="6、 面试问题"></a>6、 面试问题</h4><p>（1）<strong>ArrayList 和 LinkedList 有何不同?</strong></p>
+<blockquote>
+<p>答:先从底层数据结构开始说起，然后以某一个方法为突破口深入，比如:最大的不同是两者底层的数据结构不同，ArrayList 底层是数组，LinkedList 底层是双向链表，两者的数据结构不同也导致了操作的 API 实现有所差异，拿新增实现来说，ArrayList 会先计算并决定是否扩容，然后把新增的数据直接赋值到数组上，而 LinkedList 仅仅只需要改变插入节点和其前后节点的指向位置关系即可。</p>
+</blockquote>
+<p>（2）<strong>ArrayList 和 LinkedList 应用场景有何不同</strong></p>
+<blockquote>
+<p>答:ArrayList 更适合于快速的查找匹配，不适合频繁新增删除，像工作中经常会对元素进行匹 配查询的场景比较合适，LinkedList 更适合于经常新增和删除，对查询反而很少的场景。</p>
+</blockquote>
+<p>（3）<strong>ArrayList 和 LinkedList 两者有没有最大容量</strong></p>
+<blockquote>
+<p>答:ArrayList 有最大容量的，为 Integer 的最大值，LinkedList 底层是双向链表，理论上可以无限大,但源码中，LinkedList 实际大小用 的是 int 类型，这也说明了 LinkedList 不能超过 Integer 的最大值，不然会溢出。</p>
+</blockquote>
+<p>（4）<strong>ArrayList 和 LinkedList 是如何对 null 值进行处理的</strong></p>
+<blockquote>
+<p>答:ArrayList 允许 null 值新增，也允许 null 值删除。删除 null 值时，是从头开始，找到第一个值是 null 的元素删除，LinkedList 也是允许null值的新增和删除的。</p>
+</blockquote>
+<p>（5）<strong>ArrayList 和 LinedList 是线程安全的么，为什么?</strong></p>
+<blockquote>
+<p>答:当两者作为非共享变量时，比如说仅仅是在方法里面的局部变量时，是没有线程安全问题 的，只有当两者是共享变量时，才会有线程安全问题。</p>
+</blockquote>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Source-Code/">#Source Code</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/09/12/SourceCode-HashMap/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">HashMap 源码解读</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/09/10/SourceCode-ArrayList/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">ArrayList 源码解读</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedList"><span class="nav-text">LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81-%E6%96%B0%E5%A2%9E"><span class="nav-text">1、 新增</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81-%E5%88%A0%E9%99%A4"><span class="nav-text">2、 删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81-%E6%9F%A5%E8%AF%A2"><span class="nav-text">3、 查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%E3%80%81-%E6%96%B9%E6%B3%95%E5%AF%B9%E6%AF%94"><span class="nav-text">4、 方法对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5%E3%80%81-%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="nav-text">5、 迭代器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6%E3%80%81-%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98"><span class="nav-text">6、 面试问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text"></span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

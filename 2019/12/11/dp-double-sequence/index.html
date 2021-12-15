@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="y3zha">
+    
+    <title>
+        
+            双序列型动态规划 |
+        
+        y3zha&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.png">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpg","favicon":"/images/logo.png","article_img_align":"center","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":false,"background_img":"/images/bg.svg","description":"Keep on keeping on."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                y3zha&#39;s blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">双序列型动态规划</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">y3zha</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2019-12-11 23:15:48</span>
+        <span class="mobile">2019-12-11 23:15</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Algorithm/">Algorithm</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Dynamic-programming/">Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="动态规划：双序列型"><a href="#动态规划：双序列型" class="headerlink" title="动态规划：双序列型"></a>动态规划：双序列型</h2><p><strong>双序列型</strong>，就是有两个子序列/字符串，每个序列本身是一维的，可以转换为二维dp，序列型开数组开n+1，双序列型也是开n+1。</p>
+<p><strong>突破口</strong>：看串A和串B的最后一个字符是否匹配，是否需要串A/串B的最后一个字符，来缩减规模。</p>
+<p><strong>两种类型</strong>：计数型：情况1+情况2+…以及最值型min/max{情况1，情况2…}</p>
+<p><strong>初始条件</strong>：要特别当心空串的处理。</p>
+<h3 id="1、LintCode-77-Longest-Common-Subsequence"><a href="#1、LintCode-77-Longest-Common-Subsequence" class="headerlink" title="1、LintCode 77 Longest Common Subsequence"></a>1、<a class="link" target="_blank" rel="noopener" href="http://www.lintcode.com/problem/longest-common-subsequence/">LintCode 77 Longest Common Subsequence<i class="fas fa-external-link-alt"></i></a></h3><p>【问题】最长公共子序列。给出两个字符串，找到最长公共子序列(LCS)，返回LCS的长度。</p>
+<p>【分析】字符串A的长度为<code>n</code>，字符串B的长度为<code>m</code>，要组成最长公共子串一定是一个个对子，不能交叉，要按照顺序来，假设现在得到了最长公共子序列，有这么几种情况：</p>
+<ul>
+<li>字符串A的最后一个字符不在这个LCS中，那最长公共子串就是A中下标为<code>0～n-2</code>与B中下标为<code>0～m-1</code>的字符串的<code>最长公共子序列</code>。</li>
+<li>字符串B的最后一个字符不在这个LCS中，那最长公共字串就是B中下标为<code>0～n-2</code>与A中下标为<code>0～m-1</code>的字符串的<code>最长公共子序列</code></li>
+<li>字符串A中的最后一个字符与B中的一个字符正好是一对，那最长公共字串就是A中下标为<code>0～n-2</code>与B中下标为<code>0～m-2</code>的字符串的<code>最长公共子序列+A[n-1]</code></li>
+</ul>
+<p>【转移方程】dp[i] [j]代表A中前i个字符和B中前j个字符</p>
+<ul>
+<li><code>dp[i][j] = max{dp[i-1][j], dp[i][j-1], dp[i-1][j-1] + 1|A[i-1]=B[j-1]}</code></li>
+</ul>
+<p>时间复杂度O(MN)，空间复杂度O(MN)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">longestCommonSubsequence</span><span class="params">(String A, String B)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length();</span><br><span class="line">        <span class="keyword">int</span> m = B.length();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span> || m == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][m + <span class="number">1</span>]; <span class="comment">//双序列型的本质还是序列型</span></span><br><span class="line">        <span class="comment">//初始化第0行和第0列</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= m; i++) {</span><br><span class="line">            dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++) {</span><br><span class="line">            dp[n][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++) {</span><br><span class="line">                dp[i][j] = Math.max(dp[i - <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">                <span class="keyword">if</span> (A.charAt(i - <span class="number">1</span>) == B.charAt(j - <span class="number">1</span>)) {       </span><br><span class="line">                    dp[i][j] = Math.max(dp[i][j], dp[i - <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">1</span>);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n][m];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>可以用滚动数组优化空间复杂度至O(N)</p>
+<p>Plus：要求打印所有路径</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">LCS</span><span class="params">(String A, String B)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> m = A.length();</span><br><span class="line">        <span class="keyword">int</span> n = B.length();</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[m + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        <span class="keyword">int</span> i, j;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt;= n; j++) {</span><br><span class="line">            dp[<span class="number">0</span>][j] = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= m; i++) {</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= m; i++) {</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt;= n; j++) {</span><br><span class="line">                <span class="comment">//如果A的最后一个不在其中，或者是B的最后一个不在其中的情况</span></span><br><span class="line">                dp[i][j] = Math.max(dp[i - <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">                <span class="comment">//如果最后一个都在其中</span></span><br><span class="line">                <span class="keyword">if</span> (A.charAt(i - <span class="number">1</span>) == B.charAt(j - <span class="number">1</span>)) {</span><br><span class="line">                    dp[i][j] = Math.max(dp[i][j], dp[i - <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">1</span>);    <span class="comment">//+1 ！！！</span></span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获得了dp数组，dfs获取结果</span></span><br><span class="line">        Set&lt;String&gt; set = <span class="keyword">new</span> TreeSet&lt;&gt;();</span><br><span class="line">        dfs(<span class="string">""</span>, m, n, A, B, dp, set);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//打印结果</span></span><br><span class="line">        <span class="keyword">for</span> (String s : set) {</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(String temp, <span class="keyword">int</span> i, <span class="keyword">int</span> j, String A, String B, <span class="keyword">int</span>[][] dp, Set&lt;String&gt; set)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (temp.length() == dp[A.length()][B.length()]) {</span><br><span class="line">            set.add(<span class="keyword">new</span> StringBuilder(temp).reverse().toString());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (A.charAt(i - <span class="number">1</span>) == B.charAt(j - <span class="number">1</span>)) {   <span class="comment">//只有相等时才添加</span></span><br><span class="line">            temp += A.charAt(i - <span class="number">1</span>);</span><br><span class="line">            dfs(temp, i - <span class="number">1</span>, j - <span class="number">1</span>, A, B, dp, set);</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            <span class="comment">//上边更大</span></span><br><span class="line">            <span class="keyword">if</span> (dp[i - <span class="number">1</span>][j] &gt;= dp[i][j - <span class="number">1</span>]) {</span><br><span class="line">                dfs(temp, i - <span class="number">1</span>, j, A, B, dp, set);</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">//左边更大</span></span><br><span class="line">            <span class="keyword">if</span> (dp[i][j - <span class="number">1</span>] &gt;= dp[i - <span class="number">1</span>][j]) {</span><br><span class="line">                dfs(temp, i, j - <span class="number">1</span>, A, B, dp, set);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、LintCode-29-Interleaving-String"><a href="#2、LintCode-29-Interleaving-String" class="headerlink" title="2、LintCode 29 Interleaving String"></a>2、<a target="_blank" rel="noopener" href="http://www.lintcode.com/en/problem/interleaving-string/"><strong>LintCode 29 Interleaving String</strong></a></h3><p>【问题】交错字符串。给出三个字符串：s1、s2、s3，判断s3是否由s1和s2交叉构成。</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：s1=“aabcc” s2=“dbbac”, s3=“aadbbcbcac” </span><br><span class="line"></span><br><span class="line">输出：True( s3=“aadbbcbcac” )</span><br><span class="line">【分析】首先如果s3的长度不等于s1+s2的长度，直接输出false，设s1的长度为n，s2的长度为m，s3的长度为n+m，从最后一步出发，假设s3是由s1和s2交错构成的，那么s3的最后一个字符，要么是s1的最后一个字符，要么是s2的最后一个字符。这就是两种情况：</span><br></pre></td></tr></table></figure>
+</blockquote>
+<ul>
+<li>如果是s1的最后一个字符，那么<code>s3[0...n+m-2]</code>是由<code>s1[0..n-2]与s2[0..m-1]</code>交错形成的</li>
+<li>如果是s2的最后一个字符，那么<code>s3[0...n+m-2]</code>是由<code>s1[0..n-1]与s2[0..m-2]</code>交错形成的</li>
+</ul>
+<p>这两种情况只要一种成立即可。</p>
+<p>【状态】<code>dp[s][i][j]</code>为s3前s个字符是否由A前i个字符<code>A[0..i-1]</code>和B前j个字符<code>B[0..j-1]</code>交错形成，这是最直观的，由于<code>s = i + j</code>，便可以开成两维，设<code>dp[i][j]</code>为s3前i+j个字符是否由A前i个字符 <code>A[0..i-1]</code>和B前j个字符<code>B[0..j-1]</code>交错形成。</p>
+<p>【转移方程】<code>dp[i][j] = (dp[i-1] [j] &amp;&amp; s1[i] == s3[i+j-1]) || (dp[i][j-1] &amp;&amp; s2[j] == s3[]i+j-1)</code></p>
+<p>【初始条件】空串本身可以由s1的空串和s2的空串交错形成，<code>dp[0][0] = true</code></p>
+<p>【边界情况】如果i=0，不考虑情况一,因为没有s1[i-1];如果j=0，不考虑情况二，因为没有s2[j-1]</p>
+<p>【计算顺序】</p>
+<ul>
+<li>f[0] [0], f[0] [1], …, f[0] [m]</li>
+<li>f[1] [0], f[1] [1], …, f[1] [m]</li>
+<li>……</li>
+<li>f[n] [0], f[n] [1], …, f[n] [m]</li>
+</ul>
+<p>时间复杂度O(NM)，空间复杂度O(NM)，可以用滚动数组优化</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isInterleave</span><span class="params">(String s1, String s2, String s3)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = s1.length();</span><br><span class="line">        <span class="keyword">int</span> m = s2.length();</span><br><span class="line">        <span class="keyword">int</span> l = s3.length();</span><br><span class="line">        <span class="keyword">if</span> (l != n + m) {</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//需要把空串也纳入考虑</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">                <span class="comment">//如果是s1中最后一个字符</span></span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; dp[i - <span class="number">1</span>][j] &amp;&amp; s1.charAt(i - <span class="number">1</span>) == s3.charAt(i + j - <span class="number">1</span>)) {</span><br><span class="line">                    dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                }</span><br><span class="line">                <span class="comment">//如果是s2中最后一个字符</span></span><br><span class="line">                <span class="keyword">if</span> (j &gt; <span class="number">0</span> &amp;&amp; dp[i][j - <span class="number">1</span>] &amp;&amp; s2.charAt(j - <span class="number">1</span>) == s3.charAt(i + j - <span class="number">1</span>)) {</span><br><span class="line">                    dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n][m];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、LintCode-119-Edit-Distance"><a href="#3、LintCode-119-Edit-Distance" class="headerlink" title="3、LintCode 119 Edit Distance"></a>3、<a target="_blank" rel="noopener" href="http://www.lintcode.com/problem/edit-distance/"><strong>LintCode 119 Edit Distance</strong></a></h3><p>【问题】编辑距离。给出两个单词word1和word2，计算出将word1 转换为word2的最少操作次数。你总共三种操作方法：插入一个字符、删除一个字符、替换一个字符。</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: "horse", "ros",输出: 3</span><br><span class="line"></span><br><span class="line">解释: horse -&gt; rorse (替换 'h' 为 'r')、rorse -&gt; rose (删除 'r')、rose -&gt; ros (删除 'e')</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>【分析】要变成一模一样，一定要有个顺序的概念，不然会做起来很麻烦，比如从左往右的顺序。A长度为m，B长度为n，编辑过后A长度为n且与B的字符顺序一样。从最后一步出发，最后一步就是让A的最后一个字符变为B的最后一个字符，一共有三种操作，每种操作考虑一番，得到以下四种情况。</p>
+<ul>
+<li>情况一：A最后插入B[n-1]，才能转换为B，剩下要做的就是要先将A[0..m-1]（前面不动）变成B[0..n-2]</li>
+<li>情况二：A最后一个字符替换为B[n-1]，才能转换为B，剩下要做的就是要先将A[0..m-2]变成B[0..n-2]</li>
+<li>情况三：A删去最后一个字符，才能转换为B，剩下要做的就是要先将A[0..m-2]变成B[0..n-2]</li>
+<li>情况四：A和B最后一个字符相等，就是要先将A[0..m-2]变成B[0..n-2]</li>
+</ul>
+<p>【状态】<code>dp[i][j]</code>代表A中前i个字符和B中前j个字符的最小编辑距离</p>
+<p>【转移方程】<code>dp[i][j] = min{dp[i][j-1]+1,dp[i-1][j-1]+1,dp[i-1][j]+1,dp[i-1][j-1] &amp;&amp; A[i-1] = B[j-1]}</code></p>
+<ul>
+<li>增加<code>dp[i][j-1]+1 </code></li>
+<li>替换<code>dp[i-1][j-1]+1</code></li>
+<li>删除<code>dp[i-1][j]+1</code></li>
+</ul>
+<p>【初始条件】一个空串和一个长度为L的串的最小编辑距离是L</p>
+<p>【计算顺序】</p>
+<ul>
+<li>f[0] [0], f[0] [1], …, f[0] [m]</li>
+<li>f[1] [0], f[1] [1], …, f[1] [m]</li>
+<li>……</li>
+<li>f[n] [0], f[n] [1], …, f[n] [m]</li>
+</ul>
+<p>时间复杂度O(NM)，空间复杂度O(NM)，可以用滚动数组优化</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDistance</span><span class="params">(String A, String B)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length();</span><br><span class="line">        <span class="keyword">int</span> m = B.length();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> i, j;</span><br><span class="line">        <span class="comment">//初始化，空串到任意非空串的编辑距离</span></span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">            dp[<span class="number">0</span>][j] = j;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= n; i++) {</span><br><span class="line">            dp[i][<span class="number">0</span>] = i;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt;= m; j++) {</span><br><span class="line">                dp[i][j] = Math.min(dp[i][j - <span class="number">1</span>] + <span class="number">1</span>, Math.min(dp[i - <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">1</span>, dp[i - <span class="number">1</span>][j] + <span class="number">1</span>));</span><br><span class="line">                <span class="keyword">if</span> (A.charAt(i - <span class="number">1</span>) == B.charAt(j - <span class="number">1</span>)) {</span><br><span class="line">                    dp[i][j] = Math.min(dp[i][j], dp[i - <span class="number">1</span>][j - <span class="number">1</span>]);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n][m];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、LintCode-118-Distinct-Subsequences"><a href="#4、LintCode-118-Distinct-Subsequences" class="headerlink" title="4、LintCode 118 Distinct Subsequences"></a>4、<a target="_blank" rel="noopener" href="http://www.lintcode.com/problem/distinct-subsequences/"><strong>LintCode 118 Distinct Subsequences</strong></a></h3><p>【问题】给定字符串 <code>S</code> 和 <code>T</code>，计算 <code>S</code> 的所有子序列中有多少个 <code>T</code>。子序列字符串是原始字符串删除一些(或零个)字符之后得到的字符串，并且要求剩下的字符的相对位置不能改变。(比如 <code>"ACE"</code> 是 <code>ABCDE</code> 的一个子序列, 而 <code>"AEC"</code> 不是)</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: S = "rabbbit", T = "rabbit"</span><br><span class="line">输出: 3</span><br><span class="line">解释: 你可以删除 S 中的任意一个 'b', 所以一共有 3 种方式得到 T.</span><br><span class="line"></span><br><span class="line">输入: S = "abcd", T = ""</span><br><span class="line">输出: 1</span><br><span class="line">解释: 只有删除 S 中的所有字符这一种方式得到 T</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>【分析】给定序列A和B，问B在A中出现多少次，可以不连续。相当于A和B的LCS是B，但这的侧重点是B。 从最后一步出发，就是B的最后一个字符，设A的长度为n，B的长度为m，有两种情况：</p>
+<ul>
+<li><code>B[m-1] != A[n-1]</code>，需要考虑A[0..n-2]与B[0..m-1]</li>
+<li><code>B[m-1] = A[n-1]</code>，只需考虑A[0..n-2]与B[0..m-2]</li>
+<li>问次数，就是考虑加法，无重复无遗漏。</li>
+</ul>
+<p>【转移方程】<code>dp[i][j] = dp[i-1][j] + dp[i-1][j-1] &amp;&amp; A[i-1]=B[i-1]</code></p>
+<p>【初始条件】考虑空串</p>
+<ul>
+<li>若A是空串，B不是空串，B在A中出现次数为0，<code>dp[0][j] = 0</code></li>
+<li>若B是空串，B在A中出现次数是1（A可以是空串），就是把A中的字符都删掉<code>dp[i][0] = 1</code></li>
+</ul>
+<p>【计算顺序】</p>
+<ul>
+<li>f[0] [0], f[0] [1], …, f[0] [m]</li>
+<li>f[1] [0], f[1] [1], …, f[1] [m]</li>
+<li>……</li>
+<li>f[n] [0], f[n] [1], …, f[n] [m]</li>
+</ul>
+<p>时间复杂度O(NM)，空间复杂度O(NM)，可以用滚动数组优化成O(N)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numDistinct</span><span class="params">(String A, String B)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length();</span><br><span class="line">        <span class="keyword">int</span> m = B.length();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> i, j;</span><br><span class="line">        <span class="comment">//初始化：若A是空串而B不是空串，则出现次数为0</span></span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt;= m; j++) {</span><br><span class="line">            dp[<span class="number">0</span>][j] = <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//初始化：若B是空串，则出现次数为1</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= n; i++) {</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt;= m; j++) {</span><br><span class="line">                dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">                <span class="keyword">if</span> (A.charAt(i - <span class="number">1</span>) == B.charAt(j - <span class="number">1</span>)) {</span><br><span class="line">                    dp[i][j] += dp[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n][m];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、LintCode-154-Regular-Expression-Matching"><a href="#5、LintCode-154-Regular-Expression-Matching" class="headerlink" title="5、LintCode 154 Regular Expression Matching"></a>5、<a target="_blank" rel="noopener" href="http://www.lintcode.com/problem/regular-expression-matching/"><strong>LintCode 154 Regular Expression Matching</strong></a></h3><p>【问题】正则表达式匹配。实现支持<code>.</code>和<code>*</code>的正则表达式匹配。<code>.</code>匹配任意一个字母。<code>*</code>匹配零个或者多个前面的元素。匹配应该覆盖整个输入字符串，而不仅仅是一部分。</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">需要实现的函数是：bool isMatch(string s, string p)</span><br><span class="line"></span><br><span class="line">isMatch("aa","a") → false</span><br><span class="line"></span><br><span class="line">isMatch("aa","aa") → true</span><br><span class="line"></span><br><span class="line">isMatch("aaa","aa") → false</span><br><span class="line"></span><br><span class="line">isMatch("aa", "a*") → true</span><br><span class="line"></span><br><span class="line">isMatch("aa", ".*") → true</span><br><span class="line"></span><br><span class="line">isMatch("ab", ".*") → true</span><br><span class="line"></span><br><span class="line">isMatch("aab", "c*a*b") → true</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>【分析】从最后一步出发，关注最后进来的字符。假设A的长度为n，B的长度为m，关注正则表达式B的最后一个字符是谁，它有三种可能，<code>正常字符</code>、<code>*</code>、<code>.</code></p>
+<ol>
+<li><p>如果B的最后一个字符是<code>正常字符</code>，那就是看<code>A[n-1]</code>是否等于<code>B[m-1]</code>，相等则看<code>A[0..n-2]</code>与<code>B[0..m-2]</code>，不等则是不能匹配，break</p>
+</li>
+<li><p>如果B的最后一个字符是<code>.</code>，它能匹配任意字符，直接看<code>A[0..n-2]</code>与<code>B[0..m-2]</code></p>
+</li>
+<li><p>如果B的最后一个字符是<code>*</code>它代表<code>B[m-2]=c</code>可以重复0次或多次，它们是一个整体<code>c*</code></p>
+<ul>
+<li>情况一：A[n-1]是0个c，B最后两个字符废了，能否匹配取决于A[0..m-1]和B[0..n-3]是否匹配</li>
+<li>情况二：A[n-1]是多个c中的最后一个（这种情况必须<code>A[n-1]=c</code>或者<code>c='.'</code>），所以A匹配完往前挪一个，B继续匹配，因为可以匹配多个，继续看A[0..n-2]和B[0..m-1]是否匹配。</li>
+</ul>
+</li>
+</ol>
+<p>【转移方程】<code>dp[i] [j]</code>代表A的前i个和B的前j个能否匹配</p>
+<ul>
+<li><p>对于1和2，可以合并成一种情况<code>dp[i][j] = dp[i-1][j-1] (if A[i-1]=B[j-1] || B[j-1]='.')</code></p>
+</li>
+<li><p>对于3，分为不看<code>c*</code>和看<code>c*</code>两种情况</p>
+<ul>
+<li>不看：直接砍掉<code>dp[i][j] = dp[i][j-2]</code></li>
+<li>看：<code>dp[i][j] = dp[i-1][j](if A[i-1]=B[j-2] || B[j-2]='.')</code></li>
+</ul>
+</li>
+</ul>
+<p>【初始条件】考虑空串空正则</p>
+<ul>
+<li>空串和空正则是匹配的，<code>dp[0][0] = true</code></li>
+<li>非空串和空正则必不匹配，<code>dp[1][0]=...=dp[n][0]=false</code></li>
+<li>空串和非空正则，不能直接定义true和false，必须要计算出来。（在1、2中不能计算，在3中<code>dp[i][j] = dp[i][j-2]</code>可能出现，比如<code>A=""</code>,<code>B=a*b*c*</code>）</li>
+<li><strong>大体上可以分为空正则和非空正则两种</strong></li>
+</ul>
+<p>【计算顺序】</p>
+<ul>
+<li>f[0] [0], f[0] [1], …, f[0] [m]</li>
+<li>f[1] [0], f[1] [1], …, f[1] [m]</li>
+<li>……</li>
+<li>f[n] [0], f[n] [1], …, f[n] [m]</li>
+</ul>
+<p>时间复杂度O(NM)，空间复杂度O(NM)，可以用滚动数组优化成O(N)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isMatch</span><span class="params">(String A, String B)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length();</span><br><span class="line">        <span class="keyword">int</span> m = B.length();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">                <span class="comment">//分为空正则与非空正则两种讨论</span></span><br><span class="line">                <span class="keyword">if</span> (j == <span class="number">0</span>) {</span><br><span class="line">                    <span class="keyword">if</span> (i == <span class="number">0</span>) {</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    } <span class="keyword">else</span> {</span><br><span class="line">                        dp[i][j] = <span class="keyword">false</span>;</span><br><span class="line">                    }</span><br><span class="line">                } <span class="keyword">else</span> {</span><br><span class="line">                    <span class="comment">//非空正则，大致分为最后一个是不是 *</span></span><br><span class="line">                    <span class="keyword">if</span> (B.charAt(j - <span class="number">1</span>) != <span class="string">'*'</span>) {</span><br><span class="line">                        <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; (A.charAt(i - <span class="number">1</span>) == B.charAt(j - <span class="number">1</span>) || B.charAt(j - <span class="number">1</span>) == <span class="string">'.'</span>)) {</span><br><span class="line">                            dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                        }</span><br><span class="line">                    } <span class="keyword">else</span> {</span><br><span class="line">                        <span class="comment">//最后一个是 * ，分为不看和看两种情况</span></span><br><span class="line">                        <span class="comment">//不看</span></span><br><span class="line">                        <span class="keyword">if</span> (j &gt;= <span class="number">2</span>) {</span><br><span class="line">                            dp[i][j] |= dp[i][j - <span class="number">2</span>];</span><br><span class="line">                        }</span><br><span class="line">                        <span class="comment">//看</span></span><br><span class="line">                        <span class="keyword">if</span> (i &gt;= <span class="number">1</span> &amp;&amp; j &gt;= <span class="number">2</span> &amp;&amp; (A.charAt(i - <span class="number">1</span>) == B.charAt(j - <span class="number">2</span>) || B.charAt(j - <span class="number">2</span>) == <span class="string">'.'</span>)) {</span><br><span class="line">                            dp[i][j] |= dp[i - <span class="number">1</span>][j];</span><br><span class="line">                        }</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n][m];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="6、LintCode-192-Wildcard-Matching"><a href="#6、LintCode-192-Wildcard-Matching" class="headerlink" title="6、LintCode 192 Wildcard Matching"></a>6、<a target="_blank" rel="noopener" href="http://www.lintcode.com/problem/wildcard-matching/"><strong>LintCode 192 Wildcard Matching</strong></a></h3><p>【问题】通配符匹配，上一题是正则表达式匹配。判断两个可能包含通配符<code>？</code>和<code>*</code>的字符串是否匹配。匹配规则如下：<code>?</code>可以匹配任何单个字符，<code>*</code> 可以匹配任意字符串（包括空字符串）。两个串完全匹配才算匹配成功。</p>
+<p>【分析】通配符匹配和正则表达式匹配很像，正则表达式中的<code>.</code>与通配中的<code>?</code>作用是一样的，不同的是<code>*</code>，正则表达式中的<code>*</code>能匹配零个或者多个前面的元素，通配中的<code>*</code>能匹配0个或多个任意字符，实际上通配的情况要比正则表达式中的情况简单得多。仍然从B的最后一个字符出发，有三种可能：<code>正常字符</code>、<code>?</code>、<code>*</code>，讨论如下：（前两条情况和正则表达式一样）</p>
+<ol>
+<li><p>如果B的最后一个字符是<code>正常字符</code>，那就是看A[m-1]是否等于B[n-1]，相等则看A[0..m-2]与B[0..n-2]，不等则是不能匹配，break</p>
+</li>
+<li><p>如果B的最后一个字符是<code>？</code>，它能匹配任意字符，直接看A[0..m-2]与B[0..n-2]</p>
+</li>
+<li><p>如果B的最后一个字符是<code>*</code>，他能匹配0个或多个任意字符，那就分为两种情况</p>
+<ul>
+<li>匹配0个：就是这个<code>*</code>直接废了，需要看<code>A[0..n-1]</code>与<code>B[0..m-2]</code></li>
+<li>匹配多个：则需要看<code>A[0..n-2]</code>与<code>B[0..m-1]</code></li>
+</ul>
+</li>
+</ol>
+<p>【转移方程】<code>dp[i] [j]</code>代表A的前i个和B的前j个能否匹配</p>
+<ul>
+<li>对于1和2，可以合并成一种情况<code>dp[i][j] = dp[i-1][j-1] (if A[i-1]=B[j-1] || B[j-1]='?')</code></li>
+<li>对于3，分为不看<code>c*</code>和看<code>c*</code>两种情况<ul>
+<li>匹配0个，就是不看，直接砍掉：<code>dp[i][j] = dp[i][j-1]</code></li>
+<li>匹配多个：<code>dp[i][j] = dp[i-1][j](if B[j-1]='*')</code></li>
+</ul>
+</li>
+</ul>
+<p>【初始条件】<strong>大体上依旧是分为空正则和非空正则两种</strong></p>
+<ul>
+<li>空正则和空串匹配</li>
+<li>空正则和非空串必不匹配</li>
+<li>非空正则和空串需要看情况</li>
+</ul>
+<p>【计算顺序】</p>
+<ul>
+<li>f[0] [0], f[0] [1], …, f[0] [m]</li>
+<li>f[1] [0], f[1] [1], …, f[1] [m]</li>
+<li>……</li>
+<li>f[n] [0], f[n] [1], …, f[n] [m]</li>
+</ul>
+<p>时间复杂度O(NM)，空间复杂度O(NM)，可以用滚动数组优化成O(N)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isMatch</span><span class="params">(String A, String B)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> n = A.length();</span><br><span class="line">        <span class="keyword">int</span> m = B.length();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[n + <span class="number">1</span>][m + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">                <span class="comment">//空正则与非空正则两种情况讨论</span></span><br><span class="line">                <span class="keyword">if</span> (j == <span class="number">0</span>) {</span><br><span class="line">                    <span class="keyword">if</span> (i == <span class="number">0</span>) {</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    } <span class="keyword">else</span> {</span><br><span class="line">                        dp[i][j] = <span class="keyword">false</span>;</span><br><span class="line">                    }</span><br><span class="line">                } <span class="keyword">else</span> {</span><br><span class="line">                    <span class="comment">//分为最后一个字符是不是 * 的两种情况</span></span><br><span class="line">                    <span class="keyword">if</span> (B.charAt(j - <span class="number">1</span>) != <span class="string">'*'</span>) {</span><br><span class="line">                        <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; (A.charAt(i - <span class="number">1</span>) == B.charAt(j - <span class="number">1</span>) || B.charAt(j - <span class="number">1</span>) == <span class="string">'?'</span>)) {</span><br><span class="line">                            dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                        }</span><br><span class="line">                    } <span class="keyword">else</span> {</span><br><span class="line">                        <span class="comment">//分为匹配0个和匹配多个两种情况,这里j必定&gt;1</span></span><br><span class="line">                        <span class="comment">//匹配0个</span></span><br><span class="line">                        dp[i][j] |= dp[i][j - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (i &gt; <span class="number">0</span>) {</span><br><span class="line">                            dp[i][j] |= dp[i - <span class="number">1</span>][j];</span><br><span class="line">                        }</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n][m];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<h3 id="7、LintCode-668-Ones-And-Zeroes"><a href="#7、LintCode-668-Ones-And-Zeroes" class="headerlink" title="7、LintCode 668 Ones And Zeroes"></a>7、<a target="_blank" rel="noopener" href="http://www.lintcode.com/en/problem/ones-and-zeroes/"><strong>LintCode 668 Ones And Zeroes</strong></a></h3><p>【问题】假设你分别是 m个 <code>0</code> 和 n个 <code>1</code> 的统治者。 另一方面, 有一个只包含 <code>0</code> 和 <code>1</code> 的字符串构成的数组。现在你的任务是找到可以由 m个 <code>0</code> 和 n个 <code>1</code> 构成的字符串的最大个数。每一个 <code>0</code> 和 <code>1</code> 均只能使用一次</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：["10", "0001", "111001", "1", "0"] 5 3</span><br><span class="line">输出：4</span><br><span class="line">解释：这里总共有 4 个字符串可以用 5个 0s 和 3个 1s来构成, 它们是 "10", "0001", "1", "0"。</span><br><span class="line"></span><br><span class="line">输入：["10", "0001", "111001", "1", "0"] 7 7</span><br><span class="line">输出：5</span><br><span class="line">解释：所有字符串都可以由7个 0s 和 7个 1s来构成.</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>【分析】如果没有0，只有1，这就相当于背包问题。这边只是多了个0，用背包思路考虑，看最后一个物品有没有进去，就是分为放和不放两种情况：</p>
+<ul>
+<li>情况一：不放，最后一个字符串（物品）没有进去，一共给定了T个串，那就是去看前T-1个串中，用给的0和1最多能组成多少个01串</li>
+<li>情况二：放，最后一个字符串（物品）进去了，最后一个串中有多少个0和1，那么就在m和n中减去，比如最后一个串中有j个0，k个1，那么剩下0就是m-j，剩下1就是n-k，看这些剩下的在前T-1个串中最多能组成多少个。</li>
+</ul>
+<p>【转移方程】用<code>dp[i][j][k]代表前i个串最多能有多少个被j个0和k个1组成</code></p>
+<ul>
+<li><code>dp[i][j][k] = max{dp[i-1][j][k],dp[i-1][j-a][k-b]}</code>，a代表放的这个01串中0的个数，b代表放的这个01串中1的个数。</li>
+</ul>
+<p>【转移方程】前0个串，最多组成0个</p>
+<ul>
+<li><code>f[0][0~m][0~n] = 0</code></li>
+</ul>
+<p>【答案】<code>dp[T][m][n]</code>，len为字符串的个数</p>
+<p>时间复杂度:O(Tmn)，空间复杂度:O(Tmn)，可以用滚动数组优化至 O(mn)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findMaxForm</span><span class="params">(String[] strs, <span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> len = strs.length;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (len == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span>[][][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[len + <span class="number">1</span>][m + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> i, j, k;</span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">            <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt;= n; k++) {</span><br><span class="line">                dp[<span class="number">0</span>][j][k] = <span class="number">0</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= len; i++) {</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">                <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt;= n; k++) {</span><br><span class="line">                    <span class="comment">//不放</span></span><br><span class="line">                    dp[i][j][k] = dp[i - <span class="number">1</span>][j][k];</span><br><span class="line">                    <span class="comment">//放</span></span><br><span class="line">                    String s = strs[i - <span class="number">1</span>];</span><br><span class="line">                    <span class="keyword">char</span>[] chs = s.toCharArray();</span><br><span class="line">                    <span class="keyword">int</span> count0 = <span class="number">0</span>, count1 = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> l = <span class="number">0</span>; l &lt; chs.length; l++) {</span><br><span class="line">                        <span class="keyword">if</span> (chs[l] == <span class="string">'0'</span>) {</span><br><span class="line">                            count0++;</span><br><span class="line">                        } <span class="keyword">else</span> {</span><br><span class="line">                            count1++;</span><br><span class="line">                        }</span><br><span class="line">                    }</span><br><span class="line">                    <span class="keyword">if</span> (j &gt;= count0 &amp;&amp; k &gt;= count1) {</span><br><span class="line">                        dp[i][j][k] = Math.max(dp[i][j][k], dp[i - <span class="number">1</span>][j - count0][k - count1] + <span class="number">1</span>);</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[len][m][n];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+<p>滚动数组优化，当前的i之和前一个i-1有关联，空间复杂度O(mn)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findMaxForm</span><span class="params">(String[] strs, <span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> len = strs.length;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (len == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span>[][][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>][m + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> i, j, k;</span><br><span class="line">        <span class="comment">//初始化</span></span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">            <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt;= n; k++) {</span><br><span class="line">                dp[<span class="number">0</span>][j][k] = <span class="number">0</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> old = <span class="number">0</span>, now = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= len; i++) {</span><br><span class="line">            old = now;</span><br><span class="line">            now = <span class="number">1</span> - now;</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt;= m; j++) {</span><br><span class="line">                <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt;= n; k++) {</span><br><span class="line">                    <span class="comment">//不放</span></span><br><span class="line">                    dp[now][j][k] = dp[old][j][k];</span><br><span class="line">                    <span class="comment">//放</span></span><br><span class="line">                    String s = strs[i - <span class="number">1</span>];</span><br><span class="line">                    <span class="keyword">char</span>[] chs = s.toCharArray();</span><br><span class="line">                    <span class="keyword">int</span> count0 = <span class="number">0</span>, count1 = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> l = <span class="number">0</span>; l &lt; chs.length; l++) {</span><br><span class="line">                        <span class="keyword">if</span> (chs[l] == <span class="string">'0'</span>) {</span><br><span class="line">                            count0++;</span><br><span class="line">                        } <span class="keyword">else</span> {</span><br><span class="line">                            count1++;</span><br><span class="line">                        }</span><br><span class="line">                    }</span><br><span class="line">                    <span class="keyword">if</span> (j &gt;= count0 &amp;&amp; k &gt;= count1) {</span><br><span class="line">                        dp[now][j][k] = Math.max(dp[now][j][k], dp[old][j - count0][k - count1] + <span class="number">1</span>);</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[now][m][n];</span><br><span class="line">    }</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Dynamic-programming/">#Dynamic programming</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/12/12/SegmentTree/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">线段树</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/12/10/dp-interval/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">区间型动态规划</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: '3d02df967892eaa18e89',
+                    clientSecret: '5fe8f0aff2a03395f4828969ebad07a2dab146e4',
+                    repo: 'hexo-site-comments',
+                    owner: 'y3zha',
+                    admin: ['y3zha'],
+                    id: __gitalk__pathname,
+                    language: 'en'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">y3zha</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    
+    </div>
+</footer>
+
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%9A%E5%8F%8C%E5%BA%8F%E5%88%97%E5%9E%8B"><span class="nav-text">动态规划：双序列型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81LintCode-77-Longest-Common-Subsequence"><span class="nav-text">1、LintCode 77 Longest Common Subsequence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81LintCode-29-Interleaving-String"><span class="nav-text">2、LintCode 29 Interleaving String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81LintCode-119-Edit-Distance"><span class="nav-text">3、LintCode 119 Edit Distance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81LintCode-118-Distinct-Subsequences"><span class="nav-text">4、LintCode 118 Distinct Subsequences</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81LintCode-154-Regular-Expression-Matching"><span class="nav-text">5、LintCode 154 Regular Expression Matching</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81LintCode-192-Wildcard-Matching"><span class="nav-text">6、LintCode 192 Wildcard Matching</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7%E3%80%81LintCode-668-Ones-And-Zeroes"><span class="nav-text">7、LintCode 668 Ones And Zeroes</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>
