@@ -226,7 +226,7 @@
 <ul>
 <li><p>Future，有俩儿子，RunnableFuture接口和ScheduleFuture接口，RunnableFuture接口继承了Future和Runnable。我写了个demo</p>
 </li>
-<li><p>```java<br>public static void main(String[] args) throws ExecutionException, InterruptedException {</p>
+<li><p>``` java<br>public static void main(String[] args) throws ExecutionException, InterruptedException {</p>
 <pre><code>    //创建一个线程池
     ThreadPoolExecutor executor = new ThreadPoolExecutor(3, 3, 0L,
             TimeUnit.MILLISECONDS, new LinkedBlockingDeque&lt;&gt;());
@@ -245,10 +245,9 @@
     System.out.println(res);
 &#125;
 </code></pre>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- 从这个demo中 可以看出，callble是帮我们做事情的，future是一个线程任务，然后通过从线程池提交线程任务，可以通过futuretask来得到任务执行的结果，这就非常好，线程实现的两种方式 实现runnable接口和继承thread，都无法告知我们具体执行结果，但是我们可以通过futuretask得到执行的结果～～。</span><br><span class="line"></span><br><span class="line">- callable，他就是一个接口，在它的call方法中，定义了这个线程要做的各种事情，callable的返回值就写在callabl&lt;&gt;这里面，用callable都是和Future结合起来一起用的啦</span><br><span class="line"></span><br><span class="line">- Futuretask，他实现了RunnableFuture接口，他就是一个线程任务。自己看源码。。本身就是Runnable，然后又实现了Future，也就是说 FutureTask 具备对任务进行管 理的功能</span><br><span class="line"></span><br><span class="line">- RunnableFuture接口，继承了Runnable接口和Future接口。里面有个run方法，其目的是让Future能够管理Runnable，咋管理呢，就是可以取消Runnable，也可以查看你有没有完成了，有没有Done</span><br><span class="line"></span><br><span class="line">- Future接口。Callable接口就是得到子线程的运行结果，然后返回，那我们怎么get到callable返回的结果呢，就是通过future啦。当然future还能取消。。。如果完成了就不能取消了，它里面有这些方法</span><br><span class="line"></span><br><span class="line">  - ```java</span><br><span class="line">    //取消</span><br><span class="line">    boolean cancel(boolean mayInterruptIfRunning);</span><br><span class="line">     </span><br><span class="line">    //判断有没有被取消</span><br><span class="line">    boolean isCancelled();</span><br><span class="line">     </span><br><span class="line">    //干完了没</span><br><span class="line">    boolean isDone(); </span><br><span class="line">    </span><br><span class="line">    //得到结果，如果任务被取消了，抛前面的u一场，如果任务被打断了，抛出后面异常</span><br><span class="line">    V get() throws InterruptedException, ExecutionException;</span><br><span class="line">     </span><br><span class="line">    V get(long timeout, TimeUnit unit)</span><br><span class="line">    		throws InterruptedException, ExecutionException, TimeoutException;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- 从这个demo中 可以看出，callble是帮我们做事情的，future是一个线程任务，然后通过从线程池提交线程任务，可以通过futuretask来得到任务执行的结果，这就非常好，线程实现的两种方式 实现runnable接口和继承thread，都无法告知我们具体执行结果，但是我们可以通过futuretask得到执行的结果～～。</span><br><span class="line"></span><br><span class="line">- callable，他就是一个接口，在它的call方法中，定义了这个线程要做的各种事情，callable的返回值就写在callabl&lt;&gt;这里面，用callable都是和Future结合起来一起用的啦</span><br><span class="line"></span><br><span class="line">- Futuretask，他实现了RunnableFuture接口，他就是一个线程任务。自己看源码。。本身就是Runnable，然后又实现了Future，也就是说 FutureTask 具备对任务进行管 理的功能</span><br><span class="line"></span><br><span class="line">- RunnableFuture接口，继承了Runnable接口和Future接口。里面有个run方法，其目的是让Future能够管理Runnable，咋管理呢，就是可以取消Runnable，也可以查看你有没有完成了，有没有Done</span><br><span class="line"></span><br><span class="line">- Future接口。Callable接口就是得到子线程的运行结果，然后返回，那我们怎么get到callable返回的结果呢，就是通过future啦。当然future还能取消。。。如果完成了就不能取消了，它里面有这些方法</span><br><span class="line"></span><br><span class="line">- ``` java</span><br><span class="line">  //取消</span><br><span class="line">  boolean cancel(boolean mayInterruptIfRunning);</span><br><span class="line">   </span><br><span class="line">  //判断有没有被取消</span><br><span class="line">  boolean isCancelled();</span><br><span class="line">   </span><br><span class="line">  //干完了没</span><br><span class="line">  boolean isDone(); </span><br><span class="line">  </span><br><span class="line">  //得到结果，如果任务被取消了，抛前面的u一场，如果任务被打断了，抛出后面异常</span><br><span class="line">  V get() throws InterruptedException, ExecutionException;</span><br><span class="line">   </span><br><span class="line">  V get(long timeout, TimeUnit unit)</span><br><span class="line">  		throws InterruptedException, ExecutionException, TimeoutException;</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li><p><img  
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200219192847989.png"
@@ -256,22 +255,18 @@
                 ></p>
 </li>
 <li><p>FutureTask的初始化，它有两种方式初始化的，一种是传callable，不能传null，一种是传runnable，但是runnable是没有返回值的呀，所以他就要求你传个result，作为返回结果！但是这个返回结果没卵用，传个null即可。传参为runnable的构造器，会通过Executors.callable方法来把你这个runnable转成callable。但是runnable和callable都是接口，咋转化，<strong>适配器模式</strong>，它就搞了个RunnableAdapter 。。。</p>
-<ul>
-<li><img  
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200219193005352.png"
                      
-                ></li>
-</ul>
+                ></p>
 </li>
 <li><p>Future get操作源码：代码太长了自己看，首先会得到state，也就是状态，判断一下状态时啥，如果任务正在执行，那就要阻塞呗，底层用的是LockSupport.park，直接让线程进入waiting状态了，直到执行成功，返回结果。等待过程的源码太长了。。</p>
 </li>
 <li><p>run方法源码：这个方法没返回值的，你创建了futuretask这个任务，是可以直接run的，也可以开启新线程去跑，run的时候先判断当前任务有人有人在执行，如果有人在执行就直接返回了，run的过程中，会给outcome属性（看上上张图）赋值，赋值之后，get的时候就能从属性中拿结果了。</p>
 </li>
 <li><p>取消。。没什么说的</p>
-</li>
-</ul>
 </li>
 </ul>
 

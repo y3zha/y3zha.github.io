@@ -308,18 +308,28 @@
 </blockquote>
 <p>但是我们new一个<code>ThreadPoolExecutor</code>出来后，既可以执行<code>submit()</code>，也可以执行<code>execute()</code>，实际上这两个是有区别的</p>
 <ul>
-<li><p>顶级接口<code>Executor</code>这个接口它只有一个<code>execute()</code>方法</p>
+<li>顶级接口<code>Executor</code>这个接口它只有一个<code>execute()</code>方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
 <ul>
-<li><p>```java<br>public interface Executor {</p>
-<pre><code>void execute(Runnable command);
-</code></pre>
-<p>}</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- 二级接口`ExecutorService`，在这一层，添加了`submit()`方法</span><br><span class="line"></span><br><span class="line">  - command+F12</span><br><span class="line"></span><br><span class="line">    ![](https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311160725648.png)</span><br><span class="line"></span><br><span class="line">- 到了第三层`AbstractExecutorService`，它实现了`ExecutorService`这个接口，自然有`submit`和`execute`这两个方法</span><br><span class="line"></span><br><span class="line">- 到了第四层`ThreadPoolExecutor`这个实现类，它没有` submit`这个方法，但是有`execute`方法</span><br><span class="line"></span><br><span class="line">  - 那么实际上`ThreadPoolExecutor`的实例调用的是`AbstractExecutorService`的`submit`方法</span><br><span class="line"></span><br><span class="line">  - ```java</span><br><span class="line">    //AbstractExecutorService的submit方法，举例两个</span><br><span class="line">    public &lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task) &#123;</span><br><span class="line">        if (task == null) throw new NullPointerException();</span><br><span class="line">        RunnableFuture&lt;T&gt; ftask = newTaskFor(task);</span><br><span class="line">        execute(ftask);</span><br><span class="line">        return ftask;</span><br><span class="line">    &#125;</span><br><span class="line">    public &lt;T&gt; Future&lt;T&gt; submit(Runnable task, T result) &#123;</span><br><span class="line">        if (task == null) throw new NullPointerException();</span><br><span class="line">        RunnableFuture&lt;T&gt; ftask = newTaskFor(task, result);</span><br><span class="line">        execute(ftask);</span><br><span class="line">        return ftask;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>可以看到这个<code>AbstractExecutorService</code>的submit方法本质上还是调用了Executor的execute方法</p>
-</li>
+<li>二级接口<code>ExecutorService</code>，在这一层，添加了<code>submit()</code>方法</li>
 </ul>
-</li>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/Jerry1997/img-bed/raw/master/uPic/image-20200311160725648.png"
+                     
+                ></p>
+<ul>
+<li>到了第三层<code>AbstractExecutorService</code>，它实现了<code>ExecutorService</code>这个接口，自然有<code>submit</code>和<code>execute</code>这两个方法</li>
+<li>到了第四层<code>ThreadPoolExecutor</code>这个实现类，它没有<code> submit</code>这个方法，但是有<code>execute</code>方法，那么实际上<code>ThreadPoolExecutor</code>的实例调用的是<code>AbstractExecutorService</code>的<code>submit</code>方法</li>
 </ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//AbstractExecutorService的submit方法，举例两个</span></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Callable&lt;T&gt; task)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (task == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    RunnableFuture&lt;T&gt; ftask = newTaskFor(task);</span><br><span class="line">    execute(ftask);</span><br><span class="line">    <span class="keyword">return</span> ftask;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Runnable task, T result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (task == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    RunnableFuture&lt;T&gt; ftask = newTaskFor(task, result);</span><br><span class="line">    execute(ftask);</span><br><span class="line">    <span class="keyword">return</span> ftask;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这个<code>AbstractExecutorService</code>的submit方法本质上还是调用了Executor的execute方法</p>
 <p>注意submit的返回值是 Future 类的，而execute的返回值是void</p>
 <p><strong>submit做了两件事情</strong></p>
 <ul>
